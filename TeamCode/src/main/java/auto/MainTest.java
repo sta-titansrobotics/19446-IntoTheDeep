@@ -7,18 +7,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "MainTest", group = "Test")
 public class MainTest extends LinearOpMode {
-    private Robot robot;
+    //private Robot robot;
     private DcMotor slideH;
     private DcMotor slideV;
 
     @Override
     public void runOpMode() {
-        robot = new Robot();
-        slideH = hardwareMap.get(DcMotor.class, "slideH");
+        //robot = new Robot();
+        slideH = hardwareMap.get(DcMotor.class, "odom_h");
         HSlide sliderH = new HSlide(slideH);
 
-        slideV = hardwareMap.get(DcMotor.class, "slideV");
-        VSlide sliderV = new VSlide(slideV);
+       // slideV = hardwareMap.get(DcMotor.class, "slideV");
+       // VSlide sliderV = new VSlide(slideV);
+        sliderH.resetPosition();
 
 
         telemetry.addData("Status", "Initialized");
@@ -26,9 +27,10 @@ public class MainTest extends LinearOpMode {
 
         waitForStart();
 
-        if (opModeIsActive()) {
+        while (opModeIsActive()) {
             // Add autonomous actions here
-            robot.resetAll();
+           // robot.resetAll();
+            sliderH.goToPosition(200);
         }
     }
 

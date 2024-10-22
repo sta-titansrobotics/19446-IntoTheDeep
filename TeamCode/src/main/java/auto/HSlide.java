@@ -18,14 +18,27 @@ public class HSlide extends MainTest{
 
     public void resetPosition() {
         // Code to reset H-Slide position using touch sensor
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+       // motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        //future implementation for checking the touch sensor to see if its at 0 position,
+        // if it is not, then throw an error
 
     }
 
     public void goToPosition(int position) {
         // Code to move H-Slide to specified position
+
+
+        position = Math.max(0, position);
+        position = Math.min(300, position);
+
+
         motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(0.5);
+
     }
 
 }
