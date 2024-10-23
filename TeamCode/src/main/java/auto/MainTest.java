@@ -29,7 +29,12 @@ public class MainTest extends LinearOpMode {
 
         while (opModeIsActive()) {
            // robot.resetAll();
-            sliderH.goToPosition(200);
+            sliderH.goToPosition(500);
+
+
+            telemetry.addData("position", slideH.getCurrentPosition());
+            telemetry.update();
+
         }
     }
 

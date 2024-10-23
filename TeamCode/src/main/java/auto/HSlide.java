@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class HSlide extends MainTest{
 
@@ -20,6 +22,8 @@ public class HSlide extends MainTest{
         // Code to reset H-Slide position using touch sensor
        // motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       // motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         //future implementation for checking the touch sensor to see if its at 0 position,
@@ -32,12 +36,20 @@ public class HSlide extends MainTest{
 
 
         position = Math.max(0, position);
-        position = Math.min(300, position);
+        position = Math.min(2000, position);
 
 
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(0.5);
+        /*
+        if(motor.getCurrentPosition()<position) {
+            motor.setPower(0.5);
+        }else{
+            motor.setPower(0);
+        }*/
+
+
 
     }
 
