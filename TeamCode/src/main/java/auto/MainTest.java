@@ -28,7 +28,6 @@ public class MainTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            // Add autonomous actions here
            // robot.resetAll();
             sliderH.goToPosition(200);
         }
