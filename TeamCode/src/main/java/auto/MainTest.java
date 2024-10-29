@@ -16,10 +16,11 @@ public class MainTest extends LinearOpMode {
         //robot = new Robot();
         slideH = hardwareMap.get(DcMotor.class, "odom_h");
         HSlide sliderH = new HSlide(slideH);
+        boolean reached = false ;
 
        // slideV = hardwareMap.get(DcMotor.class, "slideV");
        // VSlide sliderV = new VSlide(slideV);
-        sliderH.resetPosition();
+        sliderH.initialize();
 
 
         telemetry.addData("Status", "Initialized");
@@ -29,11 +30,21 @@ public class MainTest extends LinearOpMode {
 
         while (opModeIsActive()) {
            // robot.resetAll();
-            sliderH.goToPosition(500);
-
+            //sliderH.goToPosition(500);
 
             telemetry.addData("position", slideH.getCurrentPosition());
             telemetry.update();
+
+
+
+
+            if(slideH.getCurrentPosition() >=500){
+                sliderH.goToPosition(0);
+                reached = true;
+            }
+            else if (!reached){
+                sliderH.goToPosition(500);
+            }
 
         }
     }

@@ -24,6 +24,8 @@ public class VSlide extends MainTest {
 
     public void goToPosition(double position) {
         // Code to move V-Slide to specified position
+
+        //between 0 and 8k ticks
         motor.setTargetPosition((int) position);
     }
 }
