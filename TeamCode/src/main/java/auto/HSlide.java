@@ -9,9 +9,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+//Gordon
 public class HSlide extends MainTest{
 
-    private DcMotor motor;
+    private final DcMotor motor;
 
     public HSlide(DcMotor motor) {
         // Constructor code if needed
@@ -58,5 +59,13 @@ public class HSlide extends MainTest{
         }*/
 
     }
+
+    // Add getCurrentPosition to retrieve the motor's current position
+    // Do not delete, this is for the SlideController Class
+    public int getCurrentPosition() {
+        return motor.getCurrentPosition();
+    }
+
+
 
 }
