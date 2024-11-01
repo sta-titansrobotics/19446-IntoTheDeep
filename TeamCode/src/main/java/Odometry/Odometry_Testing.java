@@ -23,16 +23,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 @TeleOp
 public class Odometry_Testing extends LinearOpMode {
 
-    // Declare OpMode members for each of the 3 motors and IMU.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor odom_l, odom_r, odom_h,fl, fr, bl, br;
-    private BNO055IMU imu;
     Orientation lastAngles = new Orientation();
     double globalAngle;
+    // Declare OpMode members for each of the 3 motors and IMU.
+    private final ElapsedTime runtime = new ElapsedTime();
+    private DcMotor odom_l, odom_r, odom_h, fl, fr, bl, br;
+    private BNO055IMU imu;
+
     @Override
     public void runOpMode() {
 
-        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang ;
+        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang;
         double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y, delta_global_x, delta_global_y, delta_ang;
         double global_xM = 0, global_yM = 0;
         double disM_encoderHtoCenter = 0.195; // Distance from the horizontal encoder to the center of the robot in meters, allegedly
@@ -88,7 +89,7 @@ public class Odometry_Testing extends LinearOpMode {
 
             // Get current angle from IMU
             current_ang = Math.toRadians(-getAngle()); //IMU angle
-           // current_ang = Math.toRadians((encoder_r-encoder_l)/0.023); //(r-l) divided by distance (METRES) between the encoder wheels
+            // current_ang = Math.toRadians((encoder_r-encoder_l)/0.023); //(r-l) divided by distance (METRES) between the encoder wheels
 
             // Calculate changes in encoder values and angle
             delta_encoder_l = encoder_l - prev_encoder_l;
@@ -102,7 +103,7 @@ public class Odometry_Testing extends LinearOpMode {
             delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;
             delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
 
-             // Convert local changes to global coordinates; Note X and Y are switched (maybe switched idk)
+            // Convert local changes to global coordinates; Note X and Y are switched (maybe switched idk)
             delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
             delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
 
@@ -117,8 +118,8 @@ public class Odometry_Testing extends LinearOpMode {
             prev_ang = current_ang;
 
             // Display telemetry data
-            telemetry.addData("x (cm)", global_xM*100);
-            telemetry.addData("y (cm)", global_yM*100);
+            telemetry.addData("x (cm)", global_xM * 100);
+            telemetry.addData("y (cm)", global_yM * 100);
             telemetry.addData("Angle (degrees)", Math.toDegrees(current_ang));
             telemetry.addData("Angle (delta)", Math.toDegrees(delta_ang));
 
@@ -156,8 +157,7 @@ public class Odometry_Testing extends LinearOpMode {
     }
 
     // Method to get the current angle from the IMU
-    private double getAngle()
-    {
+    private double getAngle() {
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes

@@ -21,11 +21,11 @@ public class SlideController {
                     int currentPosition = sliderH.getCurrentPosition();
 
                     // Control logic for slide movement
-                    if (currentPosition >= 500) {
+                    if (currentPosition >= 1000) {
                         sliderH.goToPosition(0);
                         reached = true;
                     } else if (!reached) {
-                        sliderH.goToPosition(500);
+                        sliderH.goToPosition(1000);
                     }
 
                     // Pause briefly to prevent excessive CPU usage
