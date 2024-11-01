@@ -91,8 +91,8 @@ public class Odometry extends LinearOpMode {
             global_yM += delta_global_y;
 
             // Telemetry to monitor values
-            telemetry.addData("x (meters)", global_xM);
-            telemetry.addData("y (meters)", global_yM);
+            telemetry.addData("x (cm)", global_xM*100);
+            telemetry.addData("y (cm)", global_yM*100);
             telemetry.addData("Angle (degrees)", Math.toDegrees(current_ang));
             telemetry.update();
 

@@ -35,7 +35,7 @@ public class Odometry_Testing extends LinearOpMode {
         double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang ;
         double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y, delta_global_x, delta_global_y, delta_ang;
         double global_xM = 0, global_yM = 0;
-        double disM_encoderHtoCenter = 0.22; // Distance from the horizontal encoder to the center of the robot in meters, allegedly
+        double disM_encoderHtoCenter = 0.195; // Distance from the horizontal encoder to the center of the robot in meters, allegedly
 
         // Initialize the hardware variables.
         odom_l = hardwareMap.get(DcMotor.class, "odom_l");
@@ -48,7 +48,6 @@ public class Odometry_Testing extends LinearOpMode {
         br = hardwareMap.get(DcMotor.class, "br");
 
 
-
         //Reverse left side motors
         fl.setDirection(DcMotorSimple.Direction.REVERSE);
         bl.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -57,9 +56,6 @@ public class Odometry_Testing extends LinearOpMode {
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-
 
         // Initialize the IMU
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -83,9 +79,6 @@ public class Odometry_Testing extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             // Convert encoder ticks to meters
-
-
-
             double encoder_l = encoderToMetres(-odom_l.getCurrentPosition());
             double encoder_r = encoderToMetres(odom_r.getCurrentPosition());
             double encoder_h = encoderToMetres(-odom_h.getCurrentPosition());
@@ -130,8 +123,6 @@ public class Odometry_Testing extends LinearOpMode {
             telemetry.addData("Angle (delta)", Math.toDegrees(delta_ang));
 
             telemetry.update();
-
-
 
             //Driving
 
