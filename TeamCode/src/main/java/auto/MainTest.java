@@ -12,29 +12,37 @@ public class MainTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        //Making Variables
         slideH = hardwareMap.get(DcMotor.class, "odom_h");
+
+
+        //-------------------------------------------------------------------------------------
+        //Initialize
         sliderH = new HSlide(slideH);
-
-        // Initialize HSlide motor
-        sliderH.initialize();
-
-        // Create SlideController and pass the HSlide instance
         slideController = new SlideController(sliderH);
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+
+        sliderH.initialize();
+        //================================================================================
 
         waitForStart();
 
-        // Start the slide control thread through SlideController
+        // START ALL THREADS
         slideController.start();
+
+
+
+        //-----------------------------------------------------------------------------------
+        //Main while loop
 
         while (opModeIsActive()) {
             telemetry.addData("position", slideH.getCurrentPosition());
             telemetry.update();
         }
 
-        // Stop the slide control thread when OpMode ends
+        //===============================================================================
+
+        // STOP ALL THREADS
         slideController.stop();
     }
 
