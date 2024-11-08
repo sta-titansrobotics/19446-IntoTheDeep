@@ -1,3 +1,4 @@
+/*
 package teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,12 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class TeleOpMain2024 extends LinearOpMode {
+public class TeleOpMain2024 {
 
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor fl, fr, bl, br;
     // test
-    @Override
     public void runOpMode() {
 
         InitializeMortors();
@@ -79,3 +79,4 @@ public class TeleOpMain2024 extends LinearOpMode {
 
 
 
+*/

@@ -23,9 +23,9 @@ public class Odometry extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the hardware variables.
-        odom_l = hardwareMap.get(DcMotor.class, "lf");
-        odom_r = hardwareMap.get(DcMotor.class, "lr");
-        odom_h = hardwareMap.get(DcMotor.class, "rf");
+        odom_l = hardwareMap.get(DcMotor.class, "odom_l");
+        odom_r = hardwareMap.get(DcMotor.class, "odom_r");
+        odom_h = hardwareMap.get(DcMotor.class, "odom_h");
 //        intake1 = hardwareMap.get(DcMotor.class, "intake1");
 //        intake2 = hardwareMap.get(DcMotor.class, "intake2");
 
@@ -58,7 +58,7 @@ public class Odometry extends LinearOpMode {
             // Convert encoder ticks to meters
             double encoder_l = encoderToMetres(odom_l.getCurrentPosition());
             double encoder_r = encoderToMetres(odom_r.getCurrentPosition());
-            double encoder_h = encoderToMetres(odom_h.getCurrentPosition());  // Inverted due to hardware setup
+            double encoder_h = encoderToMetres(-odom_h.getCurrentPosition());  // Inverted due to hardware setup
 
             telemetry.addData("l", encoder_l);
             telemetry.addData("r", encoder_r);
@@ -94,6 +94,14 @@ public class Odometry extends LinearOpMode {
             telemetry.addData("x (cm)", global_xM*100);
             telemetry.addData("y (cm)", global_yM*100);
             telemetry.addData("Angle (degrees)", Math.toDegrees(current_ang));
+            telemetry.addData("delta_encoder_l", delta_encoder_l);
+            telemetry.addData("delta_encoder_r", delta_encoder_r);
+            telemetry.addData("delta_encoder_h", delta_encoder_h);
+            telemetry.addData("delta_local_x", delta_local_x);
+            telemetry.addData("delta_local_y", delta_local_y);
+            telemetry.addData("delta_global_x", delta_global_x);
+            telemetry.addData("delta_global_y", delta_global_y);
+
             telemetry.update();
 
             // Update previous encoder and angle values for next iteration
