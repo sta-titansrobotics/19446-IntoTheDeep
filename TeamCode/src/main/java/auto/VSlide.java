@@ -3,31 +3,35 @@ package auto;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-
-//Austin
-public class VSlide extends MainTest {
+public class VSlide {
 
     private DcMotor motor;
+
     public VSlide(DcMotor motor) {
         this.motor = motor;
     }
 
-    public void goToPosition(int position) {
-        // Code to move V-Slide to specified position
-        motor.setTargetPosition(position);
-    }
-
-    @Override
-    public void resetPosition() {
-        // Code to reset V-Slide position using touch sensor
-        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+    public void initialize() {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void goToPosition(double position) {
-        // Code to move V-Slide to specified position
+    public void resetPosition() {
+        motor.setTargetPosition(0);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(0.5);
+    }
 
-        //between 0 and 8k ticks
-        motor.setTargetPosition((int) position);
+    public void goToPosition(int position) {
+        position = Math.max(0, position);
+        position = Math.min(1000, position);
+
+        motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(0.5);
+    }
+
+    public int getCurrentPosition() {
+        return motor.getCurrentPosition();
     }
 }

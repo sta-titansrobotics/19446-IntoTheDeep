@@ -7,43 +7,40 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous(name = "MainTest", group = "Test")
 public class MainTest extends LinearOpMode {
     private DcMotor slideH;
+    private DcMotor slideV;
     private HSlide sliderH;
+    private VSlide sliderV;
+
     private SlideController slideController;
+    private VSlideController vSlideController;
 
     @Override
     public void runOpMode() {
-        //Making Variables
         slideH = hardwareMap.get(DcMotor.class, "odom_h");
+        slideV = hardwareMap.get(DcMotor.class, "hSlide");
 
-
-        //-------------------------------------------------------------------------------------
-        //Initialize
         sliderH = new HSlide(slideH);
         slideController = new SlideController(sliderH);
 
+        sliderV = new VSlide(slideV);
+        vSlideController = new VSlideController(sliderV);
 
         sliderH.initialize();
-        //================================================================================
+        sliderV.initialize();
 
         waitForStart();
 
-        // START ALL THREADS
         slideController.start();
-
-
-
-        //-----------------------------------------------------------------------------------
-        //Main while loop
+        vSlideController.start();
 
         while (opModeIsActive()) {
-            telemetry.addData("position", slideH.getCurrentPosition());
+            telemetry.addData("H Slide position", slideH.getCurrentPosition());
+            telemetry.addData("V Slide position", slideV.getCurrentPosition());
             telemetry.update();
         }
 
-        //===============================================================================
-
-        // STOP ALL THREADS
         slideController.stop();
+        vSlideController.stop();
     }
 
     public void resetPosition() {
