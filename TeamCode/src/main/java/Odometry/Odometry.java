@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package Odometry;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -13,21 +12,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp
 public class Odometry extends LinearOpMode {
-    // test commit
-    // Declare OpMode members for each of the 3 motors and IMU.
+
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor odom_l, odom_r, odom_h;
     private BNO055IMU imu;
-    Orientation lastAngles = new Orientation();
-    double globalAngle;
+    private Orientation lastAngles = new Orientation();
+    private double globalAngle;
+
     @Override
     public void runOpMode() {
-        // Initialize the hardware variables.
-        odom_l = hardwareMap.get(DcMotor.class, "odom_l");
-        odom_r = hardwareMap.get(DcMotor.class, "odom_r");
-        odom_h = hardwareMap.get(DcMotor.class, "odom_h");
-//        intake1 = hardwareMap.get(DcMotor.class, "intake1");
-//        intake2 = hardwareMap.get(DcMotor.class, "intake2");
+        // Initialize hardware variables
+        odom_l = hardwareMap.get(DcMotor.class, "lf");
+        odom_r = hardwareMap.get(DcMotor.class, "lr");
+        odom_h = hardwareMap.get(DcMotor.class, "rf");
 
         // Initialize the IMU
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -38,6 +35,7 @@ public class Odometry extends LinearOpMode {
         telemetry.addData("Status", "Program Initialized");
         telemetry.update();
 
+        // Reset and set encoder modes
         odom_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         odom_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         odom_h.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -45,11 +43,9 @@ public class Odometry extends LinearOpMode {
         odom_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         odom_h.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang ;
-        double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y, delta_global_x, delta_global_y, delta_ang;
+        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0;
         double global_xM = 0, global_yM = 0;
-        double disM_encoderHtoCenter = 0.195   ; //  Distance from the horizontal encoder to the center of the robot in meters
-        double disTrackWidth = 0.12;
+        double disM_encoderHtoCenter = 0.195; // Distance from the horizontal encoder to the center in meters
 
         waitForStart();
         runtime.reset();
@@ -58,89 +54,82 @@ public class Odometry extends LinearOpMode {
             // Convert encoder ticks to meters
             double encoder_l = encoderToMetres(odom_l.getCurrentPosition());
             double encoder_r = encoderToMetres(odom_r.getCurrentPosition());
-            double encoder_h = encoderToMetres(-odom_h.getCurrentPosition());  // Inverted due to hardware setup
+            double encoder_h = encoderToMetres(odom_h.getCurrentPosition());
 
-            telemetry.addData("l", encoder_l);
-            telemetry.addData("r", encoder_r);
-            telemetry.addData("h", encoder_h);
+            // Get the current angle in radians
+            double current_ang = Math.toRadians(getAngle());
 
-            // Get current angle from IMU in radians
-            current_ang = Math.toRadians(-getAngle());
+            // Calculate encoder changes since last loop
+            double delta_encoder_l = encoder_l - prev_encoder_l;
+            double delta_encoder_r = encoder_r - prev_encoder_r;
+            double delta_encoder_h = encoder_h - prev_encoder_h;
 
-            // Calculate encoder changes since last loop iteration
-            delta_encoder_l = encoder_l - prev_encoder_l;
-            delta_encoder_r = encoder_r - prev_encoder_r;
-            delta_encoder_h = encoder_h - prev_encoder_h;
+            // Calculate change in heading angle since the last update
+            double delta_ang = current_ang - prev_ang;
 
-            // Calculate angle change (heading delta) since last loop
-            delta_ang = current_ang - prev_ang;
+            // Define a threshold for determining if the robot is turning
+            double turningThreshold = Math.toRadians(1); // 1 degree threshold
 
-            // Calculate the forward/backward movement in the robot's local frame
-            delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;
+            if (Math.abs(delta_ang) < turningThreshold) {
+                // Calculate forward/backward movement in the robot's local frame
+                double delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;
 
-            // Calculate the lateral movement, considering the angular effect of turning
-            delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);  // Corrected for angular displacement effect
+                // Adjust lateral movement to account for angular change effects
+                double delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
 
-            // Now we convert the local changes (delta_local_x, delta_local_y) to global coordinates:
-            // 1. Apply rotation matrix based on the robot's current angle
-            delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
-            delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
+                // Convert local changes to global coordinates using rotation matrix
+                double delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
+                double delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
 
-            // Update global positions by adding the global deltas to the robot's position
-            global_xM += delta_global_x;
-            global_yM += delta_global_y;
+                // Update global positions
+                global_xM += delta_global_x;
+                global_yM += delta_global_y;
 
-            // Telemetry to monitor values
-            telemetry.addData("x (cm)", global_xM*100);
-            telemetry.addData("y (cm)", global_yM*100);
+                // Telemetry display for position updates
+                telemetry.addData("Movement Status", "Updating Position");
+            } else {
+                // Telemetry display for turning status
+                telemetry.addData("Movement Status", "Turning - Position Frozen");
+            }
+
+            // Display telemetry data
+            telemetry.addData("x (meters)", global_xM);
+            telemetry.addData("y (meters)", global_yM);
             telemetry.addData("Angle (degrees)", Math.toDegrees(current_ang));
-            telemetry.addData("delta_encoder_l", delta_encoder_l);
-            telemetry.addData("delta_encoder_r", delta_encoder_r);
-            telemetry.addData("delta_encoder_h", delta_encoder_h);
-            telemetry.addData("delta_local_x", delta_local_x);
-            telemetry.addData("delta_local_y", delta_local_y);
-            telemetry.addData("delta_global_x", delta_global_x);
-            telemetry.addData("delta_global_y", delta_global_y);
-
+            telemetry.addData("Left Encoder (meters)", encoder_l);
+            telemetry.addData("Right Encoder (meters)", encoder_r);
+            telemetry.addData("Horizontal Encoder (meters)", encoder_h);
+            telemetry.addData("Angle Change (degrees)", Math.toDegrees(delta_ang));
             telemetry.update();
 
-            // Update previous encoder and angle values for next iteration
+            // Update previous values for the next loop iteration
             prev_encoder_l = encoder_l;
             prev_encoder_r = encoder_r;
             prev_encoder_h = encoder_h;
             prev_ang = current_ang;
+
+            sleep(10); // Small delay for telemetry update
         }
     }
 
     // Method to convert encoder ticks to meters
     private double encoderToMetres(int ticks) {
-        double wheelDiameter = 0.032; // Diameter of the wheel in meters (3.8 cm)
+        double wheelDiameter = 0.032; // Diameter of the wheel in meters (3.2 cm)
         double ticksPerRevolution = 2000.0; // Number of encoder ticks per wheel revolution
-        double circumference = wheelDiameter * Math.PI; // Circumference of the wheel in meters
-        return (ticks / ticksPerRevolution) * circumference; // Convert ticks to meters\
+        double circumference = wheelDiameter * Math.PI;
+        return (ticks / ticksPerRevolution) * circumference;
     }
 
     // Method to get the current angle from the IMU
-    private double getAngle()
-    {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
+    private double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
+        if (deltaAngle < -180) deltaAngle += 360;
+        else if (deltaAngle > 180) deltaAngle -= 360;
 
         globalAngle += deltaAngle;
-
         lastAngles = angles;
-
         return globalAngle;
     }
 }
