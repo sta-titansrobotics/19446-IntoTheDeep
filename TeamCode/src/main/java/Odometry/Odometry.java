@@ -76,7 +76,7 @@ public class Odometry extends LinearOpMode {
             delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;
 
             // Adjust lateral movement to account for angular change effects
-            delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
+            delta_local_y = delta_encoder_h - (delta_ang * -disM_encoderHtoCenter);
 
             telemetry.addData("delta_local_y", delta_local_y);
             telemetry.addData("delta_ang", delta_ang);
