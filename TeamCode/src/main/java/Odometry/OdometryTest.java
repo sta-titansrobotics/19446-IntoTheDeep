@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp
+@TeleOp(name="OdometryTest", group="Tests")
 public class OdometryTest extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -19,12 +19,15 @@ public class OdometryTest extends LinearOpMode {
     private Orientation lastAngles = new Orientation();
     private double globalAngle;
 
+    // Distance from the horizontal encoder to the center of the robot in meters
+    private final double disM_encoderHtoCenter = 0.195;
+
     @Override
     public void runOpMode() {
         // Initialize hardware variables
         odom_l = hardwareMap.get(DcMotor.class, "lf");
-        odom_r = hardwareMap.get(DcMotor.class, "lr");
-        odom_h = hardwareMap.get(DcMotor.class, "rf");
+        odom_r = hardwareMap.get(DcMotor.class, "rf");
+        odom_h = hardwareMap.get(DcMotor.class, "lr");
 
         // Initialize the IMU
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -35,6 +38,7 @@ public class OdometryTest extends LinearOpMode {
         telemetry.addData("Status", "Program Initialized");
         telemetry.update();
 
+        // Set encoder modes for odometry motors
         odom_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         odom_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         odom_h.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -45,32 +49,30 @@ public class OdometryTest extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        // Initial values for previous encoder and angle readings
         double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0;
         double global_xM = 0, global_yM = 0;
-        double disM_encoderHtoCenter = 0.195; // Distance from the horizontal encoder to the center of the robot in meters
 
         while (opModeIsActive() && !isStopRequested()) {
-            // Convert encoder ticks to meters
-            double encoder_l = encoderToMetres(odom_l.getCurrentPosition());
-            double encoder_r = encoderToMetres(odom_r.getCurrentPosition());
-            double encoder_h = encoderToMetres(odom_h.getCurrentPosition());
+            // Convert encoder ticks to meters and account for direction based on bot type
+            double encoder_l = encoderToMetres(-odom_l.getCurrentPosition());  // Left encoder (negative for GoBILDA omniwheel)
+            double encoder_r = encoderToMetres(odom_r.getCurrentPosition());   // Right encoder (positive for GoBILDA omniwheel)
+            double encoder_h = encoderToMetres(odom_h.getCurrentPosition());   // Horizontal encoder
 
             // Get current angle from IMU in radians
-            double current_ang = Math.toRadians(getAngle());
+            double current_ang = Math.toRadians(getAngle()); // degrees to radians
 
-            // Calculate encoder changes since last loop
+            // Calculate encoder and angle changes since last loop
             double delta_encoder_l = encoder_l - prev_encoder_l;
             double delta_encoder_r = encoder_r - prev_encoder_r;
             double delta_encoder_h = encoder_h - prev_encoder_h;
-
-            // Calculate change in heading angle since the last update
             double delta_ang = current_ang - prev_ang;
 
             // Calculate the forward/backward movement in the robot's local frame
             double delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;
             double delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
 
-            // Convert local changes (delta_local_x, delta_local_y) to global coordinates using rotation matrix
+            // Convert local frame changes to global coordinates
             double delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
             double delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
 
@@ -92,6 +94,8 @@ public class OdometryTest extends LinearOpMode {
             prev_encoder_r = encoder_r;
             prev_encoder_h = encoder_h;
             prev_ang = current_ang;
+
+            sleep(10); // Small delay for telemetry update
         }
     }
 
