@@ -68,9 +68,9 @@ public class Odometry extends LinearOpMode {
             double delta_ang = current_ang - prev_ang;
 
             // Define a threshold for determining if the robot is turning
-            double turningThreshold = Math.toRadians(1); // 1 degree threshold
+            double turningThreshold = Math.toRadians(0.1); // 1 degree threshold
 
-            if (Math.abs(delta_ang) < turningThreshold) {
+
                 // Calculate forward/backward movement in the robot's local frame
                 double delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;
 
@@ -78,8 +78,10 @@ public class Odometry extends LinearOpMode {
                 double delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
 
                 // Convert local changes to global coordinates using rotation matrix
-                double delta_global_x = delta_local_x * Math.cos(current_ang) * 0 - delta_local_y * Math.sin(current_ang);
-                double delta_global_y = delta_local_x * Math.sin(current_ang) * 0 + delta_local_y * Math.cos(current_ang);
+                double delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang) * 0
+
+                        ;
+                double delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang) * 0;
 
                 // Update global positions
                 global_xM += delta_global_x;
@@ -87,10 +89,7 @@ public class Odometry extends LinearOpMode {
 
                 // Telemetry display for position updates
                 telemetry.addData("Movement Status", "Updating Position");
-            } else {
-                // Telemetry display for turning status
-                telemetry.addData("Movement Status", "Turning - Position Frozen");
-            }
+
 
             // Display telemetry data
             telemetry.addData("x (meters)", global_xM);
