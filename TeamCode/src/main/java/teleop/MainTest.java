@@ -16,8 +16,8 @@ public class MainTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        slideH = hardwareMap.get(DcMotor.class, "vSlide");
-        slideV = hardwareMap.get(DcMotor.class, "hSlide");
+        slideV = hardwareMap.get(DcMotor.class, "vSlide");
+        slideH = hardwareMap.get(DcMotor.class, "hSlide");
 
         sliderH = new HSlide(slideH);
         horizontalSlideController = new HSlideController(sliderH);

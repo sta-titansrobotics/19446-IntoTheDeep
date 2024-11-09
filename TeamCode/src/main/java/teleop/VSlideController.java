@@ -1,13 +1,13 @@
 package teleop;
 
 public class VSlideController {
-    private final VSlide sliderH;
+    private final VSlide sliderV;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
 
     // Constructor
-    public VSlideController(VSlide sliderH) {
-        this.sliderH = sliderH;
+    public VSlideController(VSlide sliderV) {
+        this.sliderV = sliderV;
     }
 
     // Method to start the slide control thread
@@ -15,14 +15,16 @@ public class VSlideController {
         slideThread = new Thread(() -> {
             boolean reached = false;
             while (opModeActive && !Thread.currentThread().isInterrupted()) {
-                int currentPosition = sliderH.getCurrentPosition();
+                int currentPosition = sliderV.getCurrentPosition();
 
                 // Control logic for slide movement
-                if (currentPosition >= 1000) {
-                    sliderH.goToPosition(0);
+                if (currentPosition >= sliderV.getMaxPosition()) {
+                    sliderV.goToPosition(0);
                     reached = true;
+                } else if (currentPosition == 0 && reached) {
+                    reached = false;
                 } else if (!reached) {
-                    sliderH.goToPosition(1000);
+                    sliderV.goToPosition(sliderV.getMaxPosition());
                 }
 
                 // Pause briefly to prevent excessive CPU usage

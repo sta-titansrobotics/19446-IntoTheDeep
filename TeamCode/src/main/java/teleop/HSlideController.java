@@ -1,25 +1,25 @@
 package teleop;
 
 public class HSlideController {
-    private final HSlide sliderV;
+    private final HSlide sliderH;
     private Thread slideThread;
     private volatile boolean opModeActive = true;
 
-    public HSlideController(HSlide sliderV) {
-        this.sliderV = sliderV;
+    public HSlideController(HSlide sliderH) {
+        this.sliderH = sliderH;
     }
 
     public void start() {
         slideThread = new Thread(() -> {
             boolean reached = false;
             while (opModeActive && !Thread.currentThread().isInterrupted()) {
-                int currentPosition = sliderV.getCurrentPosition();
+                int currentPosition = sliderH.getCurrentPosition();
 
-                if (currentPosition >= 1000) {
-                    sliderV.goToPosition(0);
+                if (currentPosition >= sliderH.getMaxPosition()) {
+                    sliderH.goToPosition(0);
                     reached = true;
                 } else if (!reached) {
-                    sliderV.goToPosition(1000);
+                    sliderH.goToPosition(sliderH.getMaxPosition());
                 }
 
                 try {
