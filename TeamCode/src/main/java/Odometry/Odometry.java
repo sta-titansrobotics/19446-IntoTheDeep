@@ -45,7 +45,7 @@ public class Odometry extends LinearOpMode {
 
         double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0;
         double global_xM = 0, global_yM = 0;
-        double disM_encoderHtoCenter = 0.195; // Distance from the horizontal encoder to the center in meters
+        double disM_encoderHtoCenter = -0.17; // Distance from the horizontal encoder to the center in meters
 
         waitForStart();
         runtime.reset();
@@ -67,8 +67,6 @@ public class Odometry extends LinearOpMode {
             // Calculate change in heading angle since the last update
             double delta_ang = current_ang - prev_ang;
 
-            // Define a threshold for determining if the robot is turning
-            double turningThreshold = Math.toRadians(0.1); // 1 degree threshold
 
 
                 // Calculate forward/backward movement in the robot's local frame
@@ -78,10 +76,8 @@ public class Odometry extends LinearOpMode {
                 double delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
 
                 // Convert local changes to global coordinates using rotation matrix
-                double delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang) * 0
-
-                        ;
-                double delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang) * 0;
+                double delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
+                double delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
 
                 // Update global positions
                 global_xM += delta_global_x;
@@ -107,7 +103,7 @@ public class Odometry extends LinearOpMode {
             prev_encoder_h = encoder_h;
             prev_ang = current_ang;
 
-            sleep(10); // Small delay for telemetry update
+            sleep(5); // Small delay for telemetry update
         }
     }
 
