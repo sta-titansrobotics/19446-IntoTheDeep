@@ -57,8 +57,8 @@ public class Odometry_Testing extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             // Convert encoder ticks to meters
-            double encoder_l = encoderToMetres(odom_l.getCurrentPosition());
-            double encoder_r = encoderToMetres(odom_r.getCurrentPosition());
+            double encoder_l = encoderToMetres(-odom_l.getCurrentPosition());
+            double encoder_r = encoderToMetres(-odom_r.getCurrentPosition());
             double encoder_h = encoderToMetres(odom_h.getCurrentPosition());  // Inverted due to hardware setup (maybe inverted)
 
             telemetry.addData("l", encoder_l);
@@ -66,7 +66,7 @@ public class Odometry_Testing extends LinearOpMode {
             telemetry.addData("h", encoder_h);
 
             // Get current angle from IMU in radians
-            current_ang = Math.toRadians(-getAngle());
+            current_ang = Math.toRadians(getAngle());
 
             // Calculate encoder changes since last loop iteration
             delta_encoder_l = encoder_l - prev_encoder_l;
