@@ -16,13 +16,14 @@ public class MainTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        slideH = hardwareMap.get(DcMotor.class, "odom_h");
+        slideH = hardwareMap.get(DcMotor.class, "vSlide");
         slideV = hardwareMap.get(DcMotor.class, "hSlide");
 
         sliderH = new HSlide(slideH);
         slideController = new SlideController(sliderH);
 
         sliderV = new VSlide(slideV);
+
         vSlideController = new VSlideController(sliderV);
 
         sliderH.initialize();
