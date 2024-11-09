@@ -1,18 +1,18 @@
-package auto;
+package teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name = "MainTest", group = "Test")
+@TeleOp(name = "MainTest", group = "Test")
 public class MainTest extends LinearOpMode {
     private DcMotor slideH;
     private DcMotor slideV;
-    private HSlide sliderH;
     private VSlide sliderV;
+    private HSlide sliderH;
 
-    private SlideController slideController;
-    private VSlideController vSlideController;
+    private VSlideController verticalslideController;
+    private HSlideController horizontalSlideController;
 
     @Override
     public void runOpMode() {
@@ -20,19 +20,19 @@ public class MainTest extends LinearOpMode {
         slideV = hardwareMap.get(DcMotor.class, "hSlide");
 
         sliderH = new HSlide(slideH);
-        slideController = new SlideController(sliderH);
+        horizontalSlideController = new HSlideController(sliderH);
 
         sliderV = new VSlide(slideV);
 
-        vSlideController = new VSlideController(sliderV);
+        verticalslideController = new VSlideController(sliderV);
 
         sliderH.initialize();
         sliderV.initialize();
 
         waitForStart();
 
-        slideController.start();
-        vSlideController.start();
+        verticalslideController.start();
+        horizontalSlideController.start();
 
         while (opModeIsActive()) {
             telemetry.addData("H Slide position", slideH.getCurrentPosition());
@@ -40,8 +40,8 @@ public class MainTest extends LinearOpMode {
             telemetry.update();
         }
 
-        slideController.stop();
-        vSlideController.stop();
+        horizontalSlideController.stop();
+        verticalslideController.stop();
     }
 
     public void resetPosition() {

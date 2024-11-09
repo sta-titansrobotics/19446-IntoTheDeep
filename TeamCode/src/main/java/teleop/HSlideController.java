@@ -1,11 +1,11 @@
-package auto;
+package teleop;
 
-public class VSlideController {
-    private final VSlide sliderV;
+public class HSlideController {
+    private final HSlide sliderV;
     private Thread slideThread;
     private volatile boolean opModeActive = true;
 
-    public VSlideController(VSlide sliderV) {
+    public HSlideController(HSlide sliderV) {
         this.sliderV = sliderV;
     }
 

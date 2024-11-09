@@ -1,12 +1,12 @@
-package auto;
+package teleop;
 
-public class SlideController {
-    private final HSlide sliderH;
+public class VSlideController {
+    private final VSlide sliderH;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
 
     // Constructor
-    public SlideController(HSlide sliderH) {
+    public VSlideController(VSlide sliderH) {
         this.sliderH = sliderH;
     }
 

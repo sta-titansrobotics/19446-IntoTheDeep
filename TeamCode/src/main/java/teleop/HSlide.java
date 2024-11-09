@@ -1,13 +1,12 @@
-package auto;
+package teleop;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class VSlide {
+public class HSlide {
 
     private DcMotor motor;
 
-    public VSlide(DcMotor motor) {
+    public HSlide(DcMotor motor) {
         this.motor = motor;
     }
 

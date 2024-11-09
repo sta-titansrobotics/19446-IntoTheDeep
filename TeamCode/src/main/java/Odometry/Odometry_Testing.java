@@ -59,7 +59,7 @@ public class Odometry_Testing extends LinearOpMode {
             // Convert encoder ticks to meters
             double encoder_l = encoderToMetres(odom_l.getCurrentPosition());
             double encoder_r = encoderToMetres(odom_r.getCurrentPosition());
-            double encoder_h = encoderToMetres(odom_h.getCurrentPosition());  // Inverted due to hardware setup
+            double encoder_h = encoderToMetres(odom_h.getCurrentPosition());  // Inverted due to hardware setup (maybe inverted)
 
             telemetry.addData("l", encoder_l);
             telemetry.addData("r", encoder_r);
