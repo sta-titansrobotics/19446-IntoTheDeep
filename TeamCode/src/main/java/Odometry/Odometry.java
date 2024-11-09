@@ -78,8 +78,8 @@ public class Odometry extends LinearOpMode {
                 double delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter);
 
                 // Convert local changes to global coordinates using rotation matrix
-                double delta_global_x = delta_local_x * Math.cos(current_ang);// - delta_local_y * Math.sin(current_ang);
-                double delta_global_y = delta_local_x * Math.sin(current_ang);// + delta_local_y * Math.cos(current_ang);
+                double delta_global_x = delta_local_x * Math.cos(current_ang) * 0 - delta_local_y * Math.sin(current_ang);
+                double delta_global_y = delta_local_x * Math.sin(current_ang) * 0 + delta_local_y * Math.cos(current_ang);
 
                 // Update global positions
                 global_xM += delta_global_x;
