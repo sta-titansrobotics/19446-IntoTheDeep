@@ -21,8 +21,6 @@ public class VSlideController {
                 if (currentPosition >= sliderV.getMaxPosition()) {
                     sliderV.goToPosition(0);
                     reached = true;
-                } else if (currentPosition == 0 && reached) {
-                    reached = false;
                 } else if (!reached) {
                     sliderV.goToPosition(sliderV.getMaxPosition());
                 }

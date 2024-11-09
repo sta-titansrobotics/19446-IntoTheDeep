@@ -35,7 +35,8 @@ public class VSlide {
         return motor.getCurrentPosition();
     }
 
-    public int getMaxPosition() {
+    public int getMaxPosition(){
         return MAX_POSITION;
     }
+
 }
