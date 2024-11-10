@@ -17,7 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
+import com.qualcomm.robotcore.hardware.SwitchableLight;;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 
 /**
@@ -138,7 +140,7 @@ public class P2P extends LinearOpMode {
         runtime.reset();
         resetAngle();
         odom_thread calcThread = new odom_thread();
-        odom_toPoint runToPoint = new odom_toPoint(0.2, -0.2, 135, 0.2, 2.7, 3.5, 0.03, 0.067, 0.3);
+        odom_toPoint runToPoint = new odom_toPoint(0, 0, 90, 0.2, 2.7, 3.5, 0.03, 0.067, 0.3);
         odom_toPoint backToPoint = new odom_toPoint(0, 0, 0, 0.3, 2.7, 3.5, 0.03, 0.067, 0.3);
 
         calcThread.start();
