@@ -4,6 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import robotControl47_2425.Sliders.HSlide;
+import robotControl47_2425.Sliders.HSlideController;
+import robotControl47_2425.Sliders.VSlide;
+import robotControl47_2425.Sliders.VSlideController;
+
 @TeleOp(name = "MainTest", group = "Test")
 public class MainTest extends LinearOpMode {
     private DcMotor slideH;

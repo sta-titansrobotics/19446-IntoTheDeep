@@ -32,8 +32,6 @@ public class Odometry {
     double                  globalAngle;
     Telemetry telemetry = null;
 
-
-
     public Odometry(LinearOpMode mainTask, Chassis chassis, RobotPos pos, boolean auto) {
         this.mainTask = mainTask;
         this.chassis = chassis;
@@ -58,6 +56,12 @@ public class Odometry {
         imu = mainTask.hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
-
     }
+
+
+
+
+
+
+
 }

@@ -1,19 +1,20 @@
-package teleop;
+package robotControl47_2425.Sliders;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class VSlide {
+public class HSlide {
 
-    private final DcMotor motor;
-    private static final int MAX_POSITION = 2200; // Updated maximum position
+    private DcMotor motor;
+    private static final int MAX_POSITION = 2000; // Updated maximum position
 
-    public VSlide(DcMotor motor) {
+    public HSlide(DcMotor motor) {
         this.motor = motor;
     }
 
     public void initialize() {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor.setDirection(DcMotor.Direction.REVERSE); // Set motor direction to REVERSE
     }
 
     public void resetPosition() {
@@ -35,8 +36,7 @@ public class VSlide {
         return motor.getCurrentPosition();
     }
 
-    public int getMaxPosition(){
+    public int getMaxPosition() {
         return MAX_POSITION;
     }
-
 }

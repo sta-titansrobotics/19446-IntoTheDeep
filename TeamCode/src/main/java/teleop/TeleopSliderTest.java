@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import robotControl47_2425.Sliders.HSlide;
+import robotControl47_2425.Sliders.VSlide;
+
 @TeleOp(name = "TeleopSliderTest", group = "Test")
 public class TeleopSliderTest extends OpMode {
 

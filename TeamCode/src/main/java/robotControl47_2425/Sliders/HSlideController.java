@@ -1,4 +1,6 @@
-package teleop;
+package robotControl47_2425.Sliders;
+
+import robotControl47_2425.Sliders.HSlide;
 
 public class HSlideController {
     private final HSlide sliderH;

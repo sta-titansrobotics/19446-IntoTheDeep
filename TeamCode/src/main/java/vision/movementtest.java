@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import java.lang.Math;
@@ -16,8 +15,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 //so far the newest file as of Feb 5 2024
 @TeleOp
@@ -70,7 +67,7 @@ public class movementtest extends LinearOpMode {
         DcMotor BR = hardwareMap.get(DcMotor.class, "motorBackRight"); // Control hub 2
 
         DcMotor Intake = hardwareMap.get(DcMotor.class, "Intake"); // Expansion hub 1
-        DcMotor Sliders = hardwareMap.get(DcMotor.class, "Sliders"); // Control hub 0
+        DcMotor Sliders = hardwareMap.get(DcMotor.class, "robotControl47_2425/Sliders"); // Control hub 0
         DcMotor Climbing1 = hardwareMap.get(DcMotor.class, "Climbing1"); // left Control hub 1
         DcMotor Climbing2 = hardwareMap.get(DcMotor.class, "Climbing2");// right Expansion hub 0
 
