@@ -42,8 +42,9 @@ public class sampleAuton extends LinearOpMode {
         VSlide = new VSlideController(sliderV);
 
         //Initialize chasis and Odometry
+        odometry = new Odometry(this);
         chassis = new Chassis(this, odometry);
-        odometry = new Odometry(this, chassis, currentRobotPos);
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -54,12 +55,15 @@ public class sampleAuton extends LinearOpMode {
         VSlide.start();
         while (opModeIsActive() && !isStopRequested()) {
 
+            //This is moving in terms of centimeters
+            chassis.moveToPosition(60, 30, 0);
+            sleep(5000);
+            chassis.moveToPosition(0, 30, 230);
 
         }
         HSlideLeft.stop();
         HSlideRight.stop();
         VSlide.stop();
-
     }
 }
 

@@ -8,6 +8,7 @@ public class Chassis {
     private DcMotor frontLeft, frontRight, backLeft, backRight;
     private LinearOpMode opMode;
     private Odometry odometry;
+    private RobotPos targetPosition;
 
     public Chassis(LinearOpMode opMode, Odometry odometry) {
         this.opMode = opMode;
@@ -28,55 +29,75 @@ public class Chassis {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Initialize target position
+        targetPosition = new RobotPos(0, 0, 0);
     }
 
-    // Mecanum drive movement with power inputs for x (strafe), y (forward/backward), and rotation (turn)
-    public void mecanumDrive(double xPower, double yPower, double turnPower) {
-        double flPower = yPower + xPower + turnPower;
-        double frPower = yPower - xPower - turnPower;
-        double blPower = yPower - xPower + turnPower;
-        double brPower = yPower + xPower - turnPower;
+    // Method to move to a specific target position
+    public void moveToPosition(double x, double y, double targetAngle) {
 
-        // Normalize the power values to ensure no value exceeds 1.0
-        double maxPower = Math.max(1.0, Math.abs(flPower));
-        maxPower = Math.max(maxPower, Math.abs(frPower));
-        maxPower = Math.max(maxPower, Math.abs(blPower));
-        maxPower = Math.max(maxPower, Math.abs(brPower));
+        x = cmToEncoderTicks(x);
+        y = cmToEncoderTicks(y);
+        targetPosition.setPosition(x, y, targetAngle);
 
-        flPower /= maxPower;
-        frPower /= maxPower;
-        blPower /= maxPower;
-        brPower /= maxPower;
+        double kP = 0.1; // Proportional constant for movement correction
+        double angleTolerance = 2.0; // Tolerance for angle in degrees
+        double positionTolerance = 0.02; // Tolerance for position in meters
 
-        frontLeft.setPower(flPower);
-        frontRight.setPower(frPower);
-        backLeft.setPower(blPower);
-        backRight.setPower(brPower);
-    }
+        while (opMode.opModeIsActive()) {
+            // Update odometry to get current position
+            odometry.updatePosition();
+            RobotPos currentPosition = odometry.getCurrentPosition();
 
-    // Basic movement functions for convenience
-    public void moveForward(double power) {
-        mecanumDrive(0, power, 0);
-    }
+            // Calculate errors
+            double errorX = targetPosition.x - currentPosition.x;
+            double errorY = targetPosition.y - currentPosition.y;
+            double errorAngle = targetPosition.angle - currentPosition.angle;
 
-    public void moveBackward(double power) {
-        mecanumDrive(0, -power, 0);
-    }
+            // Normalize angle error
+            if (errorAngle > 180) errorAngle -= 360;
+            if (errorAngle < -180) errorAngle += 360;
 
-    public void strafeLeft(double power) {
-        mecanumDrive(-power, 0, 0);
-    }
+            // Break loop if position and angle are within tolerance
+            if (Math.hypot(errorX, errorY) < positionTolerance && Math.abs(errorAngle) < angleTolerance) {
+                stop();
+                break;
+            }
 
-    public void strafeRight(double power) {
-        mecanumDrive(power, 0, 0);
-    }
+            // Proportional control
+            double forwardPower = kP * Math.hypot(errorX, errorY);
+            double strafePower = kP * Math.atan2(errorY, errorX);
+            double turnPower = kP * (errorAngle / 180.0);
 
-    public void turnLeft(double power) {
-        mecanumDrive(0, 0, -power);
-    }
+            // Motor power calculations
+            double powerFL = forwardPower + strafePower - turnPower;
+            double powerFR = forwardPower - strafePower + turnPower;
+            double powerBL = forwardPower - strafePower - turnPower;
+            double powerBR = forwardPower + strafePower + turnPower;
 
-    public void turnRight(double power) {
-        mecanumDrive(0, 0, power);
+            // Normalize motor powers
+            double maxPower = Math.max(Math.max(Math.abs(powerFL), Math.abs(powerFR)),
+                    Math.max(Math.abs(powerBL), Math.abs(powerBR)));
+            if (maxPower > 1.0) {
+                powerFL /= maxPower;
+                powerFR /= maxPower;
+                powerBL /= maxPower;
+                powerBR /= maxPower;
+            }
+
+            // Set motor powers
+            frontLeft.setPower(powerFL);
+            frontRight.setPower(powerFR);
+            backLeft.setPower(powerBL);
+            backRight.setPower(powerBR);
+
+            // Telemetry for debugging
+            opMode.telemetry.addData("Target Position", "(%.2f, %.2f, %.2f)", x, y, targetAngle);
+            opMode.telemetry.addData("Current Position", "(%.2f, %.2f, %.2f)", currentPosition.x, currentPosition.y, currentPosition.angle);
+            opMode.telemetry.addData("Errors", "X: %.2f, Y: %.2f, Angle: %.2f", errorX, errorY, errorAngle);
+            opMode.telemetry.update();
+        }
     }
 
     // Stop all motors
@@ -87,8 +108,17 @@ public class Chassis {
         backRight.setPower(0);
     }
 
-    // Update robot's position using odometry readings
-    public void updatePosition() {
-        odometry.updatePosition();
+    private double encoderToCM(int ticks) {
+        double wheelDiameter = 0.032; // Diameter of the wheel in meters (3.2 cm)
+        double ticksPerRevolution = 2000.0; // Number of encoder ticks per wheel revolution
+        double circumference = wheelDiameter * Math.PI;
+        return (ticks / ticksPerRevolution) * circumference * 100;
+    }
+
+    private int cmToEncoderTicks(double cm) {
+        double wheelDiameter = 0.032; // Diameter of the wheel in meters (3.2 cm)
+        double ticksPerRevolution = 2000.0; // Number of encoder ticks per wheel revolution
+        double circumference = wheelDiameter * Math.PI * 100; // Convert circumference to cm
+        return (int) ((cm / circumference) * ticksPerRevolution);
     }
 }
