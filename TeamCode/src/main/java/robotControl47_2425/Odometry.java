@@ -32,7 +32,7 @@ public class Odometry {
     double                  globalAngle;
     Telemetry telemetry = null;
 
-    public Odometry(LinearOpMode mainTask, Chassis chassis, RobotPos pos, boolean auto) {
+    public Odometry(LinearOpMode mainTask, Chassis chassis, RobotPos pos) {
         this.mainTask = mainTask;
         this.chassis = chassis;
         this.pos.setPosition(pos);   // set starting the robot position
@@ -57,6 +57,8 @@ public class Odometry {
 
         imu.initialize(parameters);
     }
+
+
 
 
 
