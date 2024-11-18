@@ -1,6 +1,5 @@
 package robotControl47_2425;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,7 +29,6 @@ public class sampleAuton extends LinearOpMode {
         slideH1 = hardwareMap.get(DcMotor.class, "hSlide1");
         slideH2 = hardwareMap.get(DcMotor.class, "hSlide2");
 
-
         // Initialize sliders and their controllers
         sliderH1 = new HSlide(slideH1);
         HSlideLeft = new HSlideController(sliderH1);
@@ -38,13 +36,12 @@ public class sampleAuton extends LinearOpMode {
         sliderH2 = new HSlide(slideH2);
         HSlideRight = new HSlideController(sliderH2);
 
-        sliderV = new VSlide(slideV);
+        sliderV = new VSlide(slideV, hardwareMap, this);
         VSlide = new VSlideController(sliderV);
 
         //Initialize chasis and Odometry
         odometry = new Odometry(this);
         chassis = new Chassis(this, odometry);
-
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -54,17 +51,13 @@ public class sampleAuton extends LinearOpMode {
         HSlideRight.start();
         VSlide.start();
         while (opModeIsActive() && !isStopRequested()) {
-
             //This is moving in terms of centimeters
             chassis.moveToPosition(60, 30, 0);
             sleep(5000);
             chassis.moveToPosition(0, 30, 230);
-
         }
         HSlideLeft.stop();
         HSlideRight.stop();
         VSlide.stop();
     }
 }
-
-
