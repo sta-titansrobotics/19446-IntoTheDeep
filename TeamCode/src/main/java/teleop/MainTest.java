@@ -1,4 +1,4 @@
-package teleop;
+/*package teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -25,9 +25,9 @@ public class MainTest extends LinearOpMode {
         slideH = hardwareMap.get(DcMotor.class, "hSlide");
 
         sliderH = new HSlide(slideH);
-        horizontalSlideController = new HSlideController(sliderH);
+        horizontalSlideController = new HSlideController(sliderH, sliderH);
 
-        sliderV = new VSlide(slideV);
+        sliderV = new VSlide(slideV, slideV);
 
         verticalslideController = new VSlideController(sliderV);
 
@@ -53,3 +53,4 @@ public class MainTest extends LinearOpMode {
         // Base implementation for resetting position
     }
 }
+*/

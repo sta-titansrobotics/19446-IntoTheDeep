@@ -13,31 +13,32 @@ import robotControl47_2425.Sliders.VSlideController;
 public class sampleAuton extends LinearOpMode {
     // initialize chassis, current robot pos, odometry, sliders, etc.
     private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
-    private DcMotor slideH1, slideH2, slideV;
+    private DcMotor slideH1, slideH2, slideV1, slideV2;
     private Chassis chassis;
     private Odometry odometry;
-    private VSlide sliderV;
+    private VSlide sliderV1, sliderV2;
     private HSlide sliderH1, sliderH2;
 
     private VSlideController VSlide;
-    private HSlideController HSlideLeft, HSlideRight;
+    private HSlideController HSlide;
 
     @Override
     public void runOpMode() {
         // Initialize hardware devices and controllers here
-        slideV = hardwareMap.get(DcMotor.class, "vSlide");
+        slideV1 = hardwareMap.get(DcMotor.class, "vSlide1");
+        slideV2 = hardwareMap.get(DcMotor.class, "vSlide2");
         slideH1 = hardwareMap.get(DcMotor.class, "hSlide1");
         slideH2 = hardwareMap.get(DcMotor.class, "hSlide2");
 
-        // Initialize sliders and their controllers
+        // Initialize sliders
         sliderH1 = new HSlide(slideH1);
-        HSlideLeft = new HSlideController(sliderH1);
-
         sliderH2 = new HSlide(slideH2);
-        HSlideRight = new HSlideController(sliderH2);
+        sliderV1 = new VSlide(slideV1, hardwareMap, this);
+        sliderV2 = new VSlide(slideV2, hardwareMap, this);
 
-        sliderV = new VSlide(slideV, hardwareMap, this);
-        VSlide = new VSlideController(sliderV);
+        //Inistialize the 2 controllers
+        HSlide = new HSlideController(sliderH1, sliderH2);
+        VSlide = new VSlideController(sliderV1, sliderV2 );
 
         //Initialize chasis and Odometry
         odometry = new Odometry(this);
@@ -47,8 +48,7 @@ public class sampleAuton extends LinearOpMode {
         waitForStart();
 
         // Run autonomous-specific code here
-        HSlideLeft.start();
-        HSlideRight.start();
+        HSlide.start();
         VSlide.start();
         while (opModeIsActive() && !isStopRequested()) {
             //This is moving in terms of centimeters
@@ -56,8 +56,7 @@ public class sampleAuton extends LinearOpMode {
             sleep(5000);
             chassis.moveToPosition(0, 30, 230);
         }
-        HSlideLeft.stop();
-        HSlideRight.stop();
+        HSlide.start();
         VSlide.stop();
     }
 }

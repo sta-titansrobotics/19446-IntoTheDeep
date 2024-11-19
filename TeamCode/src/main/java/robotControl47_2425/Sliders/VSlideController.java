@@ -3,13 +3,14 @@ package robotControl47_2425.Sliders;
 import robotControl47_2425.Sliders.VSlide;
 
 public class VSlideController {
-    private final VSlide sliderV;
+    private final VSlide sliderV1 , sliderV2;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
 
     // Constructor
-    public VSlideController(VSlide sliderV) {
-        this.sliderV = sliderV;
+    public VSlideController(VSlide sliderV1, VSlide sliderV2) {
+        this.sliderV1 = sliderV1;
+        this.sliderV2 = sliderV2;
     }
 
     // Method to start the slide control thread
@@ -17,14 +18,16 @@ public class VSlideController {
         slideThread = new Thread(() -> {
             boolean reached = false;
             while (opModeActive && !Thread.currentThread().isInterrupted()) {
-                int currentPosition = sliderV.getCurrentPosition();
+                int currentPosition = sliderV1.getCurrentPosition();
 
                 // Control logic for slide movement
-                if (currentPosition >= sliderV.getMaxPosition()) {
-                    sliderV.goToPosition(0);
+                if (currentPosition >= sliderV1.getMaxPosition()) {
+                    sliderV1.goToPosition(0);
+                    sliderV2.goToPosition(0);
                     reached = true;
                 } else if (!reached) {
-                    sliderV.goToPosition(sliderV.getMaxPosition());
+                    sliderV1.goToPosition(sliderV1.getMaxPosition());
+                    sliderV2.goToPosition(sliderV2.getMaxPosition());
                 }
 
                 // Pause briefly to prevent excessive CPU usage
