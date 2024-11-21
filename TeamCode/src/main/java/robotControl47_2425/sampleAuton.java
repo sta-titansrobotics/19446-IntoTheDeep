@@ -12,7 +12,7 @@ import robotControl47_2425.Sliders.VSlideController;
 public class sampleAuton extends LinearOpMode {
     // initialize chassis, current robot pos, odometry, sliders, etc.
     //private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
-    private DcMotor slideH,
+    private DcMotor slideH;
     private Chassis chassis;
     private Odometry odometry;
     private HSlide sliderH;
@@ -44,7 +44,7 @@ public class sampleAuton extends LinearOpMode {
         VSlide.start();
         while (opModeIsActive() && !isStopRequested()) {
             //This is moving in terms of centimeters
-            chassis.moveToPosition(60, 30, 0);
+            chassis.toPoint(100, 100, );
             sleep(5000);
             chassis.moveToPosition(0, 30, 230);
         }
