@@ -84,6 +84,7 @@ public class P2P extends LinearOpMode {
         lr  = hardwareMap.get(DcMotor.class, "lr");
         rf = hardwareMap.get(DcMotor.class, "rf");
         rr = hardwareMap.get(DcMotor.class, "rr");
+        //help
         //colorSensor = hardwareMap.get(NormalizedColorSensor.class, "base_color");
         //arm = hardwareMap.get(DcMotor.class, "arm");
         //extend = hardwareMap.get(DcMotor.class, "lift");
