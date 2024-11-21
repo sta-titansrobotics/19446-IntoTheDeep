@@ -1,5 +1,7 @@
 package robotControl47_2425;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,6 +18,9 @@ public class Chassis {
     private LinearOpMode opMode;
     private Odometry odometry;
     private RobotPos targetPosition;
+    private double encoder_l, encoder_r, encoder_h;
+    private double disM_encoderHtoCenter = -0.17;// distance from horizontal odom wheel to the center of the robot
+
     private boolean isBusy = false;
     private double globalAngle = 0;
     private Orientation lastAngles = new Orientation();
@@ -46,7 +51,9 @@ public class Chassis {
         targetPosition = new RobotPos(0, 0, 0);
     }
 
-    //-----------------------------------------------------------------------------------------------
+    //=============================================================================================================================
+    //-----------------------------------------------------------------------------------------------------------------------------
+
     private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) {
         double current_x = global_xM;
         double current_y = global_yM;
@@ -119,24 +126,57 @@ public class Chassis {
         backRight.setPower(0);
         isBusy = false;
     }
-    //---------------------------------------------------------------------------------------------
 
-    // Stop all motors
-    public void stop() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backLeft.setPower(0);
+    //------------------------------------------------------------------------------------------------------------------------
+    private void odom_pos_est() {
+        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang;
+        double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y,
+                delta_global_x, delta_global_y, delta_ang;
+        while (!opMode.isStopRequested() && opMode.opModeIsActive()) {
+            encoder_l = encoderToMetres(-frontLeft.getCurrentPosition());
+            encoder_r = encoderToMetres(-backRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+            encoder_h = encoderToMetres(frontRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+
+            current_ang = Math.toRadians(getAngle()); //degrees to radians (either ways of calculating current angle work[imu or encoder])
+            //current_ang = Math.toRadians((encoder_r-encoder_l)/0.031) //(r-l) divided by distance (METRES) between the encoder wheels
+
+            delta_encoder_l = encoder_l - prev_encoder_l;
+            delta_encoder_r = encoder_r - prev_encoder_r;
+            delta_encoder_h = encoder_h - prev_encoder_h;
+            delta_ang = current_ang - prev_ang;
+
+            delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;//find avrg between both odom wheels and convert ticks to M
+            //do not need arc formula because both "x" encoders cancel out offset
+
+
+            delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter); //use arc formula to subtract arc from horizontal encoder wheel
+
+
+            //* distance of h wheel to center
+
+            delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
+            delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
+
+            global_xM += delta_global_x;
+            global_yM += delta_global_y;
+            telemetry.addData("L-encoder", encoder_l);
+            telemetry.addData("R-encoder", encoder_r);
+            telemetry.addData("H-encoder", encoder_h);
+            telemetry.addData("ang", current_ang);
+            telemetry.addData("x", global_xM);
+            telemetry.addData("y", global_yM);
+            telemetry.update();
+
+            prev_encoder_l = encoder_l;
+            prev_encoder_r = encoder_r;
+            prev_encoder_h = encoder_h;
+            prev_ang = current_ang;
+        }
     }
+    //------------------------------------------------------------------------------------------------------------------------
+    //========================================================================================================================
 
-    private double encoderToMetres(int ticks) {
-        double wheelDiameter = 0.032; // 3.2 cm wheel diameter
-        double ticksPerRevolution = 2000.0; // Encoder ticks per revolution
-        return (ticks / ticksPerRevolution) * (wheelDiameter * Math.PI);
-    }
-
-    private double getAngle()
-    {
+    private double getAngle() {
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -153,6 +193,61 @@ public class Chassis {
 
         return globalAngle;
     }
+    //--------------------------------------------------------------------------------------------------
 
+    private double encoderToMetres(int ticks) {
+        double wheelDiameter = 0.032; // 3.2 cm wheel diameter
+        double ticksPerRevolution = 2000.0; // Encoder ticks per revolution
+        return (ticks / ticksPerRevolution) * (wheelDiameter * Math.PI);
+    }
 
+    //--------------------------- Helper Methods -------------------------------------------------------------------------
+
+    private void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    private class odom_thread extends Thread {
+        public odom_thread() {
+        }
+
+        public void run() {
+            try {
+                odom_pos_est();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    // Stop all motors
+    public void stop() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backLeft.setPower(0);
+    }
+    private class moveToPoint extends Thread {
+        double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed;
+
+        public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) {
+            this.target_x = target_x;
+            this.target_y = target_y;
+            this.target_ang = target_ang;
+            this.max_speed = max_speed;
+            this.kp = kp;
+            this.kd = kd;
+            this.turn_kp = turn_kp;
+            this.turn_kd = turn_kd;
+            this.turn_max_speed = turn_max_speed;
+        }
+
+        public void run() {
+            try {
+                toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
+            } catch (Exception e) {
+            }
+        }
+    }
 }

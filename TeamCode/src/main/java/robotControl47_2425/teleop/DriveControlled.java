@@ -82,8 +82,8 @@ public class DriveControlled extends LinearOpMode {
 
     public void telemetryDrive() {
         // Driving
-        double y = -gamepad1.left_stick_y / 3; // Remember, this is reversed!
-        double x = gamepad1.left_stick_x * 1.1 / 3; // Counteract imperfect strafing
+        double y = -gamepad1.left_stick_y / 3; //tuned down speed for testing
+        double x = gamepad1.left_stick_x * 1.1 / 3; //1.1 for strafing contact friction
         double rx = gamepad1.right_stick_x / 3;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
