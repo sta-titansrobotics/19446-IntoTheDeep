@@ -1,3 +1,4 @@
+/*
 package teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -25,7 +26,9 @@ public class TeleopSliderTest extends OpMode {
         vSlide = new VSlide(vSlideMotor, hardwareMap, this);
 
         hSlide.initialize();
-        vSlide.initialize();
+        vSlide.initialize();*/
+/**//*
+
     }
 
     @Override
@@ -59,4 +62,4 @@ public class TeleopSliderTest extends OpMode {
         telemetry.addData("VSlide Extended", vSlideExtended);
         telemetry.update();
     }
-}
+}*/

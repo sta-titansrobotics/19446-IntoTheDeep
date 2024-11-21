@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class VSlideController {
     private final DcMotor slideVL, slideVR;
-    private final Servo servo1, servo2, servo3, servo4, servo5, claw;
+    private final Servo tilt1Left, tilt1Right, tilt2, roll, claw;
     private final OpMode opMode;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
@@ -18,23 +18,22 @@ public class VSlideController {
         this.opMode = opMode;
 
         // Initialize servos
-        claw = hardwareMap.get(Servo.class, "claw");
-        servo1 = hardwareMap.get(Servo.class, "servo1");
-        servo2 = hardwareMap.get(Servo.class, "servo2");
-        servo3 = hardwareMap.get(Servo.class, "servo3");
-        servo4 = hardwareMap.get(Servo.class, "servo4");
-        servo5 = hardwareMap.get(Servo.class, "servo5");
+        tilt1Left = hardwareMap.get(Servo.class, "tilt1Left"); // expansion port 0
+        tilt1Right = hardwareMap.get(Servo.class, "tilt1Right"); //expansion port 1
+        tilt2 = hardwareMap.get(Servo.class, "tilt2"); //expansion port 2
+        roll = hardwareMap.get(Servo.class, "roll"); //expansion port 3
+        claw = hardwareMap.get(Servo.class, "claw"); //expansion port 4
 
         //Initialzie motors
-        slideVL = hardwareMap.get(DcMotor.class, "vSlide1");
-        slideVR = hardwareMap.get(DcMotor.class, "vSlide2");
+        slideVL = hardwareMap.get(DcMotor.class, "vSlideL");
+        slideVR = hardwareMap.get(DcMotor.class, "vSlideR");
 
         initializeMotors();
     }
 
-
-
-    // Initialize motors
+    /**
+     *   Initialize motors
+     */
     private void initializeMotors() {
         slideVL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideVR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -135,12 +134,12 @@ public class VSlideController {
     private void updateTelemetry() {
         opMode.telemetry.addData("VSlide Left", getCurrentPosition(slideVL));
         opMode.telemetry.addData("VSlide Right", getCurrentPosition(slideVR));
-        opMode.telemetry.addData("Claw Position", claw.getPosition());
-        opMode.telemetry.addData("Servo1 Position", servo1.getPosition());
-        opMode.telemetry.addData("Servo2 Position", servo2.getPosition());
-        opMode.telemetry.addData("Servo3 Position", servo3.getPosition());
-        opMode.telemetry.addData("Servo4 Position", servo4.getPosition());
-        opMode.telemetry.addData("Servo5 Position", servo5.getPosition());
+        opMode.telemetry.addData("Claw", claw.getPosition());
+        opMode.telemetry.addData("Roll", roll.getPosition());
+        opMode.telemetry.addData("Tilt1 Left", tilt1Left.getPosition());
+        opMode.telemetry.addData("Tilt1 Right", tilt1Right.getPosition());
+        opMode.telemetry.addData("Tilt2", tilt2.getPosition());
+
         opMode.telemetry.update();
     }
 }

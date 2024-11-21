@@ -12,7 +12,7 @@ import robotControl47_2425.Sliders.VSlideController;
 public class sampleAuton extends LinearOpMode {
     // initialize chassis, current robot pos, odometry, sliders, etc.
     //private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
-    private DcMotor slideH, sliderVL, sliderVR;
+    private DcMotor slideH,
     private Chassis chassis;
     private Odometry odometry;
     private HSlide sliderH;
@@ -23,9 +23,7 @@ public class sampleAuton extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize hardware devices and controllers here
-        sliderVL = hardwareMap.get(DcMotor.class, "vSlideL");
-        sliderVR = hardwareMap.get(DcMotor.class, "vSlideR");
-        slideH = hardwareMap.get(DcMotor.class, "hSlide");
+        slideH = hardwareMap.get(DcMotor.class, "hSlide"); //only 1 motor for both Hsliders physically
 
         // Initialize sliders
         sliderH = new HSlide(slideH);
