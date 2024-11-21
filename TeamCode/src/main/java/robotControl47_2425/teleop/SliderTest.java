@@ -1,4 +1,4 @@
-package teleop;
+package robotControl47_2425.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

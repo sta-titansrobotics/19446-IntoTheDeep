@@ -1,4 +1,4 @@
-package teleop;
+package robotControl47_2425.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

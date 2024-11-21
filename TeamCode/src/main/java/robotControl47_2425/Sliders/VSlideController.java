@@ -34,7 +34,7 @@ public class VSlideController {
     /**
      *   Initialize motors
      */
-    private void initializeMotors() {
+    public void initializeMotors() {
         slideVL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideVR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideVL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -141,5 +141,9 @@ public class VSlideController {
         opMode.telemetry.addData("Tilt2", tilt2.getPosition());
 
         opMode.telemetry.update();
+    }
+
+    public DcMotor getSlideMotor() {
+        return slideVL;
     }
 }
