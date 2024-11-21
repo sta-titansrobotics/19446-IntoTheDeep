@@ -111,7 +111,7 @@ public class VSlideController {
 
     // Servo control methods
     public void openClaw() {
-        claw.setPosition(0.9);
+        claw.setPosition(0.7);
         updateTelemetry();
     }
 
@@ -121,12 +121,24 @@ public class VSlideController {
     }
 
     public void rollClawUp() {
-        claw.setPosition(0.156);
+        claw.setPosition(0.5);
         updateTelemetry();
     }
 
     public void rollClawDown() {
-        claw.setPosition(0.816);
+        claw.setPosition(0.7);
+        updateTelemetry();
+    }
+
+    public void tiltArmUp() {
+        tilt1Left.setPosition(0.3);
+        tilt1Right.setPosition(0.7);
+        updateTelemetry();
+    }
+
+    public void tiltArmDown() {
+        tilt1Left.setPosition(0.5);
+        tilt1Right.setPosition(0.5);
         updateTelemetry();
     }
 

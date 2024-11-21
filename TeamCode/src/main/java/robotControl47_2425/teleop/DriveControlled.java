@@ -15,6 +15,15 @@ public class DriveControlled extends LinearOpMode {
     private boolean vSlideExtended = false;
     private boolean previousAState = false;
     private boolean previousBState = false;
+    private boolean previousXState = false;
+    private boolean previousYState = false;
+    private boolean previousDpadUpState = false;
+    private boolean previousDpadDownState = false;
+    private boolean previousDpadLeftState = false;
+    private boolean previousDpadRightState = false;
+    private boolean clawOpen = false;
+    private boolean armTiltedUp = false;
+    private boolean clawRolledUp = false;
     private DcMotor fl, fr, bl, br;
 
     @Override
@@ -54,11 +63,85 @@ public class DriveControlled extends LinearOpMode {
             }
             previousBState = gamepad1.b;
 
+            // Gamepad macros for servos
+            // Toggle claw open/close with gamepad1.x
+            if (gamepad1.x && !previousXState) {
+                if (!clawOpen) {
+                    vSlideController.openClaw();
+                } else {
+                    vSlideController.closeClaw();
+                }
+                clawOpen = !clawOpen;
+            }
+            previousXState = gamepad1.x;
+
+            // Toggle arm tilt up/down with gamepad1.y
+            if (gamepad1.y && !previousYState) {
+                if (!armTiltedUp) {
+                    vSlideController.tiltArmUp();
+                } else {
+                    vSlideController.tiltArmDown();
+                }
+                armTiltedUp = !armTiltedUp;
+            }
+            previousYState = gamepad1.y;
+
+            // Toggle arm tilt up/down with gamepad1.dpad_up
+            if (gamepad1.dpad_up && !previousDpadUpState) {
+                if (!armTiltedUp) {
+                    vSlideController.tiltArmUp();
+                } else {
+                    vSlideController.tiltArmDown();
+                }
+                armTiltedUp = !armTiltedUp;
+            }
+            previousDpadUpState = gamepad1.dpad_up;
+
+            // Toggle arm tilt up/down with gamepad1.dpad_down
+            if (gamepad1.dpad_down && !previousDpadDownState) {
+                if (!armTiltedUp) {
+                    vSlideController.tiltArmUp();
+                } else {
+                    vSlideController.tiltArmDown();
+                }
+                armTiltedUp = !armTiltedUp;
+            }
+            previousDpadDownState = gamepad1.dpad_down;
+
+            // Toggle claw roll up/down with gamepad1.dpad_left
+            if (gamepad1.dpad_left && !previousDpadLeftState) {
+                if (!clawRolledUp) {
+                    vSlideController.rollClawUp();
+                } else {
+                    vSlideController.rollClawDown();
+                }
+                clawRolledUp = !clawRolledUp;
+            }
+            previousDpadLeftState = gamepad1.dpad_left;
+
+            // Toggle claw roll up/down with gamepad1.dpad_right
+            if (gamepad1.dpad_right && !previousDpadRightState) {
+                if (!clawRolledUp) {
+                    vSlideController.rollClawUp();
+                } else {
+                    vSlideController.rollClawDown();
+                }
+                clawRolledUp = !clawRolledUp;
+            }
+            previousDpadRightState = gamepad1.dpad_right;
+
             // Add telemetry data
             telemetry.addData("HSlide Position", hSlide.getCurrentPosition());
             telemetry.addData("HSlide Extended", hSlideExtended);
             telemetry.addData("VSlide Position", vSlideController.getCurrentPosition(vSlideController.getSlideMotor()));
             telemetry.addData("VSlide Extended", vSlideExtended);
+
+            // Add telemetry for motor powers
+            telemetry.addData("Front Left Power", fl.getPower());
+            telemetry.addData("Front Right Power", fr.getPower());
+            telemetry.addData("Back Left Power", bl.getPower());
+            telemetry.addData("Back Right Power", br.getPower());
+
             telemetry.update();
 
             telemetryDrive();
@@ -82,9 +165,9 @@ public class DriveControlled extends LinearOpMode {
 
     public void telemetryDrive() {
         // Driving
-        double y = -gamepad1.left_stick_y / 3; //tuned down speed for testing
-        double x = gamepad1.left_stick_x * 1.1 / 3; //1.1 for strafing contact friction
-        double rx = gamepad1.right_stick_x / 3;
+        double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+        double rx = gamepad1.right_stick_x;
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
