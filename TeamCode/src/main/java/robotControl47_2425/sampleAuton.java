@@ -47,6 +47,8 @@ public class sampleAuton extends LinearOpMode {
             chassis.toPoint(100, 100, );
             sleep(5000);
             chassis.moveToPosition(0, 30, 230);
+
+            telemetry.update();
         }
         HSlide.stop();
         VSlide.stop();

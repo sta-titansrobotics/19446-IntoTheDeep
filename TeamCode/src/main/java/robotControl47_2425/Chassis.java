@@ -19,7 +19,10 @@ public class Chassis {
     private Odometry odometry;
     private RobotPos targetPosition;
     private double encoder_l, encoder_r, encoder_h;
-    private double disM_encoderHtoCenter = -0.17;// distance from horizontal odom wheel to the center of the robot
+    private double disM_encoderHtoCenter = -0.17; // Distance from horizontal encoder to robot center in meters
+    private double wheelDiameter = 0.032; // Diameter of the odometry wheel in meters
+    private double ticksPerRevolution = 2000.0; // Encoder ticks per wheel revolution
+
 
     private boolean isBusy = false;
     private double globalAngle = 0;
@@ -35,7 +38,7 @@ public class Chassis {
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = opMode.hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = opMode.hardwareMap.get(DcMotor.class, "backLeft");
-        backLeft = opMode.hardwareMap.get(DcMotor.class, "backLeft");
+        backRight = opMode.hardwareMap.get(DcMotor.class, "backRight");
 
         // Set directions for motors
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -49,6 +52,10 @@ public class Chassis {
 
         // Initialize target position
         targetPosition = new RobotPos(0, 0, 0);
+        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu.initialize(parameters);
     }
 
     //=============================================================================================================================
@@ -165,7 +172,6 @@ public class Chassis {
             telemetry.addData("ang", current_ang);
             telemetry.addData("x", global_xM);
             telemetry.addData("y", global_yM);
-            telemetry.update();
 
             prev_encoder_l = encoder_l;
             prev_encoder_r = encoder_r;
@@ -196,8 +202,6 @@ public class Chassis {
     //--------------------------------------------------------------------------------------------------
 
     private double encoderToMetres(int ticks) {
-        double wheelDiameter = 0.032; // 3.2 cm wheel diameter
-        double ticksPerRevolution = 2000.0; // Encoder ticks per revolution
         return (ticks / ticksPerRevolution) * (wheelDiameter * Math.PI);
     }
 
@@ -217,16 +221,17 @@ public class Chassis {
             try {
                 odom_pos_est();
             } catch (Exception e) {
+                    opMode.telemetry.addData("Error", e.getMessage());
+                    opMode.telemetry.update();
             }
         }
     }
-
     // Stop all motors
     public void stop() {
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
-        backLeft.setPower(0);
+        backRight.setPower(0);
     }
     private class moveToPoint extends Thread {
         double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed;
