@@ -79,7 +79,7 @@ public class Odometry {
         return (ticks / ticksPerRevolution) * (wheelDiameter * Math.PI);
     }
 
-    private double getAngle() {
+    public double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
@@ -94,4 +94,5 @@ public class Odometry {
     public RobotPos getCurrentPosition() {
         return currentPosition;
     }
+
 }
