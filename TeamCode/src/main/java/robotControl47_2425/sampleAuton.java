@@ -15,7 +15,6 @@ public class sampleAuton extends LinearOpMode {
     private DcMotor slideH, sliderVL, sliderVR;
     private Chassis chassis;
     private Odometry odometry;
-    private VSlide sliderV1, sliderV2;
     private HSlide sliderH;
 
     private VSlideController VSlide;

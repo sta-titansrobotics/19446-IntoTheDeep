@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class VSlideController {
-    private final DcMotor slideV1, slideV2;
+    private final DcMotor slideVL, slideVR;
     private final Servo servo1, servo2, servo3, servo4, servo5, claw;
     private final OpMode opMode;
     private Thread slideThread;
@@ -26,8 +26,8 @@ public class VSlideController {
         servo5 = hardwareMap.get(Servo.class, "servo5");
 
         //Initialzie motors
-        slideV1 = hardwareMap.get(DcMotor.class, "vSlide1");
-        slideV2 = hardwareMap.get(DcMotor.class, "vSlide2");
+        slideVL = hardwareMap.get(DcMotor.class, "vSlide1");
+        slideVR = hardwareMap.get(DcMotor.class, "vSlide2");
 
         initializeMotors();
     }
@@ -36,10 +36,10 @@ public class VSlideController {
 
     // Initialize motors
     private void initializeMotors() {
-        slideV1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideV2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slideV1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideV2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideVL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideVR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideVL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideVR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     // Method to move motors to a position
@@ -47,12 +47,12 @@ public class VSlideController {
         position = Math.max(0, position);
         position = Math.min(MAX_POSITION, position);
 
-        slideV1.setTargetPosition(position);
-        slideV2.setTargetPosition(position);
-        slideV1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideV2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideV1.setPower(0.5);
-        slideV2.setPower(0.5);
+        slideVL.setTargetPosition(position);
+        slideVR.setTargetPosition(position);
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
     }
 
     // Method to reset motors to position 0
@@ -75,7 +75,7 @@ public class VSlideController {
         slideThread = new Thread(() -> {
             boolean reached = false;
             while (opModeActive && !Thread.currentThread().isInterrupted()) {
-                int currentPosition = (getCurrentPosition(slideV2)+getCurrentPosition(slideV1))/2; //average of two sliders
+                int currentPosition = (getCurrentPosition(slideVR)+getCurrentPosition(slideVL))/2; //average of two sliders
 
                 // Control logic for slide movement
                 if (currentPosition >= MAX_POSITION) {
@@ -133,8 +133,8 @@ public class VSlideController {
 
     // Update telemetry with motor and servo data
     private void updateTelemetry() {
-        opMode.telemetry.addData("VSlide Left", getCurrentPosition(slideV1));
-        opMode.telemetry.addData("VSlide Right", getCurrentPosition(slideV2));
+        opMode.telemetry.addData("VSlide Left", getCurrentPosition(slideVL));
+        opMode.telemetry.addData("VSlide Right", getCurrentPosition(slideVR));
         opMode.telemetry.addData("Claw Position", claw.getPosition());
         opMode.telemetry.addData("Servo1 Position", servo1.getPosition());
         opMode.telemetry.addData("Servo2 Position", servo2.getPosition());
