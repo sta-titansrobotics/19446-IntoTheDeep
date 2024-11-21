@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import robotControl47_2425.Sliders.HSlide;
 import robotControl47_2425.Sliders.HSlideController;
-import robotControl47_2425.Sliders.VSlide;
 import robotControl47_2425.Sliders.VSlideController;
 
 @Autonomous
