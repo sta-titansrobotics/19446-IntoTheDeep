@@ -23,7 +23,7 @@ public class TeleopSliderTest extends OpMode {
         DcMotor vSlideMotor = hardwareMap.get(DcMotor.class, "vSlide");
 
         hSlide = new HSlide(hSlideMotor);
-        vSlide = new VSlide(vSlideMotor);
+        vSlide = new VSlide(vSlideMotor, hardwareMap, this);
 
         hSlide.initialize();
         vSlide.initialize();
