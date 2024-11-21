@@ -180,10 +180,6 @@ public class P2P extends LinearOpMode {
                 lr.setPower(lrPower);
                 rr.setPower(rrPower);
             }
-
-
-
-
             if (gamepad1.a && !isBusy){
                 isBusy = true;
                 runToPoint.start();
