@@ -32,12 +32,9 @@ public class sampleAuton extends LinearOpMode {
         // Initialize sliders
         sliderH = new HSlide(slideH);
 
-        sliderV1 = new VSlide(slideV1, hardwareMap, this);
-        sliderV2 = new VSlide(slideV2, hardwareMap, this);
-
         //Inistialize the 2 controllers
         HSlide = new HSlideController(sliderH);
-        VSlide = new VSlideController(sliderV1, sliderV2);
+        VSlide = new VSlideController(this.hardwareMap, this);
 
         //Initialize chasis and Odometry
         odometry = new Odometry(this);
