@@ -48,7 +48,6 @@ public class DriveControlled extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             totalTime = System.currentTimeMillis();
-            telemetry.addData("time", totalTime);
 //            hSlideManualControl();
 //            handleServoControl();
             updateTelemetry();
@@ -56,6 +55,7 @@ public class DriveControlled extends LinearOpMode {
 //            vSliderCtrl();
 //            armSyncCtrl();
             gamepad1Ctrl();
+            gamepad2Ctrl();
         }
     }
 
@@ -113,9 +113,11 @@ public class DriveControlled extends LinearOpMode {
         hSlideExtended = !hSlideExtended;
     }
 
-    private void vSliderCtrl(){
-        if (gamepad1.right_trigger > 0.2){
-            vSliderSystem.goToPosition(vSliderSystem.getCurrentVPos() + 10);
+    private void vSliderCtrl() {
+        if (gamepad1.right_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(10);
+        } else if (gamepad1.left_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(-10);
         }
     }
 
@@ -209,6 +211,11 @@ public class DriveControlled extends LinearOpMode {
         br.setPower(backRightPower / denominator);
     }
 
+
+
+
+
+
     void gamepad1Ctrl(){
         // manual h-slider
         if (gamepad1.right_trigger > 0.2){
@@ -233,7 +240,6 @@ public class DriveControlled extends LinearOpMode {
             hSliderSystem.goToPosition(1500);
             long start = totalTime;
             while (totalTime - start < 600){
-                updateTime();
                 hSliderSystem.rampUp();
             }
             hSliderSystem.rampDown();
@@ -244,17 +250,38 @@ public class DriveControlled extends LinearOpMode {
             // transfer
             long start = totalTime;
             while (totalTime - start < 300){
-                updateTime();
                 hSliderSystem.rampUp();
             }
 
 
             hSliderSystem.goToPosition(0);
+        }
+    }
 
+    void gamepad2Ctrl() {
+        if (gamepad2.right_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(10);
+        } else if (gamepad2.left_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(-10);
         }
 
-    }
-    void updateTime(){
-        totalTime = System.currentTimeMillis();
+        if (gamepad2.left_stick_y != 0) {
+            vSliderSystem.tiltArmManualControl(-gamepad2.left_stick_y * 0.01);
+        }
+
+        if (gamepad2.right_stick_y != 0) {
+            vSliderSystem.tilt2.setPosition(vSliderSystem.tilt2.getPosition() - gamepad2.right_stick_y * 0.01);
+        }
+
+        if (gamepad2.x) {
+            vSliderSystem.VSlideHighBasket();
+        } else if (gamepad2.y) {
+            vSliderSystem.VSlideHighRung();
+        } else if (gamepad2.a) {
+            vSliderSystem.vSlideDrop();
+            vSliderSystem.transferPos();
+        } else if (gamepad2.b) {
+            vSliderSystem.goToPosition(0);
+        }
     }
 }
