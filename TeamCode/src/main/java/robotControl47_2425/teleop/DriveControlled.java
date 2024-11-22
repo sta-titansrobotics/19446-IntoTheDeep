@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
 import robotControl47_2425.Sliders.vSliderSystem;
 
 @TeleOp(name = "46TeleOp", group = "Test")
 public class DriveControlled extends LinearOpMode {
 
-    private HSlide hSlide;
+    private HSlideController hSliderSystem;
     private VSlideController vSliderSystem;
     private boolean hSlideExtended = false;
     private boolean vSlideExtended = false;
@@ -29,10 +30,10 @@ public class DriveControlled extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        DcMotor hSlideMotor = hardwareMap.get(DcMotor.class, "hSlide");
 
 
-        hSlide
+
+        hSliderSystem = new HSlideController(hardwareMap, this);
         vSliderSystem = new VSlideController(hardwareMap, this);
 
         hSlide.initialize();
@@ -99,9 +100,9 @@ public class DriveControlled extends LinearOpMode {
 
     private void toggleHSlide() {
         if (!hSlideExtended) {
-            hSlide.goToPosition(hSlide.getMaxPosition());
+            hSliderSystem.goToPosition(hSlide.getMaxPosition());
         } else {
-            hSlide.goToPosition(0);
+            hSliderSystem.goToPosition(0);
         }
         hSlideExtended = !hSlideExtended;
     }
@@ -134,7 +135,7 @@ public class DriveControlled extends LinearOpMode {
         if (!armTiltedUp) {
             vSliderSystem.tiltArmUp();
         } else {
-            vSliderSystem.tiltArmDown();
+            vSliderSystem.tilt1ArmZero();
         }
         armTiltedUp = !armTiltedUp;
     }
@@ -149,7 +150,7 @@ public class DriveControlled extends LinearOpMode {
     }
 
     private void updateTelemetry() {
-        telemetry.addData("HSlide Position", hSlide.getCurrentPosition());
+        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPosition());
         telemetry.addData("HSlide Extended", hSlideExtended);
         telemetry.addData("VSlide Position", vSliderSystem.getCurrentVPos());
         telemetry.addData("VSlide Extended", vSlideExtended);
