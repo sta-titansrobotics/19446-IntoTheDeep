@@ -10,7 +10,7 @@ public class HSlideController {
     private final Servo ramp;
     private Thread slideThread;
     private volatile boolean opModeActive = true;
-    private static final int MAX_POSITION = 2000;
+    private static final int MAX_POSITION = 1800;
 
     public HSlideController(HardwareMap hardwareMap, OpMode opMode) {
         // Initialize hardware
@@ -26,10 +26,11 @@ public class HSlideController {
         // Initialize slider motor
         sliderH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sliderH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //sliderH.setDirection(DcMotor.Direction.REVERSE);
+        sliderH.setDirection(DcMotor.Direction.REVERSE);
 
         // Initialize intake motor
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
@@ -66,7 +67,7 @@ public class HSlideController {
     public void resetPosition(DcMotor motor) {
         motor.setTargetPosition(0);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(0.5);
+        motor.setPower(0.4);
     }
 
     // Generic method to move a motor to a specific position
@@ -76,7 +77,7 @@ public class HSlideController {
 
         sliderH.setTargetPosition(position);
         sliderH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        sliderH.setPower(0.5);
+        sliderH.setPower(0.7);
     }
 
     // Get the current position of a motor
@@ -111,11 +112,11 @@ public class HSlideController {
     }
 
     public void intaking(){
-        intakeMotor.setPower(0.5);
+        intakeMotor.setPower(0.8);
     }
 
     public void outtaking(){
-        intakeMotor.setPower(-0.5);
+        intakeMotor.setPower(-0.8);
     }
 
     public void rampUp(){

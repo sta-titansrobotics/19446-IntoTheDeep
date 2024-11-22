@@ -43,12 +43,13 @@ public class DriveControlled extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            hSlideManualControl();
-            handleServoControl();
+//            hSlideManualControl();
+//            handleServoControl();
             updateTelemetry();
             telemetryDrive();
-            vSliderCtrl();
-            armSyncCtrl();
+//            vSliderCtrl();
+//            armSyncCtrl();
+            gamepad1Ctrl();
         }
     }
 
@@ -210,10 +211,10 @@ public class DriveControlled extends LinearOpMode {
     void gamepad1Ctrl(){
         // manual h-slider
         if (gamepad1.right_trigger > 0.2){
-            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 10);
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 50);
         }
         if (gamepad1.left_trigger > 0.2){
-            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 10);
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 50);
         }
         // intake
         if(gamepad1.right_bumper){
