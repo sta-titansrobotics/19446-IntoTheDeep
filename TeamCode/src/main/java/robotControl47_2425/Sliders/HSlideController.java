@@ -87,7 +87,7 @@ public class HSlideController {
     /**
      * Brings the Hslide motor to 0 and reset the servo position to 0.5
      */
-    public void initHSlideController(){
+    public void transferPos(){
         resetPosition(sliderH);
         ramp.setPosition(0.5);
     }
@@ -108,5 +108,13 @@ public class HSlideController {
     // Intake motor control methods
     public void setIntakePower(double power) {
         intakeMotor.setPower(power);
+    }
+
+    public void intaking(){
+        intakeMotor.setPower(0.5);
+    }
+
+    public void outtaking(){
+        intakeMotor.setPower(-0.5);
     }
 }
