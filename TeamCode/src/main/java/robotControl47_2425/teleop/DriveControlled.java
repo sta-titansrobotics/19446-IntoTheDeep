@@ -29,13 +29,8 @@ public class DriveControlled extends LinearOpMode {
 
     private long totalTime = 0;
 
-
-
     @Override
     public void runOpMode() {
-
-
-
         hSliderSystem = new HSlideController(hardwareMap, this);
         vSliderSystem = new VSlideController(hardwareMap, this);
 
@@ -48,32 +43,19 @@ public class DriveControlled extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             totalTime = System.currentTimeMillis();
-//            hSlideManualControl();
-//            handleServoControl();
             updateTelemetry();
             telemetryDrive();
-//            vSliderCtrl();
-//            armSyncCtrl();
             gamepad1Ctrl();
-        }
-    }
-
-    private void armSyncCtrl(){
-        // bring vslider into transfer pos
-        if (gamepad2.a){
-            vSliderSystem.transferPos();
-
+            gamepad2Ctrl();
         }
     }
 
     private void hSlideManualControl() {
-        // Control HSlide with gamepad1.a
         if (gamepad1.a && !previousAState) {
             hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 15);
         }
         previousAState = gamepad1.a;
 
-        // Control VSlide with gamepad1.b
         if (gamepad1.b && !previousBState) {
             hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 15);
         }
@@ -81,13 +63,11 @@ public class DriveControlled extends LinearOpMode {
     }
 
     private void handleServoControl() {
-        // Toggle claw open/close with gamepad1.x
         if (gamepad1.x && !previousXState) {
             toggleClaw();
         }
         previousXState = gamepad1.x;
 
-        // Toggle arm tilt up/down with gamepad1.y or dpad_up/down
         if ((gamepad1.y && !previousYState) || (gamepad1.dpad_up && !previousDpadUpState) || (gamepad1.dpad_down && !previousDpadDownState)) {
             toggleArmTilt();
         }
@@ -95,7 +75,6 @@ public class DriveControlled extends LinearOpMode {
         previousDpadUpState = gamepad1.dpad_up;
         previousDpadDownState = gamepad1.dpad_down;
 
-        // Toggle claw roll up/down with gamepad1.dpad_left/right
         if ((gamepad1.dpad_left && !previousDpadLeftState) || (gamepad1.dpad_right && !previousDpadRightState)) {
             toggleClawRoll();
         }
@@ -112,9 +91,11 @@ public class DriveControlled extends LinearOpMode {
         hSlideExtended = !hSlideExtended;
     }
 
-    private void vSliderCtrl(){
-        if (gamepad1.right_trigger > 0.2){
-            vSliderSystem.goToPosition(vSliderSystem.getCurrentVPos() + 10);
+    private void vSliderCtrl() {
+        if (gamepad1.right_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(10);
+        } else if (gamepad1.left_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(-10);
         }
     }
 
@@ -182,7 +163,6 @@ public class DriveControlled extends LinearOpMode {
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -190,10 +170,9 @@ public class DriveControlled extends LinearOpMode {
     }
 
     public void telemetryDrive() {
-        double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+        double y = -gamepad1.left_stick_y;
+        double x = gamepad1.left_stick_x * 1.1;
         double rx = gamepad1.right_stick_x;
-
 
         double frontLeftPower = (y + x + rx);
         double backLeftPower = (y - x + rx);
@@ -208,52 +187,63 @@ public class DriveControlled extends LinearOpMode {
         br.setPower(backRightPower / denominator);
     }
 
-
-
-
-
-
-    void gamepad1Ctrl(){
-        // manual h-slider
-        if (gamepad1.right_trigger > 0.2){
+    void gamepad1Ctrl() {
+        if (gamepad1.right_trigger > 0.2) {
             hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 50);
         }
-        if (gamepad1.left_trigger > 0.2){
+        if (gamepad1.left_trigger > 0.2) {
             hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 50);
         }
-        // intake
-        if(gamepad1.right_bumper){
+        if (gamepad1.right_bumper) {
             hSliderSystem.intaking();
-        }
-        else if(gamepad1.left_bumper){
+        } else if (gamepad1.left_bumper) {
             hSliderSystem.outtaking();
-        }
-        else{
+        } else {
             hSliderSystem.setIntakePower(0);
         }
 
-        // automatic
-        if (gamepad1.a){
+        if (gamepad1.a) {
             hSliderSystem.goToPosition(1500);
             long start = totalTime;
-            while (totalTime - start < 600){
+            while (totalTime - start < 600) {
                 hSliderSystem.rampUp();
             }
             hSliderSystem.rampDown();
-
         }
 
-        if (gamepad1.b){
-            // transfer
+        if (gamepad1.b) {
             long start = totalTime;
-            while (totalTime - start < 300){
+            while (totalTime - start < 300) {
                 hSliderSystem.rampUp();
             }
-
-
             hSliderSystem.goToPosition(0);
+        }
+    }
 
+    void gamepad2Ctrl() {
+        if (gamepad2.right_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(10);
+        } else if (gamepad2.left_trigger > 0.2) {
+            vSliderSystem.vSlideManualEg(-10);
         }
 
+        if (gamepad2.left_stick_y != 0) {
+            vSliderSystem.tiltArmManualControl(-gamepad2.left_stick_y * 0.01);
+        }
+
+        if (gamepad2.right_stick_y != 0) {
+            vSliderSystem.tilt2.setPosition(vSliderSystem.tilt2.getPosition() - gamepad2.right_stick_y * 0.01);
+        }
+
+        if (gamepad2.x) {
+            vSliderSystem.VSlideHighBasket();
+        } else if (gamepad2.y) {
+            vSliderSystem.VSlideHighRung();
+        } else if (gamepad2.a) {
+            vSliderSystem.vSlideDrop();
+            vSliderSystem.transferPos();
+        } else if (gamepad2.b) {
+            vSliderSystem.goToPosition(0);
+        }
     }
 }

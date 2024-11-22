@@ -7,7 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class VSlideController {
     private final DcMotor slideVL, slideVR;
-    private final Servo tilt1Left, tilt1Right, tilt2, roll, claw;
+    private final Servo tilt1Left;
+    private final Servo tilt1Right;
+    public final Servo tilt2;
+    private final Servo roll;
+    private final Servo claw;
     private final OpMode opMode;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
