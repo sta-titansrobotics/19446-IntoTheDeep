@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
-import robotControl47_2425.Sliders.vSliderSystem;
 
 @TeleOp(name = "46TeleOp", group = "Test")
 public class DriveControlled extends LinearOpMode {
@@ -36,7 +35,7 @@ public class DriveControlled extends LinearOpMode {
         hSliderSystem = new HSlideController(hardwareMap, this);
         vSliderSystem = new VSlideController(hardwareMap, this);
 
-        hSlide.initialize();
+        hSliderSystem.initialize();
         vSliderSystem.initializeMotors();
 
         InitializeMotors();
@@ -100,7 +99,7 @@ public class DriveControlled extends LinearOpMode {
 
     private void toggleHSlide() {
         if (!hSlideExtended) {
-            hSliderSystem.goToPosition(hSlide.getMaxPosition());
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPosition());
         } else {
             hSliderSystem.goToPosition(0);
         }
