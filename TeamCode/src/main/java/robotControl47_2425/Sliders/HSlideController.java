@@ -12,6 +12,8 @@ public class HSlideController {
     private volatile boolean opModeActive = true;
     private static final int MAX_POSITION = 1800;
 
+    private long programStartTime;
+
     public HSlideController(HardwareMap hardwareMap, OpMode opMode) {
         // Initialize hardware
         sliderH = hardwareMap.get(DcMotor.class, "hSlide");
@@ -20,7 +22,7 @@ public class HSlideController {
 
         // Initialize components
         initialize();
-
+        programStartTime = System.currentTimeMillis();
     }
     public void initialize() {
         // Initialize slider motor
@@ -45,12 +47,7 @@ public class HSlideController {
             while (opModeActive && !Thread.currentThread().isInterrupted()) {
                 int currentPosition = sliderH.getCurrentPosition();
 
-                if (currentPosition >= MAX_POSITION) {
-                    goToPosition(0);
-                    reached = true;
-                } else if (!reached) {
-                    goToPosition(MAX_POSITION);
-                }
+
 
                 try {
                     Thread.sleep(50);
@@ -67,7 +64,7 @@ public class HSlideController {
     public void resetPosition(DcMotor motor) {
         motor.setTargetPosition(0);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(0.4);
+        motor.setPower(0.6);
     }
 
     // Generic method to move a motor to a specific position
@@ -88,10 +85,19 @@ public class HSlideController {
     /**
      * Brings the Hslide motor to 0 and reset the servo position to 0.5
      */
-    public void transferPos(){
-        resetPosition(sliderH);
-        ramp.setPosition(0.5);
-    }
+//    public void transferPos(){
+//        long start = programStartTime;
+//        while (programStartTime - start < 300){
+//            ramp.setPosition(0.5);
+//            if (programStartTime - start > 300){
+//                break;
+//            }
+//
+//        }
+//        resetPosition(sliderH);
+//
+//
+//    }
 
     // Stop the slide thread
     public void stopSlideControl() {
@@ -120,11 +126,11 @@ public class HSlideController {
     }
 
     public void rampUp(){
-        ramp.setPosition(0.5);
+        ramp.setPosition(0.47);
 
     }
     public void rampDown(){
-        ramp.setPosition(0.3);
+        ramp.setPosition(0.8);
 
     }
 }

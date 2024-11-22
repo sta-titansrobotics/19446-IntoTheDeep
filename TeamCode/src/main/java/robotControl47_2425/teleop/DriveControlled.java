@@ -27,6 +27,10 @@ public class DriveControlled extends LinearOpMode {
     private boolean clawRolledUp = false;
     private DcMotor fl, fr, bl, br;
 
+    private long totalTime = 0;
+
+
+
     @Override
     public void runOpMode() {
 
@@ -43,6 +47,7 @@ public class DriveControlled extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
+            totalTime = System.currentTimeMillis();
 //            hSlideManualControl();
 //            handleServoControl();
             updateTelemetry();
@@ -229,15 +234,22 @@ public class DriveControlled extends LinearOpMode {
 
         // automatic
         if (gamepad1.a){
-            hSliderSystem.goToPosition(1000);
+            hSliderSystem.goToPosition(1500);
+            sleep(600);
             hSliderSystem.rampDown();
 
         }
 
         if (gamepad1.b){
             // transfer
+            long start = totalTime;
+            while (totalTime - start < 300){
+                hSliderSystem.rampUp();
+            }
+
+
             hSliderSystem.goToPosition(0);
-            hSliderSystem.rampUp();
+
         }
 
     }
