@@ -63,13 +63,13 @@ public class DriveControlled extends LinearOpMode {
     private void hSlideManualControl() {
         // Control HSlide with gamepad1.a
         if (gamepad1.a && !previousAState) {
-            hSliderSystem.goToPosition(hSliderSystem.getCurrentPosition() + 15);
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 15);
         }
         previousAState = gamepad1.a;
 
         // Control VSlide with gamepad1.b
         if (gamepad1.b && !previousBState) {
-            hSliderSystem.goToPosition(hSliderSystem.getCurrentPosition() - 15);
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 15);
         }
         previousBState = gamepad1.b;
     }
@@ -99,7 +99,7 @@ public class DriveControlled extends LinearOpMode {
 
     private void toggleHSlide() {
         if (!hSlideExtended) {
-            hSliderSystem.goToPosition(hSliderSystem.getCurrentPosition());
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos());
         } else {
             hSliderSystem.goToPosition(0);
         }
@@ -149,7 +149,7 @@ public class DriveControlled extends LinearOpMode {
     }
 
     private void updateTelemetry() {
-        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPosition());
+        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
         telemetry.addData("HSlide Extended", hSlideExtended);
         telemetry.addData("VSlide Position", vSliderSystem.getCurrentVPos());
         telemetry.addData("VSlide Extended", vSlideExtended);
@@ -200,5 +200,31 @@ public class DriveControlled extends LinearOpMode {
         bl.setPower(backLeftPower / denominator);
         fr.setPower(frontRightPower / denominator);
         br.setPower(backRightPower / denominator);
+    }
+
+
+
+
+
+
+    void gamepad1Ctrl(){
+        // manual h-slider
+        if (gamepad1.right_trigger > 0.2){
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 10);
+        }
+        if (gamepad1.left_trigger > 0.2){
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 10);
+        }
+        // intake
+        if(gamepad1.right_bumper){
+            hSliderSystem.intaking();
+        }
+        else if(gamepad1.left_bumper){
+            hSliderSystem.outtaking();
+        }
+        else{
+            hSliderSystem.setIntakePower(0);
+        }
+
     }
 }

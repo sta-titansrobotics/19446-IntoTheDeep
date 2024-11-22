@@ -80,7 +80,7 @@ public class HSlideController {
     }
 
     // Get the current position of a motor
-    public int getCurrentPosition() {
+    public int getCurrentPos() {
         return sliderH.getCurrentPosition();
     }
 
