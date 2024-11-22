@@ -110,7 +110,7 @@ public class HSlideController {
                 Thread.currentThread().interrupt();
             }
         }
-    }
+    }//m
 
     // Intake motor control methods
     public void setIntakePower(double power) {
