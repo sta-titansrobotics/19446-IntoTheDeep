@@ -14,8 +14,8 @@ public class HSlideController {
 
     public HSlideController(HardwareMap hardwareMap, OpMode opMode) {
         // Initialize hardware
-        sliderH = hardwareMap.get(DcMotor.class, "hslide");
-        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        sliderH = hardwareMap.get(DcMotor.class, "hSlide");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         ramp = hardwareMap.get(Servo.class, "ramp");
 
         // Initialize components

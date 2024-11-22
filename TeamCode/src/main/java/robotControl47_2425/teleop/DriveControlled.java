@@ -5,12 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import robotControl47_2425.Sliders.VSlideController;
+import robotControl47_2425.Sliders.vSliderSystem;
 
 @TeleOp(name = "46TeleOp", group = "Test")
 public class DriveControlled extends LinearOpMode {
 
     private HSlide hSlide;
-    private VSlideController vSlideController;
+    private VSlideController vSliderSystem;
     private boolean hSlideExtended = false;
     private boolean vSlideExtended = false;
     private boolean previousAState = false;
@@ -30,11 +31,12 @@ public class DriveControlled extends LinearOpMode {
     public void runOpMode() {
         DcMotor hSlideMotor = hardwareMap.get(DcMotor.class, "hSlide");
 
-        hSlide = new HSlide(hSlideMotor);
-        vSlideController = new VSlideController(hardwareMap, this);
+
+        hSlide
+        vSliderSystem = new VSlideController(hardwareMap, this);
 
         hSlide.initialize();
-        vSlideController.initializeMotors();
+        vSliderSystem.initializeMotors();
 
         InitializeMotors();
 
@@ -53,6 +55,7 @@ public class DriveControlled extends LinearOpMode {
     private void armSyncCtrl(){
         // bring vslider into transfer pos
         if (gamepad2.a){
+            vSliderSystem.transferPos();
 
         }
     }
@@ -105,42 +108,42 @@ public class DriveControlled extends LinearOpMode {
 
     private void vSliderCtrl(){
         if (gamepad1.right_trigger > 0.2){
-            vSlideController.goToPosition(vSlideController.getCurrentVPos() + 10);
+            vSliderSystem.goToPosition(vSliderSystem.getCurrentVPos() + 10);
         }
     }
 
     private void toggleVSlide() {
         if (!vSlideExtended) {
-            vSlideController.goToPosition(vSlideController.getMaxPosition());
+            vSliderSystem.goToPosition(vSliderSystem.getMaxPosition());
         } else {
-            vSlideController.goToPosition(0);
+            vSliderSystem.goToPosition(0);
         }
         vSlideExtended = !vSlideExtended;
     }
 
     private void toggleClaw() {
         if (!clawOpen) {
-            vSlideController.openClaw();
+            vSliderSystem.openClaw();
         } else {
-            vSlideController.closeClaw();
+            vSliderSystem.closeClaw();
         }
         clawOpen = !clawOpen;
     }
 
     private void toggleArmTilt() {
         if (!armTiltedUp) {
-            vSlideController.tiltArmUp();
+            vSliderSystem.tiltArmUp();
         } else {
-            vSlideController.tiltArmDown();
+            vSliderSystem.tiltArmDown();
         }
         armTiltedUp = !armTiltedUp;
     }
 
     private void toggleClawRoll() {
         if (!clawRolledUp) {
-            vSlideController.rollClawUp();
+            vSliderSystem.rollClawUp();
         } else {
-            vSlideController.rollClawDown();
+            vSliderSystem.rollClawDown();
         }
         clawRolledUp = !clawRolledUp;
     }
@@ -148,7 +151,7 @@ public class DriveControlled extends LinearOpMode {
     private void updateTelemetry() {
         telemetry.addData("HSlide Position", hSlide.getCurrentPosition());
         telemetry.addData("HSlide Extended", hSlideExtended);
-        telemetry.addData("VSlide Position", vSlideController.getCurrentVPos());
+        telemetry.addData("VSlide Position", vSliderSystem.getCurrentVPos());
         telemetry.addData("VSlide Extended", vSlideExtended);
 
         telemetry.addData("Front Left Power", fl.getPower());
