@@ -12,7 +12,7 @@ import robotControl47_2425.Sliders.VSlideController;
 public class sampleAuton extends LinearOpMode {
     // initialize chassis, current robot pos, odometry, sliders, etc.
     //private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
-    private DcMotor slideH;
+    private DcMotor hSlide;
     private Chassis chassis;
     private Odometry odometry;
     private HSlide sliderH;
@@ -23,10 +23,10 @@ public class sampleAuton extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize hardware devices and controllers here
-        slideH = hardwareMap.get(DcMotor.class, "hSlide"); //only 1 motor for both Hsliders physically
+        hSlide = hardwareMap.get(DcMotor.class, "hSlide"); //only 1 motor for both Hsliders physically
 
         // Initialize sliders
-        sliderH = new HSlide(slideH);
+        sliderH = new HSlide(hSlide);
 
         //Inistialize the 2 controllers
         HSlide = new HSlideController(sliderH);
@@ -34,7 +34,7 @@ public class sampleAuton extends LinearOpMode {
 
         //Initialize chasis and Odometry
         odometry = new Odometry(this);
-        chassis = new Chassis(this, odometry);
+        chassis = new Chassis(this);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -44,13 +44,10 @@ public class sampleAuton extends LinearOpMode {
         VSlide.start();
         while (opModeIsActive() && !isStopRequested()) {
             //This is moving in terms of centimeters
-            chassis.toPoint(100, 100, );
-            sleep(5000);
-            chassis.moveToPosition(0, 30, 230);
+            chassis.
 
             telemetry.update();
         }
-        HSlide.stop();
-        VSlide.stop();
+        chassis.stopAllThreads();
     }
 }

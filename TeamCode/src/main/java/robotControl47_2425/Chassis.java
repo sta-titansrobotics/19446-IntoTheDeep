@@ -12,11 +12,33 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 public class Chassis {
     double global_xM, global_yM = 0;
     private DcMotor frontLeft, frontRight, backLeft, backRight;
     private LinearOpMode opMode;
-    private Odometry odometry;
+
+    private Telemetry telemetry;
+
+    private moveToPoint p2pThread = null;
+    private odomTracking odomThread = null;
+//    private Odometry odometry;
     private RobotPos targetPosition;
     private double encoder_l, encoder_r, encoder_h;
     private double disM_encoderHtoCenter = -0.17; // Distance from horizontal encoder to robot center in meters
@@ -30,15 +52,15 @@ public class Chassis {
     private BNO055IMU imu;
 
 
-    public Chassis(LinearOpMode opMode, Odometry odometry) {
+    public Chassis(LinearOpMode opMode) {
         this.opMode = opMode;
-        this.odometry = odometry;
+        this.telemetry = opMode.telemetry;
 
         // Initialize motors from the hardware map
-        frontLeft = opMode.hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = opMode.hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = opMode.hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = opMode.hardwareMap.get(DcMotor.class, "backRight");
+        frontLeft = opMode.hardwareMap.get(DcMotor.class, "lf");
+        frontRight = opMode.hardwareMap.get(DcMotor.class, "lr");
+        backLeft = opMode.hardwareMap.get(DcMotor.class, "lr");
+        backRight = opMode.hardwareMap.get(DcMotor.class, "rr");
 
         // Set directions for motors
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -56,6 +78,9 @@ public class Chassis {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
+
+        p2pThread.start();
+        odomThread.start();
     }
 
     //=============================================================================================================================
@@ -141,8 +166,8 @@ public class Chassis {
                 delta_global_x, delta_global_y, delta_ang;
         while (!opMode.isStopRequested() && opMode.opModeIsActive()) {
             encoder_l = encoderToMetres(-frontLeft.getCurrentPosition());
-            encoder_r = encoderToMetres(-backRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
-            encoder_h = encoderToMetres(frontRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+            encoder_r = encoderToMetres(frontRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+            encoder_h = encoderToMetres(backRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
 
             current_ang = Math.toRadians(getAngle()); //degrees to radians (either ways of calculating current angle work[imu or encoder])
             //current_ang = Math.toRadians((encoder_r-encoder_l)/0.031) //(r-l) divided by distance (METRES) between the encoder wheels
@@ -233,6 +258,16 @@ public class Chassis {
         backLeft.setPower(0);
         backRight.setPower(0);
     }
+    public void stopAllThreads(){
+        if (p2pThread != null){
+            p2pThread.interrupt();
+            p2pThread = null;
+        }
+        if (odomThread != null){
+            odomThread.interrupt();
+            odomThread = null;
+        }
+    }
     private class moveToPoint extends Thread {
         double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed;
 
@@ -252,6 +287,21 @@ public class Chassis {
             try {
                 toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
             } catch (Exception e) {
+
+            }
+        }
+    }
+
+    private class odomTracking extends Thread{
+        public odomTracking(){
+
+        }
+        public void run(){
+            try{
+                odom_pos_est();
+
+            }catch (Exception e) {
+
             }
         }
     }

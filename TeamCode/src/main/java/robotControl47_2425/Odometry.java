@@ -34,7 +34,7 @@ public class Odometry {
 
     public void updatePosition() {
         // Convert encoder ticks to meters
-        double encoderL = encoderToMetres(odomLeft.getCurrentPosition());
+        double encoderL = encoderToMetres(-odomLeft.getCurrentPosition());
         double encoderR = encoderToMetres(odomRight.getCurrentPosition());
         double encoderH = encoderToMetres(odomHorizontal.getCurrentPosition());
 
