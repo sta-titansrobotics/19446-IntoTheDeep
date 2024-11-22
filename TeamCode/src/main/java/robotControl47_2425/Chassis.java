@@ -85,7 +85,7 @@ public class Chassis {
     //=============================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------------------
 
-    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
+    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) throws InterruptedException {
         double current_x = global_xM;
         double current_y = global_yM;
 
@@ -148,6 +148,7 @@ public class Chassis {
             if (opMode.isStopRequested()) {
                 break;
             }
+            Thread.sleep(10);
         }
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -157,7 +158,7 @@ public class Chassis {
     }
 
     //------------------------------------------------------------------------------------------------------------------------
-    private void odom_pos_est() {
+    private void odom_pos_est() throws InterruptedException {
         double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang;
         double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y,
                 delta_global_x, delta_global_y, delta_ang;
@@ -199,6 +200,8 @@ public class Chassis {
             prev_encoder_r = encoder_r;
             prev_encoder_h = encoder_h;
             prev_ang = current_ang;
+
+            Thread.sleep(10);
         }
     }
     //------------------------------------------------------------------------------------------------------------------------
@@ -251,6 +254,7 @@ public class Chassis {
             odomThread = null;
         }
     }
+
     public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout){
 
         p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
