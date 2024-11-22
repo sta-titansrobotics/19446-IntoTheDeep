@@ -1,7 +1,6 @@
 package robotControl47_2425.Sliders;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -13,6 +12,7 @@ public class VSlideController {
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
     private static final int MAX_POSITION = 2200; // Updated maximum position
+    private boolean isHighBasket = false; // Track the last called method
 
     // Constructor
     public VSlideController(HardwareMap hardwareMap, OpMode opMode) {
@@ -20,12 +20,12 @@ public class VSlideController {
 
         // Initialize servos
         tilt1Left = hardwareMap.get(Servo.class, "tilt1L"); // expansion port 0
-        tilt1Right = hardwareMap.get(Servo.class, "tilt1R"); //expansion port 1
-        tilt2 = hardwareMap.get(Servo.class, "tilt2"); //expansion port 2
-        roll = hardwareMap.get(Servo.class, "roll"); //expansion port 3
-        claw = hardwareMap.get(Servo.class, "claw"); //expansion port 4
+        tilt1Right = hardwareMap.get(Servo.class, "tilt1R"); // expansion port 1
+        tilt2 = hardwareMap.get(Servo.class, "tilt2"); // expansion port 2
+        roll = hardwareMap.get(Servo.class, "roll"); // expansion port 3
+        claw = hardwareMap.get(Servo.class, "claw"); // expansion port 4
 
-        //Initialzie motors
+        // Initialize motors
         slideVL = hardwareMap.get(DcMotor.class, "lvSlide");
         slideVR = hardwareMap.get(DcMotor.class, "rvSlide");
 
@@ -34,9 +34,7 @@ public class VSlideController {
         initializeMotors();
     }
 
-    /**
-     *   Initialize motors
-     */
+    // Initialize motors
     public void initializeMotors() {
         slideVL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideVR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -66,8 +64,9 @@ public class VSlideController {
     private int getCurrentPosition(DcMotor motor) {
         return motor.getCurrentPosition();
     }
-    public int getCurrentVPos(){
-        return (getCurrentPosition(slideVR)+getCurrentPosition(slideVL))/2;
+
+    public int getCurrentVPos() {
+        return (getCurrentPosition(slideVR) + getCurrentPosition(slideVL)) / 2;
     }
 
     // Get max position
@@ -80,7 +79,7 @@ public class VSlideController {
         slideThread = new Thread(() -> {
             boolean reached = false;
             while (opModeActive && !Thread.currentThread().isInterrupted()) {
-                int currentPosition = (getCurrentPosition(slideVR)+getCurrentPosition(slideVL))/2; //average of two sliders
+                int currentPosition = (getCurrentPosition(slideVR) + getCurrentPosition(slideVL)) / 2; // average of two sliders
 
                 // Control logic for slide movement
                 if (currentPosition >= MAX_POSITION) {
@@ -148,13 +147,72 @@ public class VSlideController {
         updateTelemetry();
     }
 
-    public void transferPos(){
+    public void transferPos() {
         tilt1ArmZero();
         tilt2.setPosition(0.5);
         openClaw();
         rollClawUp();
-        //wt
     }
+
+    public void vSlideManualEg(double increment) {
+        int newPosition = getCurrentVPos() + (int) increment;
+        newPosition = Math.max(0, newPosition);
+        newPosition = Math.min(MAX_POSITION, newPosition);
+
+        slideVL.setTargetPosition(newPosition);
+        slideVR.setTargetPosition(newPosition);
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
+    }
+
+    // VSlideController.java
+    public void tiltArmManualControl(double increment) {
+        double newPositionLeft = tilt1Left.getPosition() + increment;
+        double newPositionRight = tilt1Right.getPosition() - increment;
+
+        newPositionLeft = Math.max(0, newPositionLeft);
+        newPositionLeft = Math.min(1, newPositionLeft);
+        newPositionRight = Math.max(0, newPositionRight);
+        newPositionRight = Math.min(1, newPositionRight);
+
+        tilt1Left.setPosition(newPositionLeft);
+        tilt1Right.setPosition(newPositionRight);
+        updateTelemetry();
+    }
+
+    public void VSlideHighBasket() {
+        // Placeholder for high basket code
+        slideVL.setTargetPosition(0);
+        slideVR.setTargetPosition(0);
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
+        isHighBasket = true;
+    }
+
+    public void VSlideHighRung() {
+        slideVL.setTargetPosition(0);
+        slideVR.setTargetPosition(0);
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
+        isHighBasket = false;
+    }
+
+    public void vSlideDrop() {
+        if (isHighBasket) {
+            // Code for dropping from high basket
+            // Placeholder for high basket drop code
+        } else {
+            // Code for dropping from high rung
+            // Placeholder for high rung drop code
+        }
+    }
+
 
     // Update telemetry with motor and servo data
     private void updateTelemetry() {
