@@ -30,18 +30,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Chassis {
-    double global_xM, global_yM = 0;
+    double global_xM = 0, global_yM = 0;
     private DcMotor frontLeft, frontRight, backLeft, backRight;
     private LinearOpMode opMode;
 
     private Telemetry telemetry;
 
     private moveToPoint p2pThread = null;
-    private odomTracking odomThread = null;
+    private odomTracking odomThread = new odomTracking();
 //    private Odometry odometry;
     private RobotPos targetPosition;
     private double encoder_l, encoder_r, encoder_h;
-    private double disM_encoderHtoCenter = -0.17; // Distance from horizontal encoder to robot center in meters
+    private double disM_encoderHtoCenter = -0.0755; // Distance from horizontal encoder to robot center in meters
     private double wheelDiameter = 0.032; // Diameter of the odometry wheel in meters
     private double ticksPerRevolution = 2000.0; // Encoder ticks per wheel revolution
 
@@ -58,7 +58,7 @@ public class Chassis {
 
         // Initialize motors from the hardware map
         frontLeft = opMode.hardwareMap.get(DcMotor.class, "lf");
-        frontRight = opMode.hardwareMap.get(DcMotor.class, "lr");
+        frontRight = opMode.hardwareMap.get(DcMotor.class, "rf");
         backLeft = opMode.hardwareMap.get(DcMotor.class, "lr");
         backRight = opMode.hardwareMap.get(DcMotor.class, "rr");
 
@@ -79,14 +79,13 @@ public class Chassis {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
 
-        p2pThread.start();
         odomThread.start();
     }
 
     //=============================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------------------
 
-    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) {
+    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
         double current_x = global_xM;
         double current_y = global_yM;
 
@@ -100,19 +99,17 @@ public class Chassis {
             //or if current angle is within a 2 degree resolution from target, stop
             current_x = global_xM;
             current_y = global_yM;
-            opMode.telemetry.addData("current_y", current_y);
             current_ang = getAngle();
+            telemetry.addData("hi", "testing");
 
             double error_x = target_x - current_x;
             double error_y = target_y - current_y;
             double global_vel_x = (kp * error_x) + (kd * (error_x - prev_error_x));// PD (PID without the I) control
             double global_vel_y = (kp * error_y) + (kd * (error_y - prev_error_y));
-            opMode.telemetry.addData("global vel_y", global_vel_y);
             double local_vel_x = global_vel_x * Math.cos(Math.toRadians(getAngle())) + global_vel_y * Math.sin(Math.toRadians(getAngle()));
 
             double local_vel_y = -global_vel_x * Math.sin(Math.toRadians(getAngle())) + global_vel_y * Math.cos(Math.toRadians(getAngle()));// inverse matrix to calculate local velocities to global velocities
-            opMode.telemetry.addData("local vel_x", local_vel_x);
-            opMode.telemetry.addData("local vel_y", local_vel_y);
+
             double local_vel_max = Math.max(Math.abs(local_vel_x), Math.abs(local_vel_y));
             if (local_vel_max > max_speed) {
                 local_vel_x = (local_vel_x / local_vel_max) * max_speed;
@@ -127,9 +124,9 @@ public class Chassis {
 
 
             double lfPower = local_vel_x + local_vel_y - correction_ang;
-            double rfPower = local_vel_x + local_vel_y + correction_ang;
+            double rfPower = local_vel_x - local_vel_y + correction_ang;
             double lrPower = local_vel_x - local_vel_y - correction_ang;
-            double rrPower = local_vel_x - local_vel_y + correction_ang;
+            double rrPower = local_vel_x + local_vel_y + correction_ang;
 
             double maxNumber = Math.max(Math.max(Math.abs(lfPower), Math.abs(lrPower)), Math.max(Math.abs(rfPower), Math.abs(rrPower)));
             if (maxNumber > 1) {
@@ -238,19 +235,7 @@ public class Chassis {
         globalAngle = 0;
     }
 
-    private class odom_thread extends Thread {
-        public odom_thread() {
-        }
 
-        public void run() {
-            try {
-                odom_pos_est();
-            } catch (Exception e) {
-                    opMode.telemetry.addData("Error", e.getMessage());
-                    opMode.telemetry.update();
-            }
-        }
-    }
     // Stop all motors
     public void stop() {
         frontLeft.setPower(0);
@@ -268,10 +253,15 @@ public class Chassis {
             odomThread = null;
         }
     }
-    private class moveToPoint extends Thread {
-        double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed;
+    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout){
 
-        public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) {
+        p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
+        p2pThread.start();
+    }
+    private class moveToPoint extends Thread {
+        double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout;
+
+        public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
             this.target_x = target_x;
             this.target_y = target_y;
             this.target_ang = target_ang;
@@ -281,11 +271,12 @@ public class Chassis {
             this.turn_kp = turn_kp;
             this.turn_kd = turn_kd;
             this.turn_max_speed = turn_max_speed;
+            this.timeout = timeout;
         }
 
         public void run() {
             try {
-                toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
+                toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
             } catch (Exception e) {
 
             }

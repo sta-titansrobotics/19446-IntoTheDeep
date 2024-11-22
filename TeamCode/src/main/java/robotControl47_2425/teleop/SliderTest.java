@@ -1,8 +1,10 @@
 package robotControl47_2425.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+@TeleOp(name = "SliderTest", group = "Test")
 public class SliderTest extends OpMode {
 
     private DcMotor slideVL, slideVR;
@@ -12,12 +14,14 @@ public class SliderTest extends OpMode {
     @Override
     public void init() {
         // Initialize the slider motors
-        slideVL = hardwareMap.get(DcMotor.class, "slideVL");
-        slideVR = hardwareMap.get(DcMotor.class, "slideVR");
+        slideVL = hardwareMap.get(DcMotor.class, "lvSlide");
+        slideVR = hardwareMap.get(DcMotor.class, "rvSlide");
 
         // Set the motors to brake when power is zero
         slideVL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideVR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        slideVL.setDirection(DcMotor.Direction.REVERSE);
 
         // Reset encoders
         slideVL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -51,8 +55,8 @@ public class SliderTest extends OpMode {
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideVL.setPower(0.3);
-        slideVR.setPower(-0.3);
+        slideVL.setPower(0);
+        slideVR.setPower(0.3);
 
         while (slideVL.isBusy() && slideVR.isBusy()) {
             // Wait until target position is reached

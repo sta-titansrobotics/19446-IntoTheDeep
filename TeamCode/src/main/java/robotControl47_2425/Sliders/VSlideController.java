@@ -1,6 +1,7 @@
 package robotControl47_2425.Sliders;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -18,15 +19,17 @@ public class VSlideController {
         this.opMode = opMode;
 
         // Initialize servos
-        tilt1Left = hardwareMap.get(Servo.class, "tilt1Left"); // expansion port 0
-        tilt1Right = hardwareMap.get(Servo.class, "tilt1Right"); //expansion port 1
+        tilt1Left = hardwareMap.get(Servo.class, "tilt1L"); // expansion port 0
+        tilt1Right = hardwareMap.get(Servo.class, "tilt1R"); //expansion port 1
         tilt2 = hardwareMap.get(Servo.class, "tilt2"); //expansion port 2
         roll = hardwareMap.get(Servo.class, "roll"); //expansion port 3
         claw = hardwareMap.get(Servo.class, "claw"); //expansion port 4
 
         //Initialzie motors
-        slideVL = hardwareMap.get(DcMotor.class, "vSlideL");
-        slideVR = hardwareMap.get(DcMotor.class, "vSlideR");
+        slideVL = hardwareMap.get(DcMotor.class, "lvSlide");
+        slideVR = hardwareMap.get(DcMotor.class, "rvSlide");
+
+        slideVL.setDirection(DcMotor.Direction.REVERSE);
 
         initializeMotors();
     }
@@ -60,8 +63,11 @@ public class VSlideController {
     }
 
     // Get current position of the first motor
-    public int getCurrentPosition(DcMotor motor) {
+    private int getCurrentPosition(DcMotor motor) {
         return motor.getCurrentPosition();
+    }
+    public int getCurrentVPos(){
+        return (getCurrentPosition(slideVR)+getCurrentPosition(slideVL))/2;
     }
 
     // Get max position
@@ -111,7 +117,7 @@ public class VSlideController {
 
     // Servo control methods
     public void openClaw() {
-        claw.setPosition(0.7);
+        claw.setPosition(0.8);
         updateTelemetry();
     }
 
@@ -121,12 +127,12 @@ public class VSlideController {
     }
 
     public void rollClawUp() {
-        claw.setPosition(0.5);
+        roll.setPosition(0.156);
         updateTelemetry();
     }
 
     public void rollClawDown() {
-        claw.setPosition(0.7);
+        roll.setPosition(0.816);
         updateTelemetry();
     }
 
