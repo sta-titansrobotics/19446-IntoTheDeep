@@ -43,7 +43,7 @@ public class DriveControlled extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            hSlideControl();
+            hSlideManualControl();
             handleServoControl();
             updateTelemetry();
             telemetryDrive();
@@ -60,16 +60,16 @@ public class DriveControlled extends LinearOpMode {
         }
     }
 
-    private void hSlideControl() {
+    private void hSlideManualControl() {
         // Control HSlide with gamepad1.a
         if (gamepad1.a && !previousAState) {
-            toggleHSlide();
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPosition() + 15);
         }
         previousAState = gamepad1.a;
 
         // Control VSlide with gamepad1.b
         if (gamepad1.b && !previousBState) {
-            toggleVSlide();
+            hSliderSystem.goToPosition(hSliderSystem.getCurrentPosition() - 15);
         }
         previousBState = gamepad1.b;
     }
