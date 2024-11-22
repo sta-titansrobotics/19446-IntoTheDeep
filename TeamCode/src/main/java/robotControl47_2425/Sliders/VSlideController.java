@@ -142,10 +142,17 @@ public class VSlideController {
         updateTelemetry();
     }
 
-    public void tiltArmDown() {
+    public void tilt1ArmZero() {
         tilt1Left.setPosition(0.5);
         tilt1Right.setPosition(0.5);
         updateTelemetry();
+    }
+
+    public void transferPos(){
+        tilt1ArmZero();
+        tilt2.setPosition(0.5);
+        openClaw();
+        rollClawUp();
     }
 
     // Update telemetry with motor and servo data

@@ -41,15 +41,23 @@ public class DriveControlled extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-//            handleSlideControl();
+            hSlideControl();
             handleServoControl();
             updateTelemetry();
             telemetryDrive();
             vSliderCtrl();
+            armSyncCtrl();
         }
     }
 
-    private void handleSlideControl() {
+    private void armSyncCtrl(){
+        // bring vslider into transfer pos
+        if (gamepad2.a){
+
+        }
+    }
+
+    private void hSlideControl() {
         // Control HSlide with gamepad1.a
         if (gamepad1.a && !previousAState) {
             toggleHSlide();
