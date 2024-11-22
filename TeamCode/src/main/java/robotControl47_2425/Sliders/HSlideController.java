@@ -22,7 +22,7 @@ public class HSlideController {
         initialize();
 
     }
-    private void initialize() {
+    public void initialize() {
         // Initialize slider motor
         sliderH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sliderH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -45,10 +45,10 @@ public class HSlideController {
                 int currentPosition = sliderH.getCurrentPosition();
 
                 if (currentPosition >= MAX_POSITION) {
-                    goToPosition(0, sliderH);
+                    goToPosition(0);
                     reached = true;
                 } else if (!reached) {
-                    goToPosition(MAX_POSITION, sliderH);
+                    goToPosition(MAX_POSITION);
                 }
 
                 try {
@@ -70,18 +70,18 @@ public class HSlideController {
     }
 
     // Generic method to move a motor to a specific position
-    public void goToPosition(int position, DcMotor motor) {
+    public void goToPosition(int position) {
         position = Math.max(0, position);
         position = Math.min(MAX_POSITION, position);
 
-        motor.setTargetPosition(position);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(0.5);
+        sliderH.setTargetPosition(position);
+        sliderH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sliderH.setPower(0.5);
     }
 
     // Get the current position of a motor
-    public int getCurrentPosition(DcMotor motor) {
-        return motor.getCurrentPosition();
+    public int getCurrentPosition() {
+        return sliderH.getCurrentPosition();
     }
 
     /**
