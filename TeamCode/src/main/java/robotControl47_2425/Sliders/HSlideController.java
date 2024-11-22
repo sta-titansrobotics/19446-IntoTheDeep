@@ -117,4 +117,13 @@ public class HSlideController {
     public void outtaking(){
         intakeMotor.setPower(-0.5);
     }
+
+    public void rampUp(){
+        ramp.setPosition(0.5);
+
+    }
+    public void rampDown(){
+        ramp.setPosition(0.3);
+
+    }
 }

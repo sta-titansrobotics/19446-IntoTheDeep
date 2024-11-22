@@ -226,5 +226,18 @@ public class DriveControlled extends LinearOpMode {
             hSliderSystem.setIntakePower(0);
         }
 
+        // automatic
+        if (gamepad1.a){
+            hSliderSystem.goToPosition(1000);
+            hSliderSystem.rampDown();
+
+        }
+
+        if (gamepad1.b){
+            // transfer
+            hSliderSystem.goToPosition(0);
+            hSliderSystem.rampUp();
+        }
+
     }
 }
