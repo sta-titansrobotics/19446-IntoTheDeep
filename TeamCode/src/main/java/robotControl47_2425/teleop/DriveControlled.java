@@ -48,6 +48,7 @@ public class DriveControlled extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             totalTime = System.currentTimeMillis();
+            telemetry.addData("time", totalTime);
 //            hSlideManualControl();
 //            handleServoControl();
             updateTelemetry();
@@ -208,11 +209,6 @@ public class DriveControlled extends LinearOpMode {
         br.setPower(backRightPower / denominator);
     }
 
-
-
-
-
-
     void gamepad1Ctrl(){
         // manual h-slider
         if (gamepad1.right_trigger > 0.2){
@@ -237,6 +233,7 @@ public class DriveControlled extends LinearOpMode {
             hSliderSystem.goToPosition(1500);
             long start = totalTime;
             while (totalTime - start < 600){
+                updateTime();
                 hSliderSystem.rampUp();
             }
             hSliderSystem.rampDown();
@@ -247,6 +244,7 @@ public class DriveControlled extends LinearOpMode {
             // transfer
             long start = totalTime;
             while (totalTime - start < 300){
+                updateTime();
                 hSliderSystem.rampUp();
             }
 
@@ -255,5 +253,8 @@ public class DriveControlled extends LinearOpMode {
 
         }
 
+    }
+    void updateTime(){
+        totalTime = System.currentTimeMillis();
     }
 }

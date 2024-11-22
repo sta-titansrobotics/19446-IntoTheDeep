@@ -22,7 +22,7 @@ public class HSlideController {
 
         // Initialize components
         initialize();
-        programStartTime = System.currentTimeMillis();
+
     }
     public void initialize() {
         // Initialize slider motor
