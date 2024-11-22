@@ -3,7 +3,7 @@ package robotControl47_2425.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import robotControl47_2425.Sliders.HSlide;
+
 import robotControl47_2425.Sliders.VSlideController;
 
 @TeleOp(name = "46TeleOp", group = "Test")

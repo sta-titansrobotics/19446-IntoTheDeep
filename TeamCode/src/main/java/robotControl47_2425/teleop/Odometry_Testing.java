@@ -74,7 +74,7 @@ public class Odometry_Testing extends LinearOpMode {
             delta_encoder_h = encoder_h - prev_encoder_h;
 
             // Calculate angle change (heading delta) since last loop
-            delta_ang = current_ang - prev_ang;
+            //delta_ang = current_ang - prev_ang;
 
             // Calculate turning angle phi (rotation factor)
             phi = (delta_encoder_l - delta_encoder_r) / disTrackWidth;

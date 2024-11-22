@@ -2,11 +2,6 @@ package robotControl47_2425;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import robotControl47_2425.Sliders.HSlide;
-import robotControl47_2425.Sliders.HSlideController;
-import robotControl47_2425.Sliders.VSlideController;
 
 @Autonomous
 public class sampleAuton extends LinearOpMode {
@@ -22,11 +17,6 @@ public class sampleAuton extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // Initialize hardware devices and controllers here
-//        hSlide = hardwareMap.get(DcMotor.class, "hSlide"); //only 1 motor for both Hsliders physically
-//
-//        // Initialize sliders
-//        sliderH = new HSlide(hSlide);
 //
 //        //Inistialize the 2 controllers
 //        HSlide = new HSlideController(sliderH);
