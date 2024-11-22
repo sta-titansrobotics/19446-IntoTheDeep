@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class HSlideController {
     private final DcMotor sliderH, intakeMotor;
-    private final Servo intakeServo;
+    private final Servo ramp;
     private Thread slideThread;
     private volatile boolean opModeActive = true;
     private static final int MAX_POSITION = 2000;
@@ -16,7 +16,7 @@ public class HSlideController {
         // Initialize hardware
         sliderH = hardwareMap.get(DcMotor.class, "hslide");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-        intakeServo = hardwareMap.get(Servo.class, "intakeServo");
+        ramp = hardwareMap.get(Servo.class, "ramp");
 
         // Initialize components
         initialize();
@@ -34,7 +34,7 @@ public class HSlideController {
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Initialize intake servo
-        intakeServo.setPosition(0.5); // Default to 0.5 position
+        ramp.setPosition(0.5); // Default to 0.5 position
     }
 
     // Start a thread for the horizontal slide functionality
@@ -82,6 +82,14 @@ public class HSlideController {
     // Get the current position of a motor
     public int getCurrentPosition(DcMotor motor) {
         return motor.getCurrentPosition();
+    }
+
+    /**
+     * Brings the Hslide motor to 0 and reset the servo position to 0.5
+     */
+    public void initHSlideController(){
+        resetPosition(sliderH);
+        ramp.setPosition(0.5);
     }
 
     // Stop the slide thread
