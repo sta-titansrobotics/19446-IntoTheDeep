@@ -235,7 +235,10 @@ public class DriveControlled extends LinearOpMode {
         // automatic
         if (gamepad1.a){
             hSliderSystem.goToPosition(1500);
-            sleep(600);
+            long start = totalTime;
+            while (totalTime - start < 600){
+                hSliderSystem.rampUp();
+            }
             hSliderSystem.rampDown();
 
         }
