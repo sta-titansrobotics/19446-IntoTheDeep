@@ -231,10 +231,8 @@ public class Chassis {
 
     private void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
         globalAngle = 0;
     }
-
 
     // Stop all motors
     public void stop() {
@@ -290,7 +288,6 @@ public class Chassis {
         public void run(){
             try{
                 odom_pos_est();
-
             }catch (Exception e) {
 
             }
