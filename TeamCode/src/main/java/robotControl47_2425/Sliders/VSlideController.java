@@ -185,11 +185,19 @@ public class VSlideController {
         tilt1Right.setPosition(newPositionRight);
         updateTelemetry();
     }
+    public void RollManualControl(double increment) {
+        double newPosition = roll.getPosition() + increment;
+        newPosition = Math.max(0.2, newPosition);
+        newPosition = Math.min(0.8, newPosition);
+
+        roll.setPosition(newPosition);
+        updateTelemetry();
+    }
 
     public void VSlideHighBasket() {
         // Placeholder for high basket code
-        slideVL.setTargetPosition(0);
-        slideVR.setTargetPosition(0);
+        slideVL.setTargetPosition(MAX_POSITION);
+        slideVR.setTargetPosition(MAX_POSITION);
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
@@ -198,8 +206,8 @@ public class VSlideController {
     }
 
     public void VSlideHighRung() {
-        slideVL.setTargetPosition(0);
-        slideVR.setTargetPosition(0);
+        slideVL.setTargetPosition(0); //PLACEHOLDER
+        slideVR.setTargetPosition(0); //PLACEHOLDER
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
@@ -209,8 +217,7 @@ public class VSlideController {
 
     public void vSlideDrop() {
         if (isHighBasket) {
-            // Code for dropping from high basket
-            // Placeholder for high basket drop code
+
         } else {
             // Code for dropping from high rung
             // Placeholder for high rung drop code

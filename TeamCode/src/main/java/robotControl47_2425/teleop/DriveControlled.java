@@ -273,6 +273,10 @@ public class DriveControlled extends LinearOpMode {
             vSliderSystem.tilt2.setPosition(vSliderSystem.tilt2.getPosition() - gamepad2.right_stick_y * 0.01);
         }
 
+        if (gamepad2.left_stick_x != 0) {
+            vSliderSystem.RollManualControl(gamepad2.left_stick_x * 0.01);
+        }
+
         if (gamepad2.x) {
             vSliderSystem.VSlideHighBasket();
         } else if (gamepad2.y) {
