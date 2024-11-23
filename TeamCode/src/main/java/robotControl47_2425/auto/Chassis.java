@@ -1,4 +1,4 @@
-package auto;
+package robotControl47_2425.auto;
 
 public class Chassis {
     public double[] getOdomPositions() {
