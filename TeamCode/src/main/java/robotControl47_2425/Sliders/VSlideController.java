@@ -161,7 +161,7 @@ public class VSlideController {
     }
 
     public void vSlideManualEg(int position) {
-        position = Math.max(35, position);
+        position = Math.max(20, position);
         position = Math.min(MAX_POSITION, position);
 
         slideVL.setTargetPosition(position);
@@ -215,8 +215,8 @@ public class VSlideController {
     }
 
     public void VSlideHighRung() {
-        slideVL.setTargetPosition(1500); //PLACEHOLDER
-        slideVR.setTargetPosition(1500); //PLACEHOLDER
+        slideVL.setTargetPosition(1800); //PLACEHOLDER
+        slideVR.setTargetPosition(1800); //PLACEHOLDER
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
