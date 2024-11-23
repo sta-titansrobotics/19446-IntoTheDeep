@@ -230,7 +230,7 @@ public class VSlideController {
 
         tiltArmManualControl(0.78); //set it to max tilt
         tilt2.setPosition(0.4);
-        rollClawDown();
+        rollClawUp();
     }
 
     public void pickUpFromWall(){

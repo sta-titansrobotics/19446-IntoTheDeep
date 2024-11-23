@@ -46,12 +46,12 @@ public class DriveControlled extends LinearOpMode {
         InitializeMotors();
         vSliderSystem.goToPosition(700);
         long start = System.currentTimeMillis();
-        while(System.currentTimeMillis()-start<2000){
+        while(System.currentTimeMillis()-start<1000){
 
         }
         vSliderSystem.transferPos();
         start = System.currentTimeMillis();
-        while(System.currentTimeMillis()-start<2000){
+        while(System.currentTimeMillis()-start<1000){
 
         }
         vSliderSystem.goToPosition(30);
@@ -357,8 +357,13 @@ public class DriveControlled extends LinearOpMode {
 
         }
 
+        if(gamepad2.dpad_right){
+            hSliderSystem.{}
+        }
+
         if(gamepad2.dpad_left){
             vSliderSystem.pickUpFromWall();
+            vSliderSystem.openClaw();
         }
 
         if(gamepad2.dpad_down){
