@@ -35,7 +35,7 @@ public class AutoInit extends LinearOpMode {
         while (System.currentTimeMillis() - start < 2000) {
 
         }
-        vSliderSystem.goToPosition(30);
+        vSliderSystem.goToPosition(20);
 
         waitForStart();
 
