@@ -148,8 +148,8 @@ public class VSlideController {
     }
 
     public void tilt1ArmZero() {
-        tilt1Left.setPosition(0.515);
-        tilt1Right.setPosition(0.515);
+        tilt1Left.setPosition(0.508);
+        tilt1Right.setPosition(0.508);
         updateTelemetry();
     }
 

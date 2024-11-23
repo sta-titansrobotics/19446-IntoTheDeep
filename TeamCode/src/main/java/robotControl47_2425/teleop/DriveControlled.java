@@ -52,7 +52,7 @@ public class DriveControlled extends LinearOpMode {
 
         }
         vSliderSystem.tilt1ArmZero();
-        vSliderSystem.fdsa(0.51);
+        vSliderSystem.fdsa(0.505);
         vSliderSystem.openClaw();
         vSliderSystem.rollClawDown();
         start = System.currentTimeMillis();
