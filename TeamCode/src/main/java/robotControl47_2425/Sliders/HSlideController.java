@@ -36,7 +36,7 @@ public class HSlideController {
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        // Initialize intake servo
+        // Initialize ramp
         ramp.setPosition(0.5); // Default to 0.5 position
     }
 

@@ -155,7 +155,7 @@ public class VSlideController {
 
     public void transferPos() {
         tilt1ArmZero();
-        tilt2.setPosition(0.5);
+        tilt2.setPosition(0.505);
         openClaw();
         rollClawDown();
     }
