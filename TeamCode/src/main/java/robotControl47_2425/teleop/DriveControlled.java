@@ -28,6 +28,8 @@ public class DriveControlled extends LinearOpMode {
     private DcMotor fl, fr, bl, br;
 
     private long totalTime = 0;
+    private int position_buttonA =0;
+    private boolean isHighBasket = false;
 
 
 
@@ -43,6 +45,15 @@ public class DriveControlled extends LinearOpMode {
         vSliderSystem.initializeMotors();
 
         InitializeMotors();
+        vSliderSystem.goToPosition(700);
+        vSliderSystem.tilt1ArmZero();
+        vSliderSystem.tilt2.setPosition(0.5);
+        sleep(100);
+        vSliderSystem.openClaw();
+        vSliderSystem.rollClawDown();
+        sleep(2000);
+        //vSliderSystem.goToPosition(35);
+
 
         waitForStart();
 
@@ -168,6 +179,8 @@ public class DriveControlled extends LinearOpMode {
         telemetry.addData("Back Left Power", bl.getPower());
         telemetry.addData("Back Right Power", br.getPower());
 
+
+
         telemetry.update();
     }
 
@@ -238,8 +251,8 @@ public class DriveControlled extends LinearOpMode {
         // automatic
         if (gamepad1.a){
             hSliderSystem.goToPosition(1500);
-            long start = totalTime;
-            while (totalTime - start < 600){
+            long start = System.currentTimeMillis();
+            while (System.currentTimeMillis() - start < 600){
                 hSliderSystem.rampUp();
             }
             hSliderSystem.rampDown();
@@ -248,17 +261,17 @@ public class DriveControlled extends LinearOpMode {
 
         if (gamepad1.b){
             // transfer
-            long start = totalTime;
-            while (totalTime - start < 300){
+            long start = System.currentTimeMillis();
+            while (System.currentTimeMillis() - start < 300){
+//                updateTime();
                 hSliderSystem.rampUp();
             }
-
-
             hSliderSystem.goToPosition(0);
         }
-    }//awd
+    }
 
     void gamepad2Ctrl() {
+
         if (gamepad2.right_trigger > 0.2) {
             vSliderSystem.vSlideManualEg(10);
         } else if (gamepad2.left_trigger > 0.2) {
@@ -278,14 +291,40 @@ public class DriveControlled extends LinearOpMode {
         }
 
         if (gamepad2.x) {
+            vSliderSystem.closeClaw();
             vSliderSystem.VSlideHighBasket();
+            isHighBasket = true;
+
         } else if (gamepad2.y) {
+            vSliderSystem.closeClaw();
             vSliderSystem.VSlideHighRung();
+            isHighBasket = false;
         } else if (gamepad2.a) {
-            vSliderSystem.vSlideDrop();
-            vSliderSystem.transferPos();
+
+            if(!isHighBasket) {
+                vSliderSystem.vSlideDrop();
+                vSliderSystem.transferPos();
+                long start = System.currentTimeMillis();
+                while (System.currentTimeMillis() - start < 1000) {
+                }
+                vSliderSystem.goToPosition(0);
+            }else{
+                vSliderSystem.openClaw();
+            }
         } else if (gamepad2.b) {
-            vSliderSystem.goToPosition(0);
+            vSliderSystem.transferPos();
+            long start = System.currentTimeMillis();
+            while (System.currentTimeMillis() - start < 1000) {
+            }
+            vSliderSystem.goToPosition(40);
+
         }
+
+        if(gamepad2.dpad_down){
+            //placeholder
+        }
+    }
+    public void updateTime(){
+        totalTime = System.currentTimeMillis();
     }
 }

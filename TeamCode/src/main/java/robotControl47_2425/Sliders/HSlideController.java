@@ -85,19 +85,15 @@ public class HSlideController {
     /**
      * Brings the Hslide motor to 0 and reset the servo position to 0.5
      */
-//    public void transferPos(){
-//        long start = programStartTime;
-//        while (programStartTime - start < 300){
-//            ramp.setPosition(0.5);
-//            if (programStartTime - start > 300){
-//                break;
-//            }
-//
-//        }
-//        resetPosition(sliderH);
-//
-//
-//    }
+    public void transferPos(){
+        long start = programStartTime;
+        while (programStartTime - start < 300){
+            ramp.setPosition(0.5);
+        }
+        resetPosition(sliderH);
+
+
+    }
 
     // Stop the slide thread
     public void stopSlideControl() {

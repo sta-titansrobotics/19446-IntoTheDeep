@@ -29,6 +29,8 @@ public class VSlideController {
         roll = hardwareMap.get(Servo.class, "roll"); // expansion port 3
         claw = hardwareMap.get(Servo.class, "claw"); // expansion port 4
 
+        tilt1Right.setDirection(Servo.Direction.REVERSE);
+
         // Initialize motors
         slideVL = hardwareMap.get(DcMotor.class, "lvSlide");
         slideVR = hardwareMap.get(DcMotor.class, "rvSlide");
@@ -141,7 +143,7 @@ public class VSlideController {
 
     public void tiltArmUp() {
         tilt1Left.setPosition(0.3);
-        tilt1Right.setPosition(0.7);
+        tilt1Right.setPosition(0.3);
         updateTelemetry();
     }
 
@@ -155,16 +157,15 @@ public class VSlideController {
         tilt1ArmZero();
         tilt2.setPosition(0.5);
         openClaw();
-        rollClawUp();
+        rollClawDown();
     }
 
-    public void vSlideManualEg(double increment) {
-        int newPosition = getCurrentVPos() + (int) increment;
-        newPosition = Math.max(0, newPosition);
-        newPosition = Math.min(MAX_POSITION, newPosition);
+    public void vSlideManualEg(int position) {
+        position = Math.max(35, position);
+        position = Math.min(MAX_POSITION, position);
 
-        slideVL.setTargetPosition(newPosition);
-        slideVR.setTargetPosition(newPosition);
+        slideVL.setTargetPosition(position);
+        slideVR.setTargetPosition(position);
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
@@ -172,17 +173,13 @@ public class VSlideController {
     }
 
     // VSlideController.java
-    public void tiltArmManualControl(double increment) {
-        double newPositionLeft = tilt1Left.getPosition() + increment;
-        double newPositionRight = tilt1Right.getPosition() - increment;
+    public void tiltArmManualControl(double position) {
 
-        newPositionLeft = Math.max(0, newPositionLeft);
-        newPositionLeft = Math.min(1, newPositionLeft);
-        newPositionRight = Math.max(0, newPositionRight);
-        newPositionRight = Math.min(1, newPositionRight);
+        position = Math.max(0.2, position);
+        position = Math.min(0.95, position);
 
-        tilt1Left.setPosition(newPositionLeft);
-        tilt1Right.setPosition(newPositionRight);
+        tilt1Left.setPosition(position);
+        tilt1Right.setPosition(position);
         updateTelemetry();
     }
     public void RollManualControl(double increment) {
@@ -200,28 +197,54 @@ public class VSlideController {
         slideVR.setTargetPosition(MAX_POSITION);
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideVL.setPower(0.5);
-        slideVR.setPower(0.5);
+        slideVL.setPower(0.8);
+        slideVR.setPower(0.8);
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 700){
+
+        }
+        rollClawUp();
+        tilt2.setPosition(0.6); //cave inwards
+        // vSliderSystem.tiltArmUp();
         isHighBasket = true;
+        tiltArmManualControl(1); //set it to max tilt
     }
 
     public void VSlideHighRung() {
-        slideVL.setTargetPosition(0); //PLACEHOLDER
-        slideVR.setTargetPosition(0); //PLACEHOLDER
+        slideVL.setTargetPosition(1500); //PLACEHOLDER
+        slideVR.setTargetPosition(1500); //PLACEHOLDER
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
         slideVR.setPower(0.5);
         isHighBasket = false;
+
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 700){
+
+        }
+
+        tiltArmManualControl(0.78); //set it to max tilt
+        tilt2.setPosition(0.4);
     }
 
-    public void vSlideDrop() {
-        if (isHighBasket) {
 
-        } else {
+    public void tilt2Ctrl(int pos){
+        if (pos < 0.8 && pos > 0.2){
+            tilt2.setPosition(pos);
+        }
+
+    }
+    public void vSlideDrop() {
+        long start = System.currentTimeMillis();
+
             // Code for dropping from high rung
             // Placeholder for high rung drop code
-        }
+            claw.setPosition(0.65);
+            vSlideManualEg(1100);
+            while (System.currentTimeMillis() - start < 800){
+
+            }
     }
 
 
