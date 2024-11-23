@@ -349,6 +349,10 @@ public class DriveControlled extends LinearOpMode {
 
         }
 
+        if(gamepad2.dpad_left){
+
+        }
+
         if(gamepad2.dpad_down){
             //open claw
             vSliderSystem.closeClaw();

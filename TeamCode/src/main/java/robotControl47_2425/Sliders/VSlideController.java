@@ -232,6 +232,23 @@ public class VSlideController {
         tilt2.setPosition(0.4);
     }
 
+    public void pickUpFromWall(){
+        slideVL.setTargetPosition(1000); //PLACEHOLDER
+        slideVR.setTargetPosition(1000); //PLACEHOLDER
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
+
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 700) {
+
+        }
+        tiltArmManualControl(0.2);
+        tilt2.setPosition(0.6);
+        openClaw();
+    }
+
 
     public void tilt2Ctrl(int pos){
         if (pos < 0.8 && pos > 0.2){
