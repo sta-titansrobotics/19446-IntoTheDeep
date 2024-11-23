@@ -28,12 +28,12 @@ public class AutoInit extends LinearOpMode {
         vSliderSystem.goToPosition(700);
         long start = System.currentTimeMillis();
         while (System.currentTimeMillis() - start < 2000) {
-            // Wait for 2 seconds
+
         }
         vSliderSystem.transferPos();
         start = System.currentTimeMillis();
         while (System.currentTimeMillis() - start < 2000) {
-            // Wait for 2 seconds
+
         }
         vSliderSystem.goToPosition(20);
 
