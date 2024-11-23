@@ -126,7 +126,7 @@ public class HSlideController {
 
     }
     public void rampDown(){
-        ramp.setPosition(0.8);
+        ramp.setPosition(0.6);
 
     }
 }

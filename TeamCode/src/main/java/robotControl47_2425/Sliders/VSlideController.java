@@ -161,7 +161,7 @@ public class VSlideController {
     }
 
     public void vSlideManualEg(int position) {
-        position = Math.max(20, position);
+        position = Math.max(30, position);
         position = Math.min(MAX_POSITION, position);
 
         slideVL.setTargetPosition(position);
@@ -230,11 +230,12 @@ public class VSlideController {
 
         tiltArmManualControl(0.78); //set it to max tilt
         tilt2.setPosition(0.4);
+        rollClawDown();
     }
 
     public void pickUpFromWall(){
-        slideVL.setTargetPosition(1000); //PLACEHOLDER
-        slideVR.setTargetPosition(1000); //PLACEHOLDER
+        slideVL.setTargetPosition(500); //PLACEHOLDER
+        slideVR.setTargetPosition(500); //PLACEHOLDER
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
@@ -244,9 +245,19 @@ public class VSlideController {
         while (System.currentTimeMillis() - start < 700) {
 
         }
-        tiltArmManualControl(0.2);
+        tiltArmManualControl(0.1);
         tilt2.setPosition(0.6);
         openClaw();
+        start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 700) {
+
+        }
+        slideVL.setTargetPosition(0); //PLACEHOLDER
+        slideVR.setTargetPosition(0); //PLACEHOLDER
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
     }
 
 
@@ -261,8 +272,8 @@ public class VSlideController {
 
             // Code for dropping from high rung
             // Placeholder for high rung drop code
-            claw.setPosition(0.65);
-            vSlideManualEg(1100);
+            openClaw();
+            vSlideManualEg(900);
             while (System.currentTimeMillis() - start < 800){
 
             }

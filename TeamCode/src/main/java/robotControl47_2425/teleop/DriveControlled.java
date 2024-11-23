@@ -54,7 +54,7 @@ public class DriveControlled extends LinearOpMode {
         while(System.currentTimeMillis()-start<2000){
 
         }
-        vSliderSystem.goToPosition(20);
+        vSliderSystem.goToPosition(30);
         //====================================================
 
 
@@ -250,6 +250,14 @@ public class DriveControlled extends LinearOpMode {
             hSliderSystem.setIntakePower(0);
         }
 
+        if(gamepad1.dpad_up){
+            hSliderSystem.rampUp();
+        }
+
+        if(gamepad1.dpad_left){
+            hSliderSystem.rampDown();
+        }
+
         // automatic
         if (gamepad1.a){
             vSliderSystem.goToPosition(500);
@@ -288,7 +296,7 @@ public class DriveControlled extends LinearOpMode {
             while (hSliderSystem.getCurrentPos()>0){
 
             }
-            vSliderSystem.goToPosition(20);
+            vSliderSystem.goToPosition(30);
 
         }
     }
@@ -345,12 +353,12 @@ public class DriveControlled extends LinearOpMode {
             long start = System.currentTimeMillis();
             while (System.currentTimeMillis() - start < 1000) {
             }
-            vSliderSystem.goToPosition(20);
+            vSliderSystem.goToPosition(30);
 
         }
 
         if(gamepad2.dpad_left){
-
+            vSliderSystem.pickUpFromWall();
         }
 
         if(gamepad2.dpad_down){
