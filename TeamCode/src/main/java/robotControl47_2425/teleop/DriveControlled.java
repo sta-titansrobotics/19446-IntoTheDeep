@@ -258,6 +258,11 @@ public class DriveControlled extends LinearOpMode {
 
         // automatic
         if (gamepad1.a){
+            vSliderSystem.goToPosition(100);
+            while (System.currentTimeMillis() - start < 700){
+
+            }
+            vSliderSystem.transferPos();
             hSliderSystem.goToPosition(1500);
             long start = System.currentTimeMillis();
             while (System.currentTimeMillis() - start < 600){
