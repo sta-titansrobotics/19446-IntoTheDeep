@@ -32,14 +32,32 @@ public class AutoStrafeRight extends LinearOpMode {
 
         waitForStart();
 
-        // Set power to strafe right
-        fl.setPower(0.5);
-        fr.setPower(-0.5);
-        bl.setPower(-0.5);
-        br.setPower(0.5);
+        // Set initial power to strafe right
+        double power = 0.5;
+        fl.setPower(power);
+        fr.setPower(-power);
+        bl.setPower(-power);
+        br.setPower(power);
+
+        // Proportional control constant
+        double kP = 0.01;
 
         // Strafe for a fixed duration (e.g., 2 seconds)
-        sleep(2000);
+        long startTime = System.currentTimeMillis();
+        while (opModeIsActive() && System.currentTimeMillis() - startTime < 5000) {
+            // Calculate the error (difference in encoder values)
+            int leftError = fl.getCurrentPosition() - bl.getCurrentPosition();
+            int rightError = fr.getCurrentPosition() - br.getCurrentPosition();
+
+            // Calculate the correction
+            double correction = kP * (leftError - rightError);
+
+            // Adjust motor powers
+            fl.setPower(power - correction);
+            fr.setPower(-power - correction);
+            bl.setPower(-power + correction);
+            br.setPower(power + correction);
+        }
 
         // Stop all motors
         fl.setPower(0);
