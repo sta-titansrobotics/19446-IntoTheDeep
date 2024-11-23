@@ -148,8 +148,8 @@ public class VSlideController {
     }
 
     public void tilt1ArmZero() {
-        tilt1Left.setPosition(0.5);
-        tilt1Right.setPosition(0.5);
+        tilt1Left.setPosition(0.515);
+        tilt1Right.setPosition(0.515);
         updateTelemetry();
     }
 
@@ -189,6 +189,10 @@ public class VSlideController {
 
         roll.setPosition(newPosition);
         updateTelemetry();
+    }
+
+    public void fdsa(double lol){
+        tilt2.setPosition(lol);
     }
 
     public void VSlideHighBasket() {

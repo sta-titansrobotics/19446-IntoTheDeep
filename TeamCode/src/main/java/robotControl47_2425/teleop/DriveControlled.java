@@ -44,15 +44,23 @@ public class DriveControlled extends LinearOpMode {
         hSliderSystem.initialize();
         vSliderSystem.initializeMotors();
 
+        //----------------Yea, don't touch-----------------
         InitializeMotors();
         vSliderSystem.goToPosition(700);
+        long start = System.currentTimeMillis();
+        while(System.currentTimeMillis()-start<2000){
+
+        }
         vSliderSystem.tilt1ArmZero();
-        vSliderSystem.tilt2.setPosition(0.5);
-        sleep(100);
+        vSliderSystem.fdsa(0.51);
         vSliderSystem.openClaw();
         vSliderSystem.rollClawDown();
-        sleep(2000);
-        //vSliderSystem.goToPosition(35);
+        start = System.currentTimeMillis();
+        while(System.currentTimeMillis()-start<2000){
+
+        }
+        vSliderSystem.goToPosition(50);
+        //====================================================
 
 
         waitForStart();
