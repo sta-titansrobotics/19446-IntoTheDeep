@@ -37,6 +37,7 @@ public class Chassis {
     private Telemetry telemetry;
 
     private moveToPoint p2pThread = null;
+    Odometry lol;
     private odomTracking odomThread = new odomTracking();
 //    private Odometry odometry;
     private RobotPos targetPosition;
@@ -75,6 +76,7 @@ public class Chassis {
         // Initialize target position
         targetPosition = new RobotPos(0, 0, 0);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+        lol = new Odometry(this.opMode);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
@@ -93,14 +95,17 @@ public class Chassis {
         //put initial values first during init
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
 
-        while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.02 || Math.abs(target_ang - current_ang) > 1) {
+        while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.05 || Math.abs(target_ang - current_ang) > 1) {
+            global_xM = lol.getCurrentPosition().x;
+            global_yM = lol.getCurrentPosition().y;
+
+
             //condition uses formula for circle to create resolution
             //if current x and y is within circle with radius 0.02M
             //or if current angle is within a 2 degree resolution from target, stop
             current_x = global_xM;
             current_y = global_yM;
-            current_ang = getAngle();
-            telemetry.addData("hi", "testing");
+            current_ang = lol.getCurrentPosition().angle;
 
             double error_x = target_x - current_x;
             double error_y = target_y - current_y;
@@ -148,6 +153,8 @@ public class Chassis {
             if (opMode.isStopRequested()) {
                 break;
             }
+            telemetry.addData("error (<5):", 100*Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
+            telemetry.addData("angle error (<1):", Math.abs(target_ang - current_ang));
             Thread.sleep(10);
         }
         frontLeft.setPower(0);
@@ -193,8 +200,9 @@ public class Chassis {
             telemetry.addData("R-encoder", encoder_r);
             telemetry.addData("H-encoder", encoder_h);
             telemetry.addData("ang", current_ang);
-            telemetry.addData("x", global_xM);
-            telemetry.addData("y", global_yM);
+            telemetry.addData("global X (metres)", global_xM);
+            telemetry.addData("global Y (metres)", global_yM);
+            telemetry.update();
 
             prev_encoder_l = encoder_l;
             prev_encoder_r = encoder_r;
@@ -202,6 +210,7 @@ public class Chassis {
             prev_ang = current_ang;
 
             Thread.sleep(10);
+
         }
     }
     //------------------------------------------------------------------------------------------------------------------------
@@ -285,12 +294,14 @@ public class Chassis {
     }
 
     private class odomTracking extends Thread{
+
         public odomTracking(){
+
 
         }
         public void run(){
             try{
-                odom_pos_est();
+                lol.updatePosition();
             }catch (Exception e) {
 
             }

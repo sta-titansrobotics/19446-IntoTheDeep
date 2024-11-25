@@ -19,9 +19,9 @@ public class Odometry {
 
     public Odometry(LinearOpMode opMode) {
         // Initialize hardware
-        odomLeft = opMode.hardwareMap.get(DcMotor.class, "frontLeft"); //expansionhub port 0
-        odomRight = opMode.hardwareMap.get(DcMotor.class, "backRight"); //control hub port 2
-        odomHorizontal = opMode.hardwareMap.get(DcMotor.class, "frontRight"); //control hub port 3
+        odomLeft = opMode.hardwareMap.get(DcMotor.class, "lf"); //expansionhub port 0
+        odomRight = opMode.hardwareMap.get(DcMotor.class, "rr"); //control hub port 2
+        odomHorizontal = opMode.hardwareMap.get(DcMotor.class, "rf"); //control hub port 3
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

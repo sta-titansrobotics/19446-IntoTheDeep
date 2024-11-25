@@ -148,8 +148,8 @@ public class VSlideController {
     }
 
     public void tilt1ArmZero() {
-        tilt1Left.setPosition(0.508);
-        tilt1Right.setPosition(0.508);
+        tilt1Left.setPosition(0.5065);
+        tilt1Right.setPosition(0.5065);
         updateTelemetry();
     }
 
@@ -215,14 +215,14 @@ public class VSlideController {
     }
 
     public void VSlideHighRung() {
-        slideVL.setTargetPosition(1800); //PLACEHOLDER
-        slideVR.setTargetPosition(1800); //PLACEHOLDER
+        slideVL.setTargetPosition(1750); //PLACEHOLDER
+        slideVR.setTargetPosition(1750); //PLACEHOLDER
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
         slideVR.setPower(0.5);
+        rollClawUp();
         isHighBasket = false;
-
         long start = System.currentTimeMillis();
         while (System.currentTimeMillis() - start < 700){
 
@@ -234,6 +234,11 @@ public class VSlideController {
     }
 
     public void pickUpFromWall(){
+        openClaw();
+        long start = System.currentTimeMillis();
+        while(System.currentTimeMillis()-start<200){
+
+        }
         slideVL.setTargetPosition(500); //PLACEHOLDER
         slideVR.setTargetPosition(500); //PLACEHOLDER
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -241,13 +246,14 @@ public class VSlideController {
         slideVL.setPower(0.5);
         slideVR.setPower(0.5);
 
-        long start = System.currentTimeMillis();
+        start = System.currentTimeMillis();
         while (System.currentTimeMillis() - start < 700) {
 
         }
         tiltArmManualControl(0.1);
         tilt2.setPosition(0.6);
         openClaw();
+        rollClawDown();
         start = System.currentTimeMillis();
         while (System.currentTimeMillis() - start < 700) {
 

@@ -122,25 +122,17 @@ public class HSlideController {
     }
 
     public void rampUp(){
-        ramp.setPosition(0.3);
+        ramp.setPosition(0);
 
     }
 
     public void decreaseRamp(){
-        ramp.setPosition(ramp.getPosition()-0.01);
-        long start = System.currentTimeMillis();
-        while(start-System.currentTimeMillis()<10){
 
-        }
     }
     public void rampDown(){
-        ramp.setPosition(0.45);
+        ramp.setPosition(0.33);
         long start = System.currentTimeMillis();
-        while (ramp.getPosition()<0.45){
-            if(start-System.currentTimeMillis()>1000){
-                rampUp();
-            }
-        }
+
 
     }
 }

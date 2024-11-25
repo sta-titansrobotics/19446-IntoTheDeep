@@ -51,7 +51,7 @@ public class DriveControlled extends LinearOpMode {
         }
         vSliderSystem.transferPos();
         start = System.currentTimeMillis();
-        while(System.currentTimeMillis()-start<1000){
+        while(System.currentTimeMillis()-start<2000){
 
         }
         vSliderSystem.goToPosition(30);
@@ -304,9 +304,9 @@ public class DriveControlled extends LinearOpMode {
     void gamepad2Ctrl() {
 
         if (gamepad2.right_trigger > 0.2) {
-            vSliderSystem.vSlideManualEg(vSliderSystem.getCurrentVPos()+10);
+            vSliderSystem.vSlideManualEg(vSliderSystem.getCurrentVPos()+30);
         } else if (gamepad2.left_trigger > 0.2) {
-            vSliderSystem.vSlideManualEg(vSliderSystem.getCurrentVPos()-10);
+            vSliderSystem.vSlideManualEg(vSliderSystem.getCurrentVPos()-30);
         }
 
         if (gamepad2.left_stick_y != 0) {
@@ -349,21 +349,20 @@ public class DriveControlled extends LinearOpMode {
                 vSliderSystem.openClaw();
             }
         } else if (gamepad2.b) {
-            vSliderSystem.transferPos();
+            vSliderSystem.openClaw();
             long start = System.currentTimeMillis();
+            while (System.currentTimeMillis() - start < 300) {
+            }
+            vSliderSystem.transferPos();
+            start = System.currentTimeMillis();
             while (System.currentTimeMillis() - start < 1000) {
             }
             vSliderSystem.goToPosition(30);
 
         }
 
-        if(gamepad2.dpad_right){
-            hSliderSystem.{}
-        }
-
         if(gamepad2.dpad_left){
             vSliderSystem.pickUpFromWall();
-            vSliderSystem.openClaw();
         }
 
         if(gamepad2.dpad_down){

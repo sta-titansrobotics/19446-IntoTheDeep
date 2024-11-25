@@ -35,7 +35,7 @@ public class sampleAuton extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             //This is moving in terms of centimeters
 
-            chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0, 0, 0.2, 0);
+            chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0.1, 0.1, 0.2, 0);
 
             telemetry.update();
             sleep(10);
