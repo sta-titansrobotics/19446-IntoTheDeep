@@ -1,8 +1,13 @@
 package robotControl47_2425;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.robocol.TelemetryMessage;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -11,13 +16,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class Odometry {
     private DcMotor odomLeft, odomRight, odomHorizontal;
     private BNO055IMU imu;
-    private RobotPos currentPosition;
+
 
     private double prevEncoderL = 0, prevEncoderR = 0, prevEncoderH = 0, prevAngle = 0;
     private Orientation lastAngles = new Orientation();
     private double globalAngle = 0;
+    private Telemetry telemetry;
+    private double global_y =0, global_x =0;
 
-    public Odometry(LinearOpMode opMode) {
+    public Odometry(LinearOpMode opMode, Telemetry tm) {
         // Initialize hardware
         odomLeft = opMode.hardwareMap.get(DcMotor.class, "lf"); //expansionhub port 0
         odomRight = opMode.hardwareMap.get(DcMotor.class, "rr"); //control hub port 2
@@ -27,9 +34,9 @@ public class Odometry {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
+        telemetry = tm;
 
-        // Initialize position
-        currentPosition = new RobotPos(0, 0, 0);
+
     }
 
     public void updatePosition() {
@@ -62,15 +69,23 @@ public class Odometry {
         double deltaGlobalY = deltaLocalX * Math.sin(currentAngle) + deltaLocalY * Math.cos(currentAngle);
 
         // Update global position
-        currentPosition.x += deltaGlobalX;
-        currentPosition.y += deltaGlobalY;
-        currentPosition.angle = Math.toDegrees(currentAngle);
+        global_x+= deltaGlobalX;
+        global_y += deltaGlobalY;
+        globalAngle = Math.toDegrees(currentAngle);
 
         // Update previous values for the next update
         prevEncoderL = encoderL;
         prevEncoderR = encoderR;
         prevEncoderH = encoderH;
         prevAngle = currentAngle;
+
+        telemetry.addData("L-encoder", odomLeft);
+        telemetry.addData("R-encoder", odomRight);
+        telemetry.addData("H-encoder", odomHorizontal);
+        telemetry.addData("ang", currentAngle);
+        telemetry.addData("global X (metres)", global_x);
+        telemetry.addData("global Y (metres)", global_y);
+        telemetry.update();
     }
 
     private double encoderToMetres(int ticks) {
@@ -91,8 +106,17 @@ public class Odometry {
         return globalAngle;
     }
 
-    public RobotPos getCurrentPosition() {
-        return currentPosition;
+    public double getGlobalX() {
+        return global_x;
     }
+    public double getGlobalY() {
+        return global_y;
+    }
+    public double getGlobalAngle() {
+        return globalAngle;
+    }
+
+
+
 
 }

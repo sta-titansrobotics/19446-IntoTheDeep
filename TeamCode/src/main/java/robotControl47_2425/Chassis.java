@@ -37,10 +37,10 @@ public class Chassis {
     private Telemetry telemetry;
 
     private moveToPoint p2pThread = null;
-    Odometry lol;
+
+    private double global_X = 0, global_Y = 0;
+    private Odometry lol;
     private odomTracking odomThread = new odomTracking();
-//    private Odometry odometry;
-    private RobotPos targetPosition;
     private double encoder_l, encoder_r, encoder_h;
     private double disM_encoderHtoCenter = -0.0755; // Distance from horizontal encoder to robot center in meters
     private double wheelDiameter = 0.032; // Diameter of the odometry wheel in meters
@@ -53,7 +53,7 @@ public class Chassis {
     private BNO055IMU imu;
 
 
-    public Chassis(LinearOpMode opMode) {
+    public Chassis(LinearOpMode opMode, Telemetry tm) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
 
@@ -74,12 +74,12 @@ public class Chassis {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize target position
-        targetPosition = new RobotPos(0, 0, 0);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        lol = new Odometry(this.opMode);
+        lol = new Odometry(this.opMode, this.telemetry);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
+        telemetry = tm;
 
         odomThread.start();
     }
@@ -96,8 +96,8 @@ public class Chassis {
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
 
         while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.05 || Math.abs(target_ang - current_ang) > 1) {
-            global_xM = lol.getCurrentPosition().x;
-            global_yM = lol.getCurrentPosition().y;
+            global_xM = lol.getGlobalX();
+            global_yM = lol.getGlobalY();
 
 
             //condition uses formula for circle to create resolution
@@ -105,7 +105,7 @@ public class Chassis {
             //or if current angle is within a 2 degree resolution from target, stop
             current_x = global_xM;
             current_y = global_yM;
-            current_ang = lol.getCurrentPosition().angle;
+            current_ang = lol.getGlobalAngle();
 
             double error_x = target_x - current_x;
             double error_y = target_y - current_y;
