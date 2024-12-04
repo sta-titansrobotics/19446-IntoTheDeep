@@ -25,7 +25,7 @@ public class sampleAuton extends LinearOpMode {
 
         //Initialize chasis and Odometry
         //odometry = new Odometry(this);
-        chassis = new Chassis(this, this.telemetry);
+        chassis = new Chassis(this);
         odometry = new Odometry(this, this.telemetry);
 
         // Wait for the game to start (driver presses PLAY)

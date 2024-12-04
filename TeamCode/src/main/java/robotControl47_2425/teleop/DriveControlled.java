@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import robotControl47_2425.Chassis;
 import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
 
@@ -25,11 +26,13 @@ public class DriveControlled extends LinearOpMode {
     private boolean clawOpen = false;
     private boolean armTiltedUp = false;
     private boolean clawRolledUp = false;
-    private DcMotor fl, fr, bl, br;
+    private DcMotor lf, lr, rf, rr;
 
     private long totalTime = 0;
     private int position_buttonA =0;
     private boolean isHighBasket = false;
+
+    private Chassis chassis;
 
 
 
@@ -38,12 +41,12 @@ public class DriveControlled extends LinearOpMode {
 
         hSliderSystem = new HSlideController(hardwareMap, this);
         vSliderSystem = new VSlideController(hardwareMap, this);
+        chassis = new Chassis(this);
 
         hSliderSystem.initialize();
         vSliderSystem.initializeMotors();
 
-        //----------------Yea, don't touch-----------------
-        InitializeMotors();
+
         vSliderSystem.goToPosition(700);
         long start = System.currentTimeMillis();
         while(System.currentTimeMillis()-start<1000){
@@ -65,7 +68,7 @@ public class DriveControlled extends LinearOpMode {
 //            hSlideManualControl();
 //            handleServoControl();
             updateTelemetry();
-            telemetryDrive();
+            chassis.telemetryDrive();
 //            vSliderCtrl();
 //            armSyncCtrl();
             gamepad1Ctrl();
@@ -175,56 +178,18 @@ public class DriveControlled extends LinearOpMode {
         telemetry.addData("HSlide Extended", hSlideExtended);
         telemetry.addData("VSlide Position", vSliderSystem.getCurrentVPos());
         telemetry.addData("VSlide Extended", vSlideExtended);
-
-        telemetry.addData("Front Left Power", fl.getPower());
-        telemetry.addData("Front Right Power", fr.getPower());
-        telemetry.addData("Back Left Power", bl.getPower());
-        telemetry.addData("Back Right Power", br.getPower());
+//
+//        telemetry.addData("Front Left Power", fl.getPower());
+//        telemetry.addData("Front Right Power", fr.getPower());
+//        telemetry.addData("Back Left Power", bl.getPower());
+//        telemetry.addData("Back Right Power", br.getPower());
 
 
 
         telemetry.update();
     }
 
-    public void InitializeMotors() {
-        fl = hardwareMap.get(DcMotor.class, "lf");
-        fr = hardwareMap.get(DcMotor.class, "rf");
-        bl = hardwareMap.get(DcMotor.class, "lr");
-        br = hardwareMap.get(DcMotor.class, "rr");
 
-        fl.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.REVERSE);
-
-        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void telemetryDrive() {
-        double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-        double rx = gamepad1.right_stick_x;
-
-
-        double frontLeftPower = (y + x + rx);
-        double backLeftPower = (y - x + rx);
-        double frontRightPower = (y - x - rx);
-        double backRightPower = (y + x - rx);
-
-        double denominator = Math.max(Math.abs(frontLeftPower), Math.max(Math.abs(backLeftPower), Math.max(Math.abs(frontRightPower), Math.max(Math.abs(backRightPower), 1))));
-
-        fl.setPower(frontLeftPower / denominator);
-        bl.setPower(backLeftPower / denominator);
-        fr.setPower(frontRightPower / denominator);
-        br.setPower(backRightPower / denominator);
-    }
 
     void gamepad1Ctrl(){
         // manual h-slider
