@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -31,8 +32,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Chassis {
     double global_xM = 0, global_yM = 0;
-    private DcMotor frontLeft, frontRight, backLeft, backRight;
+    private DcMotor lf, lr, rf, rr;
     private LinearOpMode opMode;
+    private HardwareMap hardwareMap;
 
     private Telemetry telemetry;
 
@@ -52,26 +54,16 @@ public class Chassis {
     private Orientation lastAngles = new Orientation();
     private BNO055IMU imu;
 
+    private Gamepad gamepad1;
 
-    public Chassis(LinearOpMode opMode, Telemetry tm) {
+
+    public Chassis(LinearOpMode opMode) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
+        this.hardwareMap = opMode.hardwareMap;
+        this.gamepad1 = opMode.gamepad1;
 
-        // Initialize motors from the hardware map
-        frontLeft = opMode.hardwareMap.get(DcMotor.class, "lf");
-        frontRight = opMode.hardwareMap.get(DcMotor.class, "rf");
-        backLeft = opMode.hardwareMap.get(DcMotor.class, "lr");
-        backRight = opMode.hardwareMap.get(DcMotor.class, "rr");
-
-        // Set directions for motors
-//        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // Set zero power behavior
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        initializeMotors();
 
         // Initialize target position
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
@@ -79,9 +71,51 @@ public class Chassis {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
-        telemetry = tm;
 
         odomThread.start();
+    }
+    public void initializeMotors() {
+        lf = hardwareMap.get(DcMotor.class, "lf");
+        rf = hardwareMap.get(DcMotor.class, "rf");
+        lr = hardwareMap.get(DcMotor.class, "lr");
+        rr = hardwareMap.get(DcMotor.class, "rr");
+
+        lf.setDirection(DcMotor.Direction.REVERSE);
+        lr.setDirection(DcMotor.Direction.REVERSE);
+
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void telemetryDrive() {
+        double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+        double rx = gamepad1.right_stick_x;
+
+
+        double frontLeftPower = (y + x + rx);
+        double backLeftPower = (y - x + rx);
+        double frontRightPower = (y - x - rx);
+        double backRightPower = (y + x - rx);
+
+        double denominator = Math.max(Math.abs(frontLeftPower), Math.max(Math.abs(backLeftPower), Math.max(Math.abs(frontRightPower), Math.max(Math.abs(backRightPower), 1))));
+
+        lf.setPower(frontLeftPower / denominator);
+        lr.setPower(backLeftPower / denominator);
+        rf.setPower(frontRightPower / denominator);
+        rr.setPower(backRightPower / denominator);
     }
 
     //=============================================================================================================================
@@ -142,10 +176,10 @@ public class Chassis {
             }
 
 
-            frontLeft.setPower(lfPower);
-            frontRight.setPower(rfPower);
-            backLeft.setPower(lrPower);
-            backRight.setPower(rrPower);
+            lf.setPower(lfPower);
+            rf.setPower(rfPower);
+            lr.setPower(lrPower);
+            rr.setPower(rrPower);
 
             prev_error_x = error_x;
             prev_error_y = error_y;
@@ -153,14 +187,11 @@ public class Chassis {
             if (opMode.isStopRequested()) {
                 break;
             }
-            telemetry.addData("error (<5):", 100 * Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
+            telemetry.addData("error (<5):", 100*Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
             telemetry.addData("angle error (<1):", Math.abs(target_ang - current_ang));
             Thread.sleep(10);
         }
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        stop();
         isBusy = false;
     }
 
@@ -170,9 +201,9 @@ public class Chassis {
         double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y,
                 delta_global_x, delta_global_y, delta_ang;
         while (!opMode.isStopRequested() && opMode.opModeIsActive()) {
-            encoder_l = encoderToMetres(-frontLeft.getCurrentPosition());
-            encoder_r = encoderToMetres(frontRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
-            encoder_h = encoderToMetres(backRight.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+            encoder_l = encoderToMetres(-lf.getCurrentPosition());
+            encoder_r = encoderToMetres(lr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+            encoder_h = encoderToMetres(rr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
 
             current_ang = Math.toRadians(getAngle()); //degrees to radians (either ways of calculating current angle work[imu or encoder])
             //current_ang = Math.toRadians((encoder_r-encoder_l)/0.031) //(r-l) divided by distance (METRES) between the encoder wheels
@@ -248,32 +279,29 @@ public class Chassis {
 
     // Stop all motors
     public void stop() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        lf.setPower(0);
+        lr.setPower(0);
+        rf.setPower(0);
+        rr.setPower(0);
     }
-
-    public void stopAllThreads() {
-        if (p2pThread != null) {
+    public void stopAllThreads(){
+        if (p2pThread != null){
             p2pThread.interrupt();
             p2pThread = null;
         }
-        if (odomThread != null) {
+        if (odomThread != null){
             odomThread.interrupt();
             odomThread = null;
         }
     }
 
-    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
+    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout){
 
         p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
         p2pThread.start();
     }
-
     private class moveToPoint extends Thread {
         double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout;
-
         public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
             this.target_x = target_x;
             this.target_y = target_y;
@@ -296,18 +324,16 @@ public class Chassis {
         }
     }
 
+    private class odomTracking extends Thread{
 
-    private class odomTracking extends Thread {
-
-        public odomTracking() {
+        public odomTracking(){
 
 
         }
-
-        public void run() {
-            try {
+        public void run(){
+            try{
                 lol.updatePosition();
-            } catch (Exception e) {
+            }catch (Exception e) {
 
             }
         }

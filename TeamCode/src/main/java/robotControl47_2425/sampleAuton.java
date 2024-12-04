@@ -23,13 +23,13 @@ public class sampleAuton extends LinearOpMode {
 //        HSlide = new HSlideController(sliderH);
 //        VSlide = new VSlideController(this.hardwareMap, this);
 
-        //Initialize chasis and Odometr
+        //Initialize chasis and Odometry
+        //odometry = new Odometry(this);
+        chassis = new Chassis(this);
+        odometry = new Odometry(this, this.telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        chassis = new Chassis(this, this.telemetry);
-        odometry = new Odometry(this, this.telemetry);
-        //odometry.reset();
 
         // Run autonomous-specific code here
 //        HSlide.start();
@@ -37,7 +37,7 @@ public class sampleAuton extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             //This is moving in terms of centimeters
 
-            ///chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0.1, 0.1, 0.2, 0);
+            //chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0.1, 0.1, 0.2, 0);
             odometry.updatePosition();
 
             telemetry.update();
