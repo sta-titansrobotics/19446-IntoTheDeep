@@ -64,8 +64,8 @@ public class Chassis {
         backRight = opMode.hardwareMap.get(DcMotor.class, "rr");
 
         // Set directions for motors
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set zero power behavior
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -153,7 +153,7 @@ public class Chassis {
             if (opMode.isStopRequested()) {
                 break;
             }
-            telemetry.addData("error (<5):", 100*Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
+            telemetry.addData("error (<5):", 100 * Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
             telemetry.addData("angle error (<1):", Math.abs(target_ang - current_ang));
             Thread.sleep(10);
         }
@@ -253,24 +253,27 @@ public class Chassis {
         backLeft.setPower(0);
         backRight.setPower(0);
     }
-    public void stopAllThreads(){
-        if (p2pThread != null){
+
+    public void stopAllThreads() {
+        if (p2pThread != null) {
             p2pThread.interrupt();
             p2pThread = null;
         }
-        if (odomThread != null){
+        if (odomThread != null) {
             odomThread.interrupt();
             odomThread = null;
         }
     }
 
-    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout){
+    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
 
         p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
         p2pThread.start();
     }
+
     private class moveToPoint extends Thread {
         double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout;
+
         public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
             this.target_x = target_x;
             this.target_y = target_y;
@@ -293,16 +296,18 @@ public class Chassis {
         }
     }
 
-    private class odomTracking extends Thread{
 
-        public odomTracking(){
+    private class odomTracking extends Thread {
+
+        public odomTracking() {
 
 
         }
-        public void run(){
-            try{
+
+        public void run() {
+            try {
                 lol.updatePosition();
-            }catch (Exception e) {
+            } catch (Exception e) {
 
             }
         }
