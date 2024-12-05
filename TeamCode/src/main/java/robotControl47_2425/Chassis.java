@@ -31,7 +31,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Chassis {
-    double global_xM = 0, global_yM = 0;
+    private double global_xM = 0, global_yM = 0;
     private DcMotor lf, lr, rf, rr;
     private LinearOpMode opMode;
     private HardwareMap hardwareMap;
@@ -40,11 +40,10 @@ public class Chassis {
 
     private moveToPoint p2pThread = null;
 
-    private double global_X = 0, global_Y = 0;
-    private Odometry lol;
-    private odomTracking odomThread = new odomTracking();
+    private odom_thread odomTracking = new odom_thread();
+    private boolean odomTrackingStartFlag = false;
     private double encoder_l, encoder_r, encoder_h;
-    private double disM_encoderHtoCenter = -0.0755; // Distance from horizontal encoder to robot center in meters
+    private double disM_encoderHtoCenter = 0.0755; // Distance from horizontal encoder to robot center in meters
     private double wheelDiameter = 0.032; // Diameter of the odometry wheel in meters
     private double ticksPerRevolution = 2000.0; // Encoder ticks per wheel revolution
 
@@ -67,12 +66,11 @@ public class Chassis {
 
         // Initialize target position
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        lol = new Odometry(this.opMode, this.telemetry);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
 
-        odomThread.start();
+        odomTracking.start();
     }
     public void initializeMotors() {
         lf = hardwareMap.get(DcMotor.class, "lf");
@@ -130,8 +128,7 @@ public class Chassis {
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
 
         while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.05 || Math.abs(target_ang - current_ang) > 1) {
-            global_xM = lol.getGlobalX();
-            global_yM = lol.getGlobalY();
+
 
 
             //condition uses formula for circle to create resolution
@@ -139,7 +136,7 @@ public class Chassis {
             //or if current angle is within a 2 degree resolution from target, stop
             current_x = global_xM;
             current_y = global_yM;
-            current_ang = lol.getGlobalAngle();
+//            current_ang = lol.getGlobalAngle();
 
             double error_x = target_x - current_x;
             double error_y = target_y - current_y;
@@ -197,52 +194,9 @@ public class Chassis {
 
     //------------------------------------------------------------------------------------------------------------------------
     private void odom_pos_est() throws InterruptedException {
-        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang;
-        double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y,
-                delta_global_x, delta_global_y, delta_ang;
-        while (!opMode.isStopRequested() && opMode.opModeIsActive()) {
-            encoder_l = encoderToMetres(-lf.getCurrentPosition());
-            encoder_r = encoderToMetres(lr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
-            encoder_h = encoderToMetres(rr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
-
-            current_ang = Math.toRadians(getAngle()); //degrees to radians (either ways of calculating current angle work[imu or encoder])
-            //current_ang = Math.toRadians((encoder_r-encoder_l)/0.031) //(r-l) divided by distance (METRES) between the encoder wheels
-
-            delta_encoder_l = encoder_l - prev_encoder_l;
-            delta_encoder_r = encoder_r - prev_encoder_r;
-            delta_encoder_h = encoder_h - prev_encoder_h;
-            delta_ang = current_ang - prev_ang;
-
-            delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;//find avrg between both odom wheels and convert ticks to M
-            //do not need arc formula because both "x" encoders cancel out offset
 
 
-            delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter); //use arc formula to subtract arc from horizontal encoder wheel
 
-
-            //* distance of h wheel to center
-
-            delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
-            delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
-
-            global_xM += delta_global_x;
-            global_yM += delta_global_y;
-            telemetry.addData("L-encoder", encoder_l);
-            telemetry.addData("R-encoder", encoder_r);
-            telemetry.addData("H-encoder", encoder_h);
-            telemetry.addData("ang", current_ang);
-            telemetry.addData("global X (metres)", global_xM);
-            telemetry.addData("global Y (metres)", global_yM);
-            telemetry.update();
-
-            prev_encoder_l = encoder_l;
-            prev_encoder_r = encoder_r;
-            prev_encoder_h = encoder_h;
-            prev_ang = current_ang;
-
-            Thread.sleep(10);
-
-        }
     }
     //------------------------------------------------------------------------------------------------------------------------
     //========================================================================================================================
@@ -289,9 +243,9 @@ public class Chassis {
             p2pThread.interrupt();
             p2pThread = null;
         }
-        if (odomThread != null){
-            odomThread.interrupt();
-            odomThread = null;
+        if (odomTracking != null){
+            odomTracking.interrupt();
+            odomTracking = null;
         }
     }
 
@@ -324,18 +278,65 @@ public class Chassis {
         }
     }
 
-    private class odomTracking extends Thread{
 
-        public odomTracking(){
-
-
+    private class odom_thread extends Thread{
+        double prev_encoder_l = 0, prev_encoder_r = 0, prev_encoder_h = 0, prev_ang = 0, current_ang;
+        double delta_encoder_l, delta_encoder_r, delta_encoder_h, delta_local_x, delta_local_y,
+                delta_global_x, delta_global_y, delta_ang;
+        public odom_thread(){
         }
         public void run(){
-            try{
-                lol.updatePosition();
-            }catch (Exception e) {
+            while (opMode.opModeIsActive() && !opMode.isStopRequested()){
+                try{
+                    encoder_l = encoderToMetres(lr.getCurrentPosition());
+                    encoder_r = encoderToMetres(-rr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+                    encoder_h = encoderToMetres(lf.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
 
+                    current_ang = Math.toRadians(getAngle()); //degrees to radians (either ways of calculating current angle work[imu or encoder])
+                    //current_ang = Math.toRadians((encoder_r-encoder_l)/0.031) //(r-l) divided by distance (METRES) between the encoder wheels
+
+                    delta_encoder_l = encoder_l - prev_encoder_l;
+                    delta_encoder_r = encoder_r - prev_encoder_r;
+                    delta_encoder_h = encoder_h - prev_encoder_h;
+                    delta_ang = current_ang - prev_ang;
+
+                    delta_local_x = (delta_encoder_l + delta_encoder_r) / 2;//find avrg between both odom wheels and convert ticks to M
+                    //do not need arc formula because both "x" encoders cancel out offset
+
+
+                    delta_local_y = delta_encoder_h - (delta_ang * disM_encoderHtoCenter); //use arc formula to subtract arc from horizontal encoder wheel
+
+
+                    //* distance of h wheel to center
+
+                    delta_global_x = delta_local_x * Math.cos(current_ang) - delta_local_y * Math.sin(current_ang);
+                    delta_global_y = delta_local_x * Math.sin(current_ang) + delta_local_y * Math.cos(current_ang);
+
+                    global_xM += delta_global_x;
+                    global_yM += delta_global_y;
+    //            telemetry.addData("L-encoder", encoder_l);
+    //            telemetry.addData("R-encoder", encoder_r);
+    //            telemetry.addData("H-encoder", encoder_h);
+    //            telemetry.addData("ang", current_ang);
+    //            telemetry.addData("global X (metres)", global_xM);
+    //            telemetry.addData("global Y (metres)", global_yM);
+
+                    prev_encoder_l = encoder_l;
+                    prev_encoder_r = encoder_r;
+                    prev_encoder_h = encoder_h;
+                    prev_ang = current_ang;
+                    Thread.sleep(10);
+
+                }
+                catch(Exception e){
+                    Thread.currentThread().interrupt(); // Restore interrupt status
+                    break;
+                }
             }
         }
+    }
+
+    public String getGlobalPos(){
+        return "Global X: " + global_xM + "|Global Y: " + global_yM;
     }
 }

@@ -26,7 +26,6 @@ public class sampleAuton extends LinearOpMode {
         //Initialize chasis and Odometry
         //odometry = new Odometry(this);
         chassis = new Chassis(this);
-        odometry = new Odometry(this, this.telemetry);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -38,7 +37,7 @@ public class sampleAuton extends LinearOpMode {
             //This is moving in terms of centimeters
 
             //chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0.1, 0.1, 0.2, 0);
-            odometry.updatePosition();
+
 
             telemetry.update();
             sleep(10);
