@@ -25,7 +25,7 @@ public class sampleAuton extends LinearOpMode {
 
         //Initialize chasis and Odometry
         //odometry = new Odometry(this);
-        chassis = new Chassis(this);
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -33,15 +33,28 @@ public class sampleAuton extends LinearOpMode {
         // Run autonomous-specific code here
 //        HSlide.start();
 //        VSlide.start();
+        chassis = new Chassis(this);
+
         while (opModeIsActive() && !isStopRequested()) {
             //This is moving in terms of centimeters
 
-            //chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0.1, 0.1, 0.2, 0);
+            chassis.p2pDrive(0.2, 0, 0, 0.4, 2, 2, 0.1, 0.1, 0.2, 0);
 
 
-            telemetry.update();
-            sleep(10);
+            updateTelemetry();
+            //sleep(10);
         }
         chassis.stopAllThreads();
+
     }//sjfdjsa
+    private void updateTelemetry() {
+//
+//        telemetry.addData("Front Left Power", fl.getPower());
+//        telemetry.addData("Front Right Power", fr.getPower());
+//        telemetry.addData("Back Left Power", bl.getPower());
+//        telemetry.addData("Back Right Power", br.getPower());
+
+        telemetry.addData("Position", chassis.getGlobalPos());
+        telemetry.update();
+    }
 }

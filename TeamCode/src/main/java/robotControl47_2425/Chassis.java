@@ -38,9 +38,10 @@ public class Chassis {
 
     private Telemetry telemetry;
 
-    private moveToPoint p2pThread = null;
+    private moveToPoint p2pThread = new moveToPoint(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     private odom_thread odomTracking = new odom_thread();
+    private
     private boolean odomTrackingStartFlag = false;
     private double encoder_l, encoder_r, encoder_h;
     private double disM_encoderHtoCenter = 0.0755; // Distance from horizontal encoder to robot center in meters
@@ -127,7 +128,7 @@ public class Chassis {
         //put initial values first during init
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
 
-        while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.05 || Math.abs(target_ang - current_ang) > 1) {
+        while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.015 || Math.abs(target_ang - current_ang) > 1) {
 
 
 
@@ -136,7 +137,7 @@ public class Chassis {
             //or if current angle is within a 2 degree resolution from target, stop
             current_x = global_xM;
             current_y = global_yM;
-//            current_ang = lol.getGlobalAngle();
+            current_ang = getAngle();
 
             double error_x = target_x - current_x;
             double error_y = target_y - current_y;
@@ -159,10 +160,10 @@ public class Chassis {
             }
 
 
-            double lfPower = local_vel_x + local_vel_y - correction_ang;
+            double lfPower = local_vel_x + local_vel_y + correction_ang;
             double rfPower = local_vel_x - local_vel_y + correction_ang;
             double lrPower = local_vel_x - local_vel_y - correction_ang;
-            double rrPower = local_vel_x + local_vel_y + correction_ang;
+            double rrPower = local_vel_x + local_vel_y - correction_ang;
 
             double maxNumber = Math.max(Math.max(Math.abs(lfPower), Math.abs(lrPower)), Math.max(Math.abs(rfPower), Math.abs(rrPower)));
             if (maxNumber > 1) {
@@ -184,7 +185,7 @@ public class Chassis {
             if (opMode.isStopRequested()) {
                 break;
             }
-            telemetry.addData("error (<5):", 100*Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
+            telemetry.addData("error (<2):", 100*Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
             telemetry.addData("angle error (<1):", Math.abs(target_ang - current_ang));
             Thread.sleep(10);
         }
@@ -192,13 +193,6 @@ public class Chassis {
         isBusy = false;
     }
 
-    //------------------------------------------------------------------------------------------------------------------------
-    private void odom_pos_est() throws InterruptedException {
-
-
-
-    }
-    //------------------------------------------------------------------------------------------------------------------------
     //========================================================================================================================
 
     private double getAngle() {
@@ -326,17 +320,15 @@ public class Chassis {
                     prev_encoder_h = encoder_h;
                     prev_ang = current_ang;
                     Thread.sleep(10);
-
                 }
                 catch(Exception e){
-                    Thread.currentThread().interrupt(); // Restore interrupt status
-                    break;
+
                 }
             }
         }
     }
 
     public String getGlobalPos(){
-        return "Global X: " + global_xM + "|Global Y: " + global_yM;
+        return "Global X: " + (int)(global_xM * 10000)/100.0 + "|Global Y: " + (int)(global_yM * 10000)/100.0;
     }
 }

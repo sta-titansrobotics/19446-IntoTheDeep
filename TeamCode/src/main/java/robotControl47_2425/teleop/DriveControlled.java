@@ -35,17 +35,15 @@ public class DriveControlled extends LinearOpMode {
     private Chassis chassis;
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
 
         hSliderSystem = new HSlideController(hardwareMap, this);
         vSliderSystem = new VSlideController(hardwareMap, this);
-        chassis = new Chassis(this);
 
-        hSliderSystem.initialize();
-        vSliderSystem.initializeMotors();
 
+     //   hSliderSystem.initialize();
+     //   vSliderSystem.initializeMotors();
 
 //        vSliderSystem.goToPosition(700);
 //        long start = System.currentTimeMillis();
@@ -60,8 +58,8 @@ public class DriveControlled extends LinearOpMode {
 //        vSliderSystem.goToPosition(30);
         //====================================================
 
-
         waitForStart();
+        chassis = new Chassis(this);
 
         while (opModeIsActive() && !isStopRequested()) {
             totalTime = System.currentTimeMillis();
@@ -69,7 +67,7 @@ public class DriveControlled extends LinearOpMode {
 //            handleServoControl();
             updateTelemetry();
             chassis.telemetryDrive();
-//            chassis.odom_pos_est();
+        //    chassis.odom_pos_est();
 //            vSliderCtrl();
 //            armSyncCtrl();
 //            gamepad1Ctrl();
@@ -187,11 +185,8 @@ public class DriveControlled extends LinearOpMode {
 //        telemetry.addData("Back Right Power", br.getPower());
 
         telemetry.addData("Position", chassis.getGlobalPos());
-
         telemetry.update();
     }
-
-
 
     void gamepad1Ctrl(){
         // manual h-slider
