@@ -35,20 +35,33 @@ public class sampleAuton extends LinearOpMode {
         // Run autonomous-specific code here
 //        HSlide.start();
 //        VSlide.start();
+//        chassis = new Chassis(this, 0.36 / 2, -0.315 / 2);
         chassis = new Chassis(this, 0.36 / 2, -0.315 / 2);
         chassis.startOdomThread();
-
-
-
-        chassis.p2pDrive(0.98, -0.315/2, 0, 0.7, 4, 2, 0.1, 0.1, 0.2);
+        chassis.p2pDrive(0, 0, 0, 0.7, 3, 2, 1, 0, 0.3);
         timeout(3000, chassis);
-        chassis.p2pDrive(0.75, -0.75, 90, 0.7, 2, 2, 0.1, 0.1, 0.3);
-        timeout(7000, chassis);
-        // h slide intakes and outtakes
+        chassis.p2pDrive(0.5, -0.5, 180, 0.7, 3, 2, 1, 0, 0.3);
+        timeout(3000, chassis);
 
 
-        chassis.p2pDrive(0.18, -0.9, 180, 0.7, 2, 2, 0.1, 0.1, 0.3);
-        timeout(7000, chassis);
+
+//
+//        chassis.p2pDrive(0.85, -0.315/2, 0, 0.7, 2, 2, 0.1, 0.1, 0.2);
+//        timeout(3000, chassis);
+//        chassis.p2pDrive(0.75, -0.75, 90, 0.7, 2, 2, 0.3, 0.3, 0.2);
+//        timeout(3000, chassis);
+//        // h slide intakes and outtakes
+//
+//        for(int i = 0; i < 3; i++){
+//            chassis.p2pDrive(0.22, -0.9, 0, 0.7, 3, 2, 0.3, 0.3, 0.3);
+//            timeout(5000, chassis);
+//
+//            chassis.p2pDrive(0.85, -0.315, 0, 0.7, 3, 2, 0.3, 0.3, 0.3);
+//            timeout(5000, chassis);
+//        }
+//
+//        chassis.p2pDrive(0.25, -0.9, 0, 0.7, 2, 2, 0.3, 0.3, 0.3);
+//        timeout(5000, chassis);
 
 //        chassis.p2pDrive(0.5, -0.4, -90, 0.6, 2, 2, 0.1, 0.1, 0.3);
 //        timeout(1200, chassis);
