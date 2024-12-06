@@ -28,7 +28,7 @@ public class sampleAuton extends LinearOpMode {
         // Run autonomous-specific code here
 //        HSlide.start();
 //        VSlide.start();
-        chassis = new Chassis(this);
+//        chassis = new Chassis(this);
         chassis.startOdomThread();
         chassis.p2pDrive(0, 0, 0, 0.7, 3, 2, 1, 0, 0.3);
         timeout(3000, chassis);
