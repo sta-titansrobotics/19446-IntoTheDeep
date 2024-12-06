@@ -215,8 +215,8 @@ public class VSlideController {
     }
 
     public void VSlideHighRung() {
-        slideVL.setTargetPosition(1750); //PLACEHOLDER
-        slideVR.setTargetPosition(1750); //PLACEHOLDER
+        slideVL.setTargetPosition(1750);
+        slideVR.setTargetPosition(1750);
         slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideVL.setPower(0.5);
