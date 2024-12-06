@@ -55,7 +55,7 @@ public class Chassis {
     private Gamepad gamepad1;
 
 
-    public Chassis(LinearOpMode opMode) {
+    public Chassis(LinearOpMode opMode, double initPosX, double initPosY) {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
         this.hardwareMap = opMode.hardwareMap;
@@ -68,6 +68,8 @@ public class Chassis {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
+        global_xM = initPosX;
+        global_yM = initPosY;
 
     }
 
