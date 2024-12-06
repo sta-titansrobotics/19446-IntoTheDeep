@@ -41,7 +41,7 @@ public class DriveControlled extends LinearOpMode {
 
         hSliderSystem = new HSlideController(hardwareMap, this);
         vSliderSystem = new VSlideController(hardwareMap, this);
-        chassis = new Chassis(this);
+        chassis = new Chassis(this, 0, 0);
 
      //   hSliderSystem.initialize();
      //   vSliderSystem.initializeMotors();

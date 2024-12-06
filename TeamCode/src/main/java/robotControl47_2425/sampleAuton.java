@@ -21,9 +21,19 @@ public class sampleAuton extends LinearOpMode {
         slideVL = hardwareMap.get(DcMotor.class, "slideVL");
         slideVR = hardwareMap.get(DcMotor.class, "slideVR");
 
-        // Initialize chassis and odometry
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        // Run autonomous-specific code here
+//        HSlide.start();
+//        VSlide.start();
         chassis = new Chassis(this);
         chassis.startOdomThread();
+        chassis.p2pDrive(0, 0, 0, 0.7, 3, 2, 1, 0, 0.3);
+        timeout(3000, chassis);
+        chassis.p2pDrive(0.5, -0.5, 180, 0.7, 3, 2, 1, 0, 0.3);
+        timeout(3000, chassis);
 
         waitForStart();
 
@@ -36,7 +46,7 @@ public class sampleAuton extends LinearOpMode {
         });
         vSlideThread.start();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++){
             chassis.p2pDrive(0, -0.4, 0, 0.7, 2, 2, 0.1, 0.1, 0.3);
             timeout(5000, chassis);
             chassis.p2pDrive(0, 0, 0, 0.7, 2, 2, 0.1, 0.1, 0.3);
