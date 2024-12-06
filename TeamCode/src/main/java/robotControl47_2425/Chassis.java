@@ -38,10 +38,8 @@ public class Chassis {
 
     private Telemetry telemetry;
 
-    private moveToPoint p2pThread = new moveToPoint(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-    private odom_thread odomTracking = new odom_thread();
-    private
+    private volatile moveToPoint p2pThread = null;
+    private volatile odom_thread odomTracking = new odom_thread();
     private boolean odomTrackingStartFlag = false;
     private double encoder_l, encoder_r, encoder_h;
     private double disM_encoderHtoCenter = 0.0755; // Distance from horizontal encoder to robot center in meters
@@ -49,7 +47,7 @@ public class Chassis {
     private double ticksPerRevolution = 2000.0; // Encoder ticks per wheel revolution
 
 
-    private boolean isBusy = false;
+    public boolean isBusy = false;
     private double globalAngle = 0;
     private Orientation lastAngles = new Orientation();
     private BNO055IMU imu;
@@ -71,8 +69,12 @@ public class Chassis {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
 
+    }
+
+    public void startOdomThread(){
         odomTracking.start();
     }
+
     public void initializeMotors() {
         lf = hardwareMap.get(DcMotor.class, "lf");
         rf = hardwareMap.get(DcMotor.class, "rf");
@@ -120,7 +122,8 @@ public class Chassis {
     //=============================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------------------
 
-    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) throws InterruptedException {
+    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) throws InterruptedException {
+
         double current_x = global_xM;
         double current_y = global_yM;
 
@@ -128,9 +131,12 @@ public class Chassis {
         //put initial values first during init
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
 
-        while (Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.015 || Math.abs(target_ang - current_ang) > 1) {
+        while (!Thread.currentThread().isInterrupted()||Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.015 || Math.abs(target_ang - current_ang) > 0.5) {
 
-
+            if (Thread.currentThread().isInterrupted()) {
+                System.out.println("Thread interrupted, exiting...");
+                break;
+            }
 
             //condition uses formula for circle to create resolution
             //if current x and y is within circle with radius 0.02M
@@ -160,10 +166,10 @@ public class Chassis {
             }
 
 
-            double lfPower = local_vel_x + local_vel_y + correction_ang;
-            double rfPower = local_vel_x - local_vel_y + correction_ang;
-            double lrPower = local_vel_x - local_vel_y - correction_ang;
-            double rrPower = local_vel_x + local_vel_y - correction_ang;
+            double lfPower = local_vel_x - local_vel_y - correction_ang;
+            double rfPower = local_vel_x + local_vel_y + correction_ang;
+            double lrPower = local_vel_x + local_vel_y - correction_ang;
+            double rrPower = local_vel_x - local_vel_y + correction_ang;
 
             double maxNumber = Math.max(Math.max(Math.abs(lfPower), Math.abs(lrPower)), Math.max(Math.abs(rfPower), Math.abs(rrPower)));
             if (maxNumber > 1) {
@@ -190,7 +196,11 @@ public class Chassis {
             Thread.sleep(10);
         }
         stop();
+
         isBusy = false;
+        p2pThread.interrupt();
+        p2pThread = null;
+
     }
 
     //========================================================================================================================
@@ -243,14 +253,25 @@ public class Chassis {
         }
     }
 
-    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout){
+    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed){
 
-        p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
+        isBusy = true;
+        // Safely stop the previous thread if it exists
+        if (p2pThread != null && p2pThread.isAlive()) {
+            p2pThread.interrupt(); // Request interruption
+            try {
+                p2pThread.join(); // Wait for the thread to terminate
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Handle this thread's interrupt state
+            }
+        }
+        p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
+
         p2pThread.start();
     }
     private class moveToPoint extends Thread {
-        double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout;
-        public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed, double timeout) {
+        double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed;
+        public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) {
             this.target_x = target_x;
             this.target_y = target_y;
             this.target_ang = target_ang;
@@ -260,12 +281,11 @@ public class Chassis {
             this.turn_kp = turn_kp;
             this.turn_kd = turn_kd;
             this.turn_max_speed = turn_max_speed;
-            this.timeout = timeout;
         }
 
         public void run() {
             try {
-                toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed, timeout);
+                toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
             } catch (Exception e) {
 
             }
@@ -329,6 +349,10 @@ public class Chassis {
     }
 
     public String getGlobalPos(){
-        return "Global X: " + (int)(global_xM * 10000)/100.0 + "|Global Y: " + (int)(global_yM * 10000)/100.0;
+        return "Global X: " + (int)(global_xM * 10000)/10000.0 + " | Global Y: " + (int)(global_yM * 10000)/10000.0;
+    }
+
+    public boolean getBusyState(){
+        return isBusy;
     }
 }

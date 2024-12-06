@@ -37,7 +37,7 @@ public class HSlideController {
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Initialize ramp
-        ramp.setPosition(0.5); // Default to 0.5 position
+//        ramp.setPosition(0.5); // Default to 0.5 position
     }
 
     // Start a thread for the horizontal slide functionality
