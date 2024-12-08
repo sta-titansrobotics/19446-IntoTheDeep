@@ -13,8 +13,8 @@ public class SliderLengthTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        slideVL = hardwareMap.get(DcMotor.class, "slideVL");
-        slideVR = hardwareMap.get(DcMotor.class, "slideVR");
+        slideVL = hardwareMap.get(DcMotor.class, "lvSlide");
+        slideVR = hardwareMap.get(DcMotor.class, "rvSlide");
 
         slideVL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideVR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

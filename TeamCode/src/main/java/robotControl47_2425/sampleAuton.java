@@ -2,8 +2,10 @@ package robotControl47_2425;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import robotControl47_2425.Sliders.VSlideController;
 
 @Autonomous
 public class sampleAuton extends LinearOpMode {
@@ -13,20 +15,14 @@ public class sampleAuton extends LinearOpMode {
     private Chassis chassis;
     ElapsedTime timer = new ElapsedTime();
     private Odometry odometry;
-    //private HSlide sliderH;
-
-    //private VSlideController VSlide;
-    //private HSlideController HSlide;
+    private VSlideController vSliderSystem;
+    private DcMotor slideVL, slideVR;
 
     @Override
     public void runOpMode() {
-//
-//        //Inistialize the 2 controllers
-//        HSlide = new HSlideController(sliderH);
-//        VSlide = new VSlideController(this.hardwareMap, this);
-
-        //Initialize chasis and Odometry
-        //odometry = new Odometry(this);
+        // Initialize motors
+        slideVL = hardwareMap.get(DcMotor.class, "slideVL");
+        slideVR = hardwareMap.get(DcMotor.class, "slideVR");
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -88,6 +84,20 @@ public class sampleAuton extends LinearOpMode {
             telemetry.addData("w", timer.milliseconds());
             telemetry.addData("isBusy", chassis.getBusyState());
             telemetry.update();
+        }
+    }
+
+    public void VSlideHighRung() {
+        slideVL.setTargetPosition(-50); // PLACEHOLDER
+        slideVR.setTargetPosition(50); // PLACEHOLDER
+        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideVL.setPower(0.5);
+        slideVR.setPower(0.5);
+        vSliderSystem.rollClawUp();
+        long start = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start < 700) {
+            // Wait for 700 milliseconds
         }
     }
 }
