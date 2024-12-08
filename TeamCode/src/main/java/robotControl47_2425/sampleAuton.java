@@ -36,11 +36,11 @@ public class sampleAuton extends LinearOpMode {
 //        HSlide.start();
 //        VSlide.start();
 //        chassis = new Chassis(this, 0.36 / 2, -0.315 / 2);
-        chassis = new Chassis(this, 0.36 / 2, -0.315 / 2);
+        chassis = new Chassis(this, 0, 0);
         chassis.startOdomThread();
-        chassis.p2pDrive(0, 0, 0, 0.7, 3, 2, 1, 0, 0.3);
-        timeout(3000, chassis);
-        chassis.p2pDrive(0.5, -0.5, 180, 0.7, 3, 2, 1, 0, 0.3);
+//        chassis.p2pDrive(0, 0, 0, 1, 5, 2, 1.5, 0, 0.4);
+//        timeout(3000, chassis);
+        chassis.p2pDrive(0, 0, 180, 1, 5, 2, 1, 0, 0.4);
         timeout(3000, chassis);
 
 

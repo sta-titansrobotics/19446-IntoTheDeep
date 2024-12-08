@@ -133,7 +133,7 @@ public class Chassis {
         //put initial values first during init
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
 
-        while (!Thread.currentThread().isInterrupted()||Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.015 || Math.abs(target_ang - current_ang) > 0.5) {
+        while (!Thread.currentThread().isInterrupted()||Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.015 || Math.abs(target_ang - current_ang) > 1.5) {
 
             if (Thread.currentThread().isInterrupted()) {
                 System.out.println("Thread interrupted, exiting...");
@@ -193,8 +193,7 @@ public class Chassis {
             if (opMode.isStopRequested()) {
                 break;
             }
-            telemetry.addData("error (<2):", 100*Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)));
-            telemetry.addData("angle error (<1):", Math.abs(target_ang - current_ang));
+
             Thread.sleep(10);
         }
         stop();
