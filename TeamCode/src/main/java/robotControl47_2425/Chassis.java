@@ -71,6 +71,7 @@ public class Chassis {
         global_xM = initPosX;
         global_yM = initPosY;
 
+
     }
 
     public void startOdomThread(){
@@ -123,35 +124,67 @@ public class Chassis {
 
     //=============================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------------------
-
-    private void toPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) throws InterruptedException {
+// double min_speed, double max_speed,
+//                         double turn_min_speed, double turn_max_speed,
+//                         double kpx = 1.15, double kpy = 1.3, double kdx = 2, double kdy = 2, double turn_kp = 0.03,
+//                         double turn_kd = 0.04
+    private void toPoint(double target_x, double target_y, double target_ang, double timeoutSeconds, double pos_tolerance, double ang_tolerance,
+                         double min_speed, double max_speed, double turn_min_speed, double turn_max_speed,
+                         double kpx, double kdx, double kpy, double kdy, double turn_kp, double turn_kd) throws InterruptedException {
 
         double current_x = global_xM;
         double current_y = global_yM;
 
         double current_ang = getAngle();
+        double error_sum_x = 0, error_sum_y = 0;
         //put initial values first during init
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
+        double ki = 0.02;
 
-        while (!Thread.currentThread().isInterrupted()||Math.sqrt(Math.pow(target_x - current_x, 2) + Math.pow(target_y - current_y, 2)) > 0.015 || Math.abs(target_ang - current_ang) > 1.5) {
+        double error_ang = target_ang - current_ang;
+        double error_x = target_x - current_x;
+        double error_y = target_y - current_y;
+        isBusy = true;
+        double startTime = opMode.getRuntime();
+        while (opMode.opModeIsActive() && isBusy  && (Math.hypot(error_x, error_y) > pos_tolerance || Math.abs(error_ang) > ang_tolerance) && opMode.getRuntime()  - startTime < timeoutSeconds){
 
             if (Thread.currentThread().isInterrupted()) {
                 System.out.println("Thread interrupted, exiting...");
                 break;
             }
-
-            //condition uses formula for circle to create resolution
-            //if current x and y is within circle with radius 0.02M
-            //or if current angle is within a 2 degree resolution from target, stop
             current_x = global_xM;
             current_y = global_yM;
             current_ang = getAngle();
 
-            double error_x = target_x - current_x;
-            double error_y = target_y - current_y;
-            double global_vel_x = (kp * error_x) + (kd * (error_x - prev_error_x));// PD (PID without the I) control
-            double global_vel_y = (kp * error_y) + (kd * (error_y - prev_error_y));
+            error_x = target_x - current_x;
+            error_y = target_y - current_y;
+
+            //condition uses formula for circle to create resolution
+            //if current x and y is within circle with radius 0.02M
+            //or if current angle is within a 2 degree resolution from target, stop
+            double global_vel_x;
+            if (Math.abs(error_x) < pos_tolerance / 2.0){
+                global_vel_x = 0;
+            }
+            else {
+                global_vel_x = (kpx * error_x) + (kdx * (error_x - prev_error_x) + (ki * error_sum_x));// PD (PID without the I) control
+                global_vel_x = Math.abs(global_vel_x) < min_speed? Math.signum(global_vel_x) * min_speed : global_vel_x;
+            }
+
+            double global_vel_y;
+            if (Math.abs(error_y) < pos_tolerance / 2.0){
+                global_vel_y = 0;
+            }
+            else {
+                global_vel_y = (kpy * error_y) + (kdy * (error_y - prev_error_y) + (ki * error_sum_y));
+                global_vel_y = Math.abs(global_vel_y) < min_speed? Math.signum(global_vel_y) * min_speed : global_vel_y;
+            }
+
+
+
             double local_vel_x = global_vel_x * Math.cos(Math.toRadians(getAngle())) + global_vel_y * Math.sin(Math.toRadians(getAngle()));
+
+
 
             double local_vel_y = -global_vel_x * Math.sin(Math.toRadians(getAngle())) + global_vel_y * Math.cos(Math.toRadians(getAngle()));// inverse matrix to calculate local velocities to global velocities
 
@@ -161,11 +194,22 @@ public class Chassis {
                 local_vel_y = (local_vel_y / local_vel_max) * max_speed;
             }
 
-            double error_ang = target_ang - current_ang;
-            double correction_ang = (turn_kp * error_ang) + (turn_kd * (error_ang - prev_error_ang));//PD control
+
+
+
+            error_ang = target_ang - current_ang;
+            double correction_ang;
+            if (error_ang < ang_tolerance){
+                correction_ang = 0;
+            }
+            else{
+                correction_ang = (turn_kp * error_ang) + (turn_kd * (error_ang - prev_error_ang));//PD control
+                correction_ang = Math.abs(correction_ang) < turn_min_speed? Math.signum(correction_ang) * turn_min_speed : correction_ang;
+            }
             if (Math.abs(correction_ang) > turn_max_speed) {
                 correction_ang = turn_max_speed * Math.signum(correction_ang);
             }
+
 
 
             double lfPower = local_vel_x - local_vel_y - correction_ang;
@@ -190,6 +234,8 @@ public class Chassis {
             prev_error_x = error_x;
             prev_error_y = error_y;
             prev_error_ang = error_ang;
+//            error_sum_x += prev_error_x;
+//            error_sum_y += prev_error_y;
             if (opMode.isStopRequested()) {
                 break;
             }
@@ -199,14 +245,12 @@ public class Chassis {
         stop();
 
         isBusy = false;
-        p2pThread.interrupt();
-        p2pThread = null;
 
     }
 
     //========================================================================================================================
 
-    private double getAngle() {
+    public double getAngle() {
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -254,7 +298,10 @@ public class Chassis {
         }
     }
 
-    public void p2pDrive(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed){
+    public void p2pDrive(double target_x, double target_y, double target_ang, double timeoutSeconds, double min_speed, double max_speed,
+                         double turn_min_speed, double turn_max_speed, double pos_tolerance, double ang_tolerance,
+                         double kpx, double kdx, double kpy,double kdy, double turn_kp,
+                         double turn_kd){
 
         isBusy = true;
         // Safely stop the previous thread if it exists
@@ -266,27 +313,39 @@ public class Chassis {
                 Thread.currentThread().interrupt(); // Handle this thread's interrupt state
             }
         }
-        p2pThread = new moveToPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
+        p2pThread = new moveToPoint(target_x, target_y, target_ang, timeoutSeconds, pos_tolerance, ang_tolerance,
+                min_speed, max_speed, turn_min_speed, turn_max_speed, kpx, kdx, kpy, kdy, turn_kp, turn_kd);
 
         p2pThread.start();
     }
     private class moveToPoint extends Thread {
-        double target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed;
-        public moveToPoint(double target_x, double target_y, double target_ang, double max_speed, double kp, double kd, double turn_kp, double turn_kd, double turn_max_speed) {
+        double target_x, target_y, target_ang, timeoutSeconds, pos_tolerance,
+                ang_tolerance, min_speed, max_speed, turn_min_speed, turn_max_speed, kpx, kdx, kpy, kdy, turn_kp, turn_kd;
+        public moveToPoint(double target_x, double target_y, double target_ang, double timeoutSeconds, double pos_tolerance, double ang_tolerance,
+                           double min_speed, double max_speed, double turn_min_speed, double turn_max_speed,
+                           double kpx, double kdx, double kpy, double kdy, double turn_kp, double turn_kd) {
             this.target_x = target_x;
             this.target_y = target_y;
             this.target_ang = target_ang;
+            this.timeoutSeconds = timeoutSeconds;
+            this.pos_tolerance = pos_tolerance;
+            this.ang_tolerance = ang_tolerance;
+            this.min_speed = min_speed;
             this.max_speed = max_speed;
-            this.kp = kp;
-            this.kd = kd;
+            this.turn_min_speed = turn_min_speed;
+            this.turn_max_speed = turn_max_speed;
+            this.kpx = kpx;
+            this.kdx = kdx;
+            this.kpy = kpy;
+            this.kdy = kdy;
             this.turn_kp = turn_kp;
             this.turn_kd = turn_kd;
-            this.turn_max_speed = turn_max_speed;
         }
 
         public void run() {
             try {
-                toPoint(target_x, target_y, target_ang, max_speed, kp, kd, turn_kp, turn_kd, turn_max_speed);
+                toPoint(target_x, target_y, target_ang, timeoutSeconds, pos_tolerance, ang_tolerance, min_speed,
+                        max_speed, turn_min_speed, turn_max_speed, kpx, kdx, kpy, kdy, turn_kp, turn_kd);
             } catch (Exception e) {
 
             }
@@ -301,7 +360,7 @@ public class Chassis {
         public odom_thread(){
         }
         public void run(){
-            while (opMode.opModeIsActive() && !opMode.isStopRequested()){
+            while (!opMode.isStopRequested()){
                 try{
                     encoder_l = encoderToMetres(lr.getCurrentPosition());
                     encoder_r = encoderToMetres(-rr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
@@ -350,7 +409,7 @@ public class Chassis {
     }
 
     public String getGlobalPos(){
-        return "Global X: " + (int)(global_xM * 10000)/10000.0 + " | Global Y: " + (int)(global_yM * 10000)/10000.0;
+        return "Global X: " + (int)(global_xM * 10000)/10000.0 + " | Global Y: " + (int)(global_yM * 10000)/10000.0 + "| Angle: " + globalAngle;
     }
 
     public boolean getBusyState(){

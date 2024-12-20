@@ -64,6 +64,7 @@ public class DriveControlled extends LinearOpMode {
         chassis.startOdomThread();
 
         while (opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("ang", chassis.getAngle());
             totalTime = System.currentTimeMillis();
 //            hSlideManualControl();
 //            handleServoControl();
