@@ -1,5 +1,7 @@
 package robotControl47_2425;
 
+import androidx.annotation.AnyThread;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,16 +17,16 @@ public class sampleAuton extends LinearOpMode {
     private Chassis chassis;
     ElapsedTime timer = new ElapsedTime();
     private Odometry odometry;
-    private VSlideController vSliderSystem;
-    private DcMotor slideVL, slideVR;
+    private  VSlideController  vSliderSystem = null;
+
 
     @Override
     public void runOpMode() {
-        // Initialize motors
-//        slideVL = hardwareMap.get(DcMotor.class, "lvslide");
-//        slideVR = hardwareMap.get(DcMotor.class, "rvslide");
+        vSliderSystem = new VSlideController(this);
+        // MUST HAVE, DO NOT RUN THIS METHOD AGAIN AFTER AUTON INIT
+        vSliderSystem.resetVSlidePos();
 
-        chassis = new Chassis(this, 0.36 / 2, -0.315 / 2);
+        chassis = new Chassis(this, 0.36 / 2, -0.36 / 2);
         chassis.startOdomThread();
         sleep(2000);
         telemetry.addLine("Ready");
@@ -52,29 +54,41 @@ public class sampleAuton extends LinearOpMode {
 //                telemetry.update();
 //            }
 //        }
-
-
-        chassis.p2pDrive(0.8, -0.13, 0, 3000, 0.2, 1.1, 0.2, 0.5, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
-        timeout(3000, chassis);
-
-        chassis.p2pDrive(0.75, -0.75, 100, 0.9, 1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
-        timeout(3000, chassis);
-//        // h slide intakes and outtakes
-//
+        chassis.p2pDrive(1.15, -0.13, 0, 2000, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
+        timeout(2000, chassis);
         for(int i = 0; i < 3; i++){
-            // go into human player
-            chassis.p2pDrive(0.22, -0.9, 0, 0.9,
-                    1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
-            timeout(5000, chassis);
 
-            // crash into wall, virtual point outside of field, increase dis and angle tolerance
-            // tolerance, timeout, min power
-            // put kp kd in function, max_speed fast is 1.1, slow is 0.5,
-
-            chassis.p2pDrive(0.85, -0.13, 0, 0.9, 1.15, 2, 2, 2, 0.03, 0.04, 0.4);
-            timeout(5000, chassis);
+            chassis.p2pDrive(0.3, -1, 0, 2300, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
+            timeout(2300, chassis);
+            chassis.p2pDrive(-0.3, -1, 0, 400, 0.2, 1.1, 0.2, 0.6, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
+            timeout(400, chassis);
+            chassis.p2pDrive(0.8, -0.1, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
+            timeout(1500, chassis);
+            chassis.p2pDrive(1.15, -0.1, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
+            timeout(1500, chassis);
         }
-        chassis.p2pDrive(0.25, -0.9, 0, 0.9, 1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
+        chassis.p2pDrive(0.3, -1.8, 0, 600, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
+        timeout(600, chassis);
+
+
+
+//        chassis.p2pDrive(0.75, -0.75, 100, 0.9, 1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
+//        timeout(3000, chassis);
+////        // h slide intakes and outtakes
+////
+//        for(int i = 0; i < 3; i++){
+//            // go into human player
+//            chassis.p2pDrive(0.22, -0.9, 0, 0.9,1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
+//            timeout(5000, chassis);
+//
+//            // crash into wall, virtual point outside of field, increase dis and angle tolerance
+//            // tolerance, timeout, min power
+//            // put kp kd in function, max_speed fast is 1.1, slow is 0.5,
+//
+//            chassis.p2pDrive(0.85, -0.13, 0, 0.9, 1.15, 2, 2, 2, 0.03, 0.04, 0.4);
+//            timeout(5000, chassis);
+//        }
+//        chassis.p2pDrive(0.25, -0.9, 0, 0.9, 1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
 
 //
 //        chassis.p2pDrive(0.25, -0.9, 0, 0.7, 2, 2, 0.3, 0.3, 0.3);
@@ -121,17 +135,7 @@ public class sampleAuton extends LinearOpMode {
 
     }
 
-    public void VSlideHighRung() {
-        slideVL.setTargetPosition(-50); // PLACEHOLDER
-        slideVR.setTargetPosition(50); // PLACEHOLDER
-        slideVL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideVR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideVL.setPower(0.5);
-        slideVR.setPower(0.5);
-        vSliderSystem.rollClawUp();
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < 700) {
-            // Wait for 700 milliseconds
-        }
-    }
+
+
+
 }

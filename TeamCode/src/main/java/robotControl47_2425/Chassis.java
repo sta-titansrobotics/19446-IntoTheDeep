@@ -145,9 +145,9 @@ public class Chassis {
         double error_x = target_x - current_x;
         double error_y = target_y - current_y;
         isBusy = true;
-        double startTime = opMode.getRuntime();
-        while (opMode.opModeIsActive() && isBusy  && (Math.hypot(error_x, error_y) > pos_tolerance || Math.abs(error_ang) > ang_tolerance) && opMode.getRuntime()  - startTime < timeoutSeconds){
-
+        double startTime = opMode.getRuntime() * 1000.0;
+        while (opMode.opModeIsActive() && isBusy  && (Math.hypot(error_x, error_y) > pos_tolerance || Math.abs(error_ang) > ang_tolerance) && opMode.getRuntime() * 1000.0  - startTime < timeoutSeconds){
+            opMode.telemetry.addData("running", opMode.getRuntime() + "||||" + startTime);
             if (Thread.currentThread().isInterrupted()) {
                 System.out.println("Thread interrupted, exiting...");
                 break;
@@ -362,9 +362,9 @@ public class Chassis {
         public void run(){
             while (!opMode.isStopRequested()){
                 try{
-                    encoder_l = encoderToMetres(lr.getCurrentPosition());
+                    encoder_l = encoderToMetres(lf.getCurrentPosition());
                     encoder_r = encoderToMetres(-rr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
-                    encoder_h = encoderToMetres(lf.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
+                    encoder_h = encoderToMetres(lr.getCurrentPosition()); //negative if using gobilda omniwheel bot, positive if using openodometry bot
 
                     current_ang = Math.toRadians(getAngle()); //degrees to radians (either ways of calculating current angle work[imu or encoder])
                     //current_ang = Math.toRadians((encoder_r-encoder_l)/0.031) //(r-l) divided by distance (METRES) between the encoder wheels
