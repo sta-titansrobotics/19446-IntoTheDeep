@@ -82,9 +82,16 @@ public class DriveControlled extends LinearOpMode {
     }
     private void vSliderCtrl() {
         if (gamepad1.x) {
-            vSliderSystem.goToPosition(10);
+            vSliderSystem.stepCtrl(100);
         } else if (gamepad1.y) {
-            vSliderSystem.goToPosition(-10);
+            vSliderSystem.stepCtrl(-100);
+        }
+
+        if (gamepad1.dpad_down){
+            vSliderSystem.tiltStepCtrl(-0.05);
+        }
+        else if(gamepad1.dpad_up){
+            vSliderSystem.tiltStepCtrl(0.05);
         }
     }
     private void toggleClaw() {
@@ -339,9 +346,9 @@ public class DriveControlled extends LinearOpMode {
 //        if(gamepad2.dpad_up){
 //            //close claw
 //            vSliderSystem.openClaw();
-//        }
+////        }
+////    }
+//    public void updateTime(){
+//        totalTime = System.currentTimeMillis();
 //    }
-    public void updateTime(){
-        totalTime = System.currentTimeMillis();
-    }
 }

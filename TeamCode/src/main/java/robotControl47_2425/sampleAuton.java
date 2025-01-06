@@ -55,20 +55,20 @@ public class sampleAuton extends LinearOpMode {
 //            }
 //        }
         chassis.p2pDrive(1.15, -0.13, 0, 2000, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
-        timeout(2000, chassis);
+        timeout(chassis);
         for(int i = 0; i < 3; i++){
 
             chassis.p2pDrive(0.3, -1, 0, 2300, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
-            timeout(2300, chassis);
+            timeout(chassis);
             chassis.p2pDrive(-0.3, -1, 0, 400, 0.2, 1.1, 0.2, 0.6, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
-            timeout(400, chassis);
+            timeout(chassis);
             chassis.p2pDrive(0.8, -0.1, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
-            timeout(1500, chassis);
+            timeout(chassis);
             chassis.p2pDrive(1.15, -0.1, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
-            timeout(1500, chassis);
+            timeout(chassis);
         }
-        chassis.p2pDrive(0.3, -1.8, 0, 600, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
-        timeout(600, chassis);
+        chassis.p2pDrive(0.3, -1.8, 0, 2000, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
+        timeout(chassis);
 
 
 
@@ -92,7 +92,7 @@ public class sampleAuton extends LinearOpMode {
 
 //
 //        chassis.p2pDrive(0.25, -0.9, 0, 0.7, 2, 2, 0.3, 0.3, 0.3);
-        timeout(5000, chassis);
+
 
 //        chassis.p2pDrive(0.5, -0.4, -90, 0.6, 2, 2, 0.1, 0.1, 0.3);
 //        timeout(1200, chassis);
@@ -117,7 +117,7 @@ public class sampleAuton extends LinearOpMode {
         telemetry.update();
     }
 
-    private void timeout(int ms, Chassis chassis){
+    private void timeout(Chassis chassis){
         timer.reset();
 //        while (opModeIsActive() && timer.milliseconds() < ms && chassis.isBusy){
 //            // && chassis.isBusy && timer.milliseconds() < ms

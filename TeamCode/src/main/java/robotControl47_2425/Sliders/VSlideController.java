@@ -34,7 +34,7 @@ public class VSlideController {
         //should only initialize for auto, the resets carry into teleOp
     }
 
-    // Initialize motors
+    //should only initialize for auto, the resets carry into teleOp
     public void resetVSlidePos() {
         slideL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -51,10 +51,10 @@ public class VSlideController {
     }
 
     // Method to move motors to a position
-    public void goToPosition(int position) {
+    public void stepCtrl(int step) {
         int targetPos;
-        targetPos = Math.max(0, getCurrentPos() + position);
-        targetPos = Math.min(MAX_POSITION, getCurrentPos() + position);
+        targetPos = Math.max(0, getCurrentPos() + step);
+        targetPos = Math.min(MAX_POSITION, getCurrentPos() + step);
 
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
@@ -64,19 +64,50 @@ public class VSlideController {
         slideR.setPower(0.2);
     }
 
-    // Method to reset motors to position 0
-    public void resetPosition() {
-        goToPosition(0);
+    public void goToPos(int pos){
+        int targetPos;
+        targetPos = Math.max(0, pos);
+        targetPos = Math.min(MAX_POSITION, pos);
+
+        slideL.setTargetPosition(targetPos);
+        slideR.setTargetPosition(targetPos);
+        slideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideL.setPower(0.4);
+        slideR.setPower(0.4);
     }
+    public void openClaw() {
+        clawL.setPosition(0.4);
+        clawR.setPosition(0.63);
+    }
+
+    public void closeClaw() {
+        clawL.setPosition(0.53);
+        clawR.setPosition(0.5);
+    }
+
+    public void tiltToPos(double pos){
+        pos = pos > 0.14 ? (pos < 1 ? pos : 1) : 0.14;
+        tiltL.setPosition(pos);
+        tiltR.setPosition(pos);
+    }
+
+    public void tiltStepCtrl (double step){
+        double targetPos;
+        targetPos = Math.max(0.14, tiltL.getPosition() + step);
+        targetPos = Math.min(1.0, tiltL.getPosition() + step);
+        tiltL.setPosition(targetPos);
+        tiltR.setPosition(targetPos);
+    }
+
+
+
 
     public int getCurrentPos() {
         return (slideR.getCurrentPosition() + slideL.getCurrentPosition()) / 2;
     }
 
-    // Get max position
-    public int getMaxPosition() {
-        return MAX_POSITION;
-    }
+
 
     // Method to start the slide control thread
 //    public void start() {
@@ -119,15 +150,7 @@ public class VSlideController {
 //    }
 //
     // Servo control methods
-    public void openClaw() {
-        clawL.setPosition(0.4);
-        clawR.setPosition(0.63);
-    }
 
-    public void closeClaw() {
-        clawL.setPosition(0.53);
-        clawR.setPosition(0.5);
-    }
 //
 //    public void rollClawUp() {
 //        roll.setPosition(0.156);
@@ -158,17 +181,6 @@ public class VSlideController {
 //        rollClawDown();
 //    }
 //
-//    public void vSlideManualEg(int position) {
-//        position = Math.max(30, position);
-//        position = Math.min(MAX_POSITION, position);
-//
-//        slideL.setTargetPosition(position);
-//        slideR.setTargetPosition(position);
-//        slideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        slideR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        slideL.setPower(0.5);
-//        slideR.setPower(0.5);
-//    }
 //
 //    // VSlideController.java
 //    public void tiltArmManualControl(double position) {
