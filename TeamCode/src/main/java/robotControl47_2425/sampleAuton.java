@@ -32,30 +32,19 @@ public class sampleAuton extends LinearOpMode {
         telemetry.addLine("Ready");
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
+        vSliderSystem.closeClaw();
         waitForStart();
         resetRuntime();
 
+        vSliderSystem.tiltToPos(0.15);
+        vSliderSystem.goToPos(900);
 
-        // Run autonomous-specific code here
-//        HSlide.start();
-//        VSlide.start();
-//        chassis = new Chassis(this, 0.36 / 2, -0.315 / 2);
-
-//        while (opModeIsActive()){
-//            if (gamepad1.a){
-//                chassis.p2pDrive(0.5, 0.5, 180, 0.9, 1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
-//                timeout(8000, chassis);
-////                chassis.p2pDrive(0, 0, 0, 0.9, 1.2, 2, 0.04, 0.05, 0.4);
-////                timeout(8000, chassis);
-//            }
-//            else{
-//                telemetry.addData("ang", chassis.getAngle());
-//                telemetry.addData("pos", chassis.getGlobalPos());
-//                telemetry.update();
-//            }
-//        }
         chassis.p2pDrive(1.15, -0.13, 0, 2000, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
         timeout(chassis);
+        vSliderSystem.tiltToPos(0.5);
+        sleep(300);
+        vSliderSystem.openClaw();
+
         for(int i = 0; i < 3; i++){
 
             chassis.p2pDrive(0.3, -1, 0, 2300, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);

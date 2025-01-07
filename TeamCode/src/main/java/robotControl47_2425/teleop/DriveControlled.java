@@ -69,7 +69,6 @@ public class DriveControlled extends LinearOpMode {
 //            handleServoControl();
             updateTelemetry();
             chassis.telemetryDrive();
-        //    chassis.odom_pos_est();
             vSliderCtrl();
 //            armSyncCtrl();
 //            gamepad1Ctrl();
@@ -77,6 +76,7 @@ public class DriveControlled extends LinearOpMode {
             if (gamepad1.a){
                 toggleClaw();
             }
+            sleep(5);
         }
         chassis.stopAllThreads();
     }
@@ -93,14 +93,16 @@ public class DriveControlled extends LinearOpMode {
         else if(gamepad1.dpad_up){
             vSliderSystem.tiltStepCtrl(0.05);
         }
+
     }
-    private void toggleClaw() {
+    private void toggleClaw(){
         if (!clawOpen) {
             vSliderSystem.openClaw();
         } else {
             vSliderSystem.closeClaw();
         }
         clawOpen = !clawOpen;
+
     }
 
 
@@ -186,6 +188,7 @@ public class DriveControlled extends LinearOpMode {
 //        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
 //        telemetry.addData("HSlide Extended", hSlideExtended);
         telemetry.addData("VSlide Position", vSliderSystem.getCurrentPos());
+        telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
 //
 //        telemetry.addData("Front Left Power", fl.getPower());
 //        telemetry.addData("Front Right Power", fr.getPower());

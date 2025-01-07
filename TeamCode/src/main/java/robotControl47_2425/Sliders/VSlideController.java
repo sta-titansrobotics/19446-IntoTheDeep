@@ -12,7 +12,7 @@ public class VSlideController {
     private final HardwareMap hardwareMap;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
-    private static final int MAX_POSITION = 2750; // Updated maximum position
+    private static final int MAX_POSITION = 2400; // Updated maximum position
     private boolean isHighBasket = false; // Track the last called method
 
     // Constructor
@@ -52,9 +52,7 @@ public class VSlideController {
 
     // Method to move motors to a position
     public void stepCtrl(int step) {
-        int targetPos;
-        targetPos = Math.max(0, getCurrentPos() + step);
-        targetPos = Math.min(MAX_POSITION, getCurrentPos() + step);
+        int targetPos = Math.min(MAX_POSITION, Math.max(20, getCurrentPos() + step));
 
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
@@ -65,9 +63,7 @@ public class VSlideController {
     }
 
     public void goToPos(int pos){
-        int targetPos;
-        targetPos = Math.max(0, pos);
-        targetPos = Math.min(MAX_POSITION, pos);
+        int targetPos = Math.min(MAX_POSITION, Math.max(20, pos));
 
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
@@ -92,12 +88,15 @@ public class VSlideController {
         tiltR.setPosition(pos);
     }
 
+    public double getTiltPos(){
+        return tiltL.getPosition();
+    }
+
     public void tiltStepCtrl (double step){
-        double targetPos;
-        targetPos = Math.max(0.14, tiltL.getPosition() + step);
-        targetPos = Math.min(1.0, tiltL.getPosition() + step);
+
+        double targetPos = Math.min(1.0, Math.max(0.1, tiltL.getPosition() + step));
         tiltL.setPosition(targetPos);
-        tiltR.setPosition(targetPos);
+//        tiltR.setPosition(targetPos);
     }
 
 
