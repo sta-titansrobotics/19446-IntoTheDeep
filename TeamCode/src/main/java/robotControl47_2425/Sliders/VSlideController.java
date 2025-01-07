@@ -52,7 +52,7 @@ public class VSlideController {
 
     // Method to move motors to a position
     public void stepCtrl(int step) {
-        int targetPos = Math.min(MAX_POSITION, Math.max(20, getCurrentPos() + step));
+        int targetPos = Math.min(MAX_POSITION, Math.max(0, getCurrentPos() + step));
 
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
@@ -63,7 +63,7 @@ public class VSlideController {
     }
 
     public void goToPos(int pos){
-        int targetPos = Math.min(MAX_POSITION, Math.max(20, pos));
+        int targetPos = Math.min(MAX_POSITION, Math.max(0, pos));
 
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
@@ -80,6 +80,11 @@ public class VSlideController {
     public void closeClaw() {
         clawL.setPosition(0.53);
         clawR.setPosition(0.5);
+    }
+
+    public void pickupClaw(){
+        clawL.setPosition(0.35);
+        clawR.setPosition(0.55);
     }
 
     public void tiltToPos(double pos){

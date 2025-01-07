@@ -45,21 +45,31 @@ public class sampleAuton extends LinearOpMode {
         sleep(300);
         vSliderSystem.openClaw();
 
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 1; i++){
+            vSliderSystem.goToPos(0);
+            vSliderSystem.tiltToPos(0.7);
+            vSliderSystem.pickupClaw();
+            chassis.p2pDrive(-0.15, -0.9, 0, 4000, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
+            timeout(chassis);
+            chassis.p2pDrive(0, -1.05, 0, 500, 0.2, 1.1, 0.2, 0.6, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
+            timeout(chassis);
+            vSliderSystem.closeClaw();
+            sleep(50);
+            vSliderSystem.tiltToPos(0.15);
+            vSliderSystem.goToPos(900);
+            chassis.p2pDrive(0.8, -0.1, 0, 1300, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
+            timeout(chassis);
 
-            chassis.p2pDrive(0.3, -1, 0, 2300, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
+            chassis.p2pDrive(1.15, -0.1, 0, 1300, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
             timeout(chassis);
-            chassis.p2pDrive(-0.3, -1, 0, 400, 0.2, 1.1, 0.2, 0.6, 0.02, 2, 1.15, 2, 1.15, 2, 0.03, 0.04);
-            timeout(chassis);
-            chassis.p2pDrive(0.8, -0.1, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
-            timeout(chassis);
-            chassis.p2pDrive(1.15, -0.1, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
-            timeout(chassis);
+            vSliderSystem.tiltToPos(0.5);
+            sleep(300);
+            vSliderSystem.openClaw();
         }
         chassis.p2pDrive(0.3, -1.8, 0, 2000, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.4, 2, 0.03, 0.04);
         timeout(chassis);
 
-
+//testtest
 
 //        chassis.p2pDrive(0.75, -0.75, 100, 0.9, 1.15, 1.3, 2, 2, 0.03, 0.04, 0.4);
 //        timeout(3000, chassis);
