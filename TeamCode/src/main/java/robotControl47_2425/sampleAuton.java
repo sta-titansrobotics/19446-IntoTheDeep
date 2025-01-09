@@ -118,7 +118,7 @@ public class sampleAuton extends LinearOpMode {
 
             dropHighRung();
         }
-        //oaihdsoid
+        //oaihdso
 
 
 
