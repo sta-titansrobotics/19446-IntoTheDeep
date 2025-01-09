@@ -199,12 +199,14 @@ public class Chassis {
 
             error_ang = target_ang - current_ang;
             double correction_ang;
-            if (error_ang < ang_tolerance){
+            if (Math.abs(error_ang) < ang_tolerance) {
                 correction_ang = 0;
             }
             else{
                 correction_ang = (turn_kp * error_ang) + (turn_kd * (error_ang - prev_error_ang));//PD control
                 correction_ang = Math.abs(correction_ang) < turn_min_speed? Math.signum(correction_ang) * turn_min_speed : correction_ang;
+
+
             }
             if (Math.abs(correction_ang) > turn_max_speed) {
                 correction_ang = turn_max_speed * Math.signum(correction_ang);
@@ -275,7 +277,7 @@ public class Chassis {
 
     //--------------------------- Helper Methods -------------------------------------------------------------------------
 
-    private void resetAngle() {
+    public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }

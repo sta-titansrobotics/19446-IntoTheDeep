@@ -83,7 +83,7 @@ public class VSlideController {
     }
 
     public void pickupClaw(){
-        clawL.setPosition(0.35);
+        clawL.setPosition(0.15);
         clawR.setPosition(0.55);
     }
 

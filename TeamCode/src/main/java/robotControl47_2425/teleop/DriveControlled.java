@@ -37,8 +37,9 @@ public class DriveControlled extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-//        hSliderSystem = new HSlideController(hardwareMap, this);
+        hSliderSystem = new HSlideController(this);
         vSliderSystem = new VSlideController(this);
+
 
         chassis = new Chassis(this, 0.36 / 2, -0.36 / 2);
 
@@ -70,9 +71,8 @@ public class DriveControlled extends LinearOpMode {
             updateTelemetry();
             chassis.telemetryDrive();
             vSliderCtrl();
-//            armSyncCtrl();
-//            gamepad1Ctrl();
-//            gamepad2Ctrl();
+            hSliderCtrl();
+
             if (gamepad1.a){
                 toggleClaw();
             }
@@ -95,6 +95,16 @@ public class DriveControlled extends LinearOpMode {
         }
 
     }
+
+    public void hSliderCtrl(){
+        if (gamepad1.dpad_left){
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos()+10);
+        }
+        else if (gamepad1.dpad_right){
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos()-10);
+        }
+    }
+
     private void toggleClaw(){
         if (!clawOpen) {
             vSliderSystem.openClaw();
@@ -185,8 +195,7 @@ public class DriveControlled extends LinearOpMode {
 //    }
 
     private void updateTelemetry() {
-//        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
-//        telemetry.addData("HSlide Extended", hSlideExtended);
+        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
         telemetry.addData("VSlide Position", vSliderSystem.getCurrentPos());
         telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
 //
