@@ -3,6 +3,7 @@ package robotControl47_2425.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import robotControl47_2425.Chassis;
 import robotControl47_2425.Sliders.HSlideController;
@@ -10,9 +11,10 @@ import robotControl47_2425.Sliders.VSlideController;
 
 @TeleOp(name = "46TeleOp", group = "Test")
 public class DriveControlled extends LinearOpMode {
-
-    private HSlideController hSliderSystem;
+    private Chassis chassis;
+    private HSlideController hSliderSystem = null;
     private VSlideController vSliderSystem = null;
+
 //    private boolean hSlideExtended = false;
 //    private boolean vSlideExtended = false;
 //    private boolean previousAState = false;
@@ -30,9 +32,7 @@ public class DriveControlled extends LinearOpMode {
     private int position_buttonA =0;
     private boolean isHighBasket = false;
 
-    private Chassis chassis;
-
-
+    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,8 +70,10 @@ public class DriveControlled extends LinearOpMode {
 //            handleServoControl();
             updateTelemetry();
             chassis.telemetryDrive();
+            //chassis.telemetryStrafe();
             vSliderCtrl();
             hSliderCtrl();
+
 
             if (gamepad1.a){
                 toggleClaw();
@@ -80,6 +82,7 @@ public class DriveControlled extends LinearOpMode {
         }
         chassis.stopAllThreads();
     }
+
     private void vSliderCtrl() {
         if (gamepad1.x) {
             vSliderSystem.stepCtrl(100);
@@ -115,7 +118,38 @@ public class DriveControlled extends LinearOpMode {
 
     }
 
+    public void prepDropHighRung(){
+        vSliderSystem.tiltToPos(0.15);
+        vSliderSystem.goToPos(930);
+    }
+    public void dropHighRung(){
+        vSliderSystem.tiltToPos(0.5);
+        sleep(300);
+        vSliderSystem.openClaw();
+    }
 
+    public void prepPickup(){
+        vSliderSystem.goToPos(0);
+        vSliderSystem.tiltToPos(0.73);
+        vSliderSystem.pickupClaw();
+    }
+
+    public void pickup(){
+        vSliderSystem.closeClaw();
+        sleep(400);
+    }
+
+    public void hSlidePushFloor(){
+        hSliderSystem.goToPos(1500);
+        hSliderSystem.rampDown();
+        hSliderSystem.outtaking();
+    }
+
+    public void hSlideReturn(){
+        hSliderSystem.intakeOff();
+        hSliderSystem.goToPos(0);
+        hSliderSystem.rampUp();
+    }
 
 //    private void hSlideManualControl() {
 //        // Control HSlide with gamepad1.a
@@ -351,7 +385,7 @@ public class DriveControlled extends LinearOpMode {
 //        }
 //
 //        if(gamepad2.dpad_down){
-//            //open claw
+//            //opexn claw
 //            vSliderSystem.closeClaw();
 //        }
 //
