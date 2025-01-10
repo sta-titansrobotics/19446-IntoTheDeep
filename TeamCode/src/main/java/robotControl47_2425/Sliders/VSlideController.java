@@ -29,6 +29,9 @@ public class VSlideController {
         slideL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        slideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         initializeServos();
         //resetVSlidePos();
         //should only initialize for auto, the resets carry into teleOp

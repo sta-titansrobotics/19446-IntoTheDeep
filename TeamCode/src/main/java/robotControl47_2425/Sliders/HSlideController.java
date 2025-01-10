@@ -47,7 +47,15 @@ public class HSlideController {
 
         slideH.setTargetPosition(position);
         slideH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideH.setPower(1);
+        slideH.setPower(0.9);
+    }
+    public void goToPos(int position, double power) {
+        position = Math.max(0, position);
+        position = Math.min(MAX_POSITION, position);
+
+        slideH.setTargetPosition(position);
+        slideH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideH.setPower(power);
     }
 
     // Get the current position of a motor
