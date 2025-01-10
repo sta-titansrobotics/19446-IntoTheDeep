@@ -47,7 +47,7 @@ public class sampleAuton extends LinearOpMode {
 
         prepDropHighRung();
 
-        chassis.p2pDrive(1.09, 0.24, 0, 1800, 0.2, 0.7, 0.2, 0.4, 0.02, 2, 1.5, 2, 1.4, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.09, 0.26, 0, 1800, 0.2, 0.7, 0.2, 0.4, 0.02, 2, 1.5, 2, 1.4, 2, 0.02, 0.04);
         timeout(chassis);
 
         dropHighRung();
@@ -58,14 +58,14 @@ public class sampleAuton extends LinearOpMode {
         timeout(chassis);
 
         //point 3
-        chassis.p2pDrive(1.3, -0.84, 0, 1200, 0.3, 1.1, 0.2, 0.5, 0.08, 3, 1.4, 2, 1, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.4, -0.84, 0, 1200, 0.3, 1.1, 0.2, 0.5, 0.08, 3, 1.4, 2, 1, 2, 0.02, 0.04);
         timeout(chassis);
 
 
 //lutut
         //push floor 1
 
-        chassis.p2pDrive(1.44, -1.3, 0, 1000, 0.4, 0.6, 0.2, 0.5, 0.06, 2, 1.3, 2, 1.8, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.46, -1.2, 0, 1000, 0.4, 0.6, 0.2, 0.5, 0.06, 2, 1.3, 2, 1.4, 2, 0.03, 0.04);
         timeout(chassis);
 //        sleep(200);
 
@@ -75,15 +75,15 @@ public class sampleAuton extends LinearOpMode {
 //        timeout(chassis);
 
 //        hSlidePushFloor();
-        chassis.p2pDrive(0.5, -1.3, 0, 1200, 0.25, 1.1, 0.2, 0.2, 0.1, 2, 2, 2, 1.15, 2, 0.03, 0.04);
+        chassis.p2pDrive(0.4, -1.22, 0, 1200, 0.25, 1.1, 0.2, 0.2, 0.02, 2, 1.6, 2, 1.3, 2, 0.03, 0.04);
         timeout(chassis);
 //        hSlideReturn();
-        chassis.p2pDrive(1.2, -1, 0, 1200, 0.6, 1.1, 0.2, 0.4, 0.1, 2, 1.5, 2, 2.5, 2, 0.03, 0.04);
+        chassis.p2pDrive(1.3, -1, 0, 1200, 0.6, 1.1, 0.2, 0.4, 0.1, 2, 1.5, 2, 2.5, 2, 0.03, 0.04);
         timeout(chassis);
 
 
         //push floor 2
-        chassis.p2pDrive(1.48, -1.47, 0, 1200, 0.25, 1.1, 0.2, 0.5, 0.035, 2, 1.3, 2, 1.5, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.48, -1.44, 0, 1200, 0.25, 1.1, 0.2, 0.5, 0.035, 2, 1.3, 2, 1.5, 2, 0.02, 0.04);
         timeout(chassis);
 //        sleep(200);
 
@@ -94,7 +94,7 @@ public class sampleAuton extends LinearOpMode {
 
 //        hSlidePushFloor();
 //        sleep(200);
-        chassis.p2pDrive(0.5, -1.5, 15, 1500, 0.25, 1.1, 0.2, 0.2, 0.1, 2, 1.5, 2, 1.15, 2, 0.02, 0.04);
+        chassis.p2pDrive(0.5, -1.45, 15, 1500, 0.25, 1.1, 0.2, 0.2, 0.1, 2, 1.5, 2, 1.15, 2, 0.02, 0.04);
         timeout(chassis);
 //        hSlideReturn();
 
@@ -113,7 +113,7 @@ public class sampleAuton extends LinearOpMode {
         prepDropHighRung();
 //        chassis.p2pDrive(0.75, 0.1, 0, 1000, 0.8, 1.1, 0.2, 0.4, 0.1, 2, 1.35, 2, 1.4, 2, 0.01, 0.04);
 //        timeout(chassis);
-        chassis.p2pDrive(1.09, 0.14, 0, 2300, 0.2, 0.9, 0.2, 0.4, 0.02, 2, 1.3, 2, 1.4, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.09, 0.16, 0, 2300, 0.2, 0.9, 0.2, 0.4, 0.02, 2, 1.3, 2, 1.4, 2, 0.02, 0.04);
         timeout(chassis);
 
 
@@ -128,17 +128,17 @@ public class sampleAuton extends LinearOpMode {
         for (int i = 0; i < 2; i++){
 
             prepPickup();
-            chassis.p2pDrive(0.20, -1.05, 0, 2000, 0.8, 1.1, 0.2, 0.4, 0.1, 3, 1.4, 2, 2, 2, 0.01, 0.04);
+            chassis.p2pDrive(0.26, -1.05, 0, 2000, 0.8, 1.1, 0.2, 0.4, 0.03, 3, 1.2, 2, 1.5, 2, 0.01, 0.04);
             timeout(chassis);
 
-            chassis.p2pDrive(0.15, -1.05, 0, 700, 0.4, 0.6, 0.2, 0.4, 0.01, 2, 1.7, 2, 1.1, 2, 0.01, 0.04);
+            chassis.p2pDrive(0.155, -1.05, 0, 800, 0.4, 0.6, 0.2, 0.4, 0.01, 2, 1.1, 2, 1.1, 2, 0.01, 0.04);
             timeout(chassis);
             pickup();
 
             prepDropHighRung();
 //            chassis.p2pDrive(0.75, -0.06, 0, 800, 0.8, 1.1, 0.2, 0.4, 0.1, 2, 1.35, 2, 1.6, 2, 0.01, 0.04);
 //            timeout(chassis);
-            chassis.p2pDrive(1.1, 0.02 - i * 0.07, 0, 2500, 0.3, 0.9, 0.2, 0.4, 0.025, 2, 0.6, 2, 2.5, 2, 0.02, 0.04);
+            chassis.p2pDrive(1.08, 0.06 - 0.07*i, 0, 2400, 0.25, 0.9, 0.2, 0.4, 0.02, 2, 1.1, 2, 2, 2, 0.02, 0.04);
             timeout(chassis);
 
 
