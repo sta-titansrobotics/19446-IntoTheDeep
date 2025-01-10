@@ -62,7 +62,7 @@ public class sampleAuton extends LinearOpMode {
         timeout(chassis);
 
 
-//l
+//lutut
         //push floor 1
 
         chassis.p2pDrive(1.44, -1.3, 0, 1000, 0.4, 0.6, 0.2, 0.5, 0.06, 2, 1.3, 2, 1.8, 2, 0.02, 0.04);
