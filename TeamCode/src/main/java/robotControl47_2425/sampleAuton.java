@@ -12,13 +12,13 @@ import robotControl47_2425.Sliders.VSlideController;
 
 @Autonomous
 public class sampleAuton extends LinearOpMode {
+    ElapsedTime timer = new ElapsedTime();
     // initialize chassis, current robot pos, odometry, sliders, etc.
     //private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
     //private DcMotor hSlide;
     private Chassis chassis;
-    ElapsedTime timer = new ElapsedTime();
     private Odometry odometry;
-    private  VSlideController  vSliderSystem = null;
+    private VSlideController vSliderSystem = null;
     private HSlideController hSliderSystem = null;
 
 
@@ -44,7 +44,6 @@ public class sampleAuton extends LinearOpMode {
         waitForStart();
         resetRuntime();
 
-
         prepDropHighRung();
 
         chassis.p2pDrive(1.09, 0.26, 0, 1800, 0.2, 0.7, 0.2, 0.4, 0.02, 2, 1.5, 2, 1.4, 2, 0.02, 0.04);
@@ -61,23 +60,20 @@ public class sampleAuton extends LinearOpMode {
         chassis.p2pDrive(1.4, -0.84, 0, 1200, 0.3, 1.1, 0.2, 0.5, 0.08, 3, 1.4, 2, 1, 2, 0.02, 0.04);
         timeout(chassis);
 
-
-//lutut
         //push floor 1
-
         chassis.p2pDrive(1.46, -1.2, 0, 1000, 0.4, 0.6, 0.2, 0.5, 0.06, 2, 1.3, 2, 1.4, 2, 0.03, 0.04);
         timeout(chassis);
 //        sleep(200);
 
         //verify angle
-
 //        chassis.p2pDrive(1.48, -1.25, 0, 500, 0.2, 0.4, 0.2, 0.3, 0.02, 2, 1.5, 2, 1.15, 2, 0.02, 0.04);
 //        timeout(chassis);
 
-//        hSlidePushFloor();
+//      hSlidePushFloor();
         chassis.p2pDrive(0.4, -1.22, 0, 1200, 0.25, 1.1, 0.2, 0.2, 0.02, 2, 1.6, 2, 1.3, 2, 0.03, 0.04);
         timeout(chassis);
-//        hSlideReturn();
+
+//      hSlideReturn();
         chassis.p2pDrive(1.3, -1, 0, 1200, 0.6, 1.1, 0.2, 0.4, 0.1, 2, 1.5, 2, 2.5, 2, 0.03, 0.04);
         timeout(chassis);
 
@@ -120,12 +116,11 @@ public class sampleAuton extends LinearOpMode {
         dropHighRung();
 
 
-
         // for human player
 //        sleep(100);
 
         // 2 & 3
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
 
             prepPickup();
             chassis.p2pDrive(0.26, -1.05, 0, 2000, 0.8, 1.1, 0.2, 0.4, 0.03, 3, 1.2, 2, 1.5, 2, 0.01, 0.04);
@@ -138,7 +133,7 @@ public class sampleAuton extends LinearOpMode {
             prepDropHighRung();
 //            chassis.p2pDrive(0.75, -0.06, 0, 800, 0.8, 1.1, 0.2, 0.4, 0.1, 2, 1.35, 2, 1.6, 2, 0.01, 0.04);
 //            timeout(chassis);
-            chassis.p2pDrive(1.08, 0.06 - 0.07*i, 0, 2400, 0.25, 0.9, 0.2, 0.4, 0.02, 2, 1.1, 2, 2, 2, 0.02, 0.04);
+            chassis.p2pDrive(1.08, 0.06 - 0.07 * i, 0, 2400, 0.25, 0.9, 0.2, 0.4, 0.02, 2, 1.1, 2, 2, 2, 0.02, 0.04);
             timeout(chassis);
 
 
@@ -151,19 +146,6 @@ public class sampleAuton extends LinearOpMode {
         hSliderSystem.goToPos(1500, 0.6);
         chassis.p2pDrive(0.48, -0.65, 64, 1000, 0.6, 1.1, 0.2, 0.4, 0.1, 3, 1.5, 2, 1.5, 2, 0.01, 0.04);
         timeout(chassis);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //        for(int i = 0; i < 1; i++){
@@ -215,16 +197,15 @@ public class sampleAuton extends LinearOpMode {
 
 //        chassis.p2pDrive(0.5, -0.4, -90, 0.6, 2, 2, 0.1, 0.1, 0.3);
 //        timeout(1200, chassis);
-
-
         chassis.stopAllThreads();
         double endTime = getRuntime();
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
             telemetry.addData("End Time", "%.2f", endTime);
             telemetry.update();
         }
 
     }//sjfdjsa
+
     private void updateTelemetry() {
 //
 //        telemetry.addData("Front Left Power", fl.getPower());
@@ -236,13 +217,13 @@ public class sampleAuton extends LinearOpMode {
         telemetry.update();
     }
 
-    private void timeout(Chassis chassis){
+    private void timeout(Chassis chassis) {
         timer.reset();
 //        while (opModeIsActive() && timer.milliseconds() < ms && chassis.isBusy){
 //            // && chassis.isBusy && timer.milliseconds() < ms
 //
 //        }
-        while(opModeIsActive() && chassis.isBusy){
+        while (opModeIsActive() && chassis.isBusy) {
             telemetry.addData("w", timer.milliseconds());
             telemetry.addData("isBusy", chassis.getBusyState());
             telemetry.addData("ang", chassis.getAngle());
@@ -253,39 +234,40 @@ public class sampleAuton extends LinearOpMode {
         sleep(30);
 
     }
-    public void prepDropHighRung(){
+
+    public void prepDropHighRung() {
         vSliderSystem.tiltToPos(0.15);
         vSliderSystem.goToPos(930);
     }
-    public void dropHighRung(){
+
+    public void dropHighRung() {
         vSliderSystem.tiltToPos(0.5);
         sleep(300);
         vSliderSystem.openClaw();
     }
 
-    public void prepPickup(){
+    public void prepPickup() {
         vSliderSystem.goToPos(0);
         vSliderSystem.tiltToPos(0.73);
         vSliderSystem.pickupClaw();
     }
 
-    public void pickup(){
+    public void pickup() {
         vSliderSystem.closeClaw();
         sleep(400);
     }
 
-    public void hSlidePushFloor(){
+    public void hSlidePushFloor() {
         hSliderSystem.goToPos(1500);
         hSliderSystem.rampDown();
         hSliderSystem.outtaking();
     }
 
-    public void hSlideReturn(){
+    public void hSlideReturn() {
         hSliderSystem.intakeOff();
         hSliderSystem.goToPos(0);
         hSliderSystem.rampUp();
     }
-
 
 
 }

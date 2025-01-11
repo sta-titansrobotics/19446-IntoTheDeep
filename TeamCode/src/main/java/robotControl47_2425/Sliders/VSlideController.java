@@ -95,7 +95,6 @@ public class VSlideController {
         tiltL.setPosition(pos);
         tiltR.setPosition(pos);
     }
-
     public double getTiltPos(){
         return tiltL.getPosition();
     }
@@ -104,11 +103,8 @@ public class VSlideController {
 
         double targetPos = Math.min(1.0, Math.max(0.1, tiltL.getPosition() + step));
         tiltL.setPosition(targetPos);
-//        tiltR.setPosition(targetPos);
+        tiltR.setPosition(targetPos);
     }
-
-
-
 
     public int getCurrentPos() {
         return (slideR.getCurrentPosition() + slideL.getCurrentPosition()) / 2;

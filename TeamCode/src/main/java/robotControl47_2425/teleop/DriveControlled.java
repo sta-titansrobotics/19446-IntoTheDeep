@@ -15,7 +15,7 @@ public class DriveControlled extends LinearOpMode {
     private HSlideController hSliderSystem = null;
     private VSlideController vSliderSystem = null;
 
-//    private boolean hSlideExtended = false;
+    //    private boolean hSlideExtended = false;
 //    private boolean vSlideExtended = false;
 //    private boolean previousAState = false;
 //    private boolean previousBState = false;
@@ -26,7 +26,7 @@ public class DriveControlled extends LinearOpMode {
 //    private boolean previousDpadLeftState = false;
 //    private boolean previousDpadRightState = false;
     private boolean clawOpen = false;
-//    private boolean armTiltedUp = false;
+    //    private boolean armTiltedUp = false;
 //    private boolean clawRolledUp = false;
     private long totalTime = 0;
     private int position_buttonA =0;
@@ -43,8 +43,8 @@ public class DriveControlled extends LinearOpMode {
 
         chassis = new Chassis(this, 0.36 / 2, -0.36 / 2);
 
-     //   hSliderSystem.initialize();
-     //   vSliderSystem.initializeMotors();
+        //   hSliderSystem.initialize();
+        //   vSliderSystem.initializeMotors();
 
 //        vSliderSystem.goToPosition(700);
 //        long start = System.currentTimeMillis();
@@ -98,7 +98,6 @@ public class DriveControlled extends LinearOpMode {
         }
 
     }
-
     public void hSliderCtrl(){
         if (gamepad1.dpad_left){
             hSliderSystem.goToPos(hSliderSystem.getCurrentPos()+10);
@@ -117,8 +116,8 @@ public class DriveControlled extends LinearOpMode {
         clawOpen = !clawOpen;
 
     }
-
     public void prepDropHighRung(){
+        vSliderSystem.closeClaw();
         vSliderSystem.tiltToPos(0.15);
         vSliderSystem.goToPos(930);
     }
@@ -128,15 +127,13 @@ public class DriveControlled extends LinearOpMode {
         vSliderSystem.openClaw();
     }
 
+    //This is the macro for auto pick up from sidways walls.
     public void prepPickup(){
-        vSliderSystem.goToPos(0);
-        vSliderSystem.tiltToPos(0.73);
-        vSliderSystem.pickupClaw();
-    }
-
-    public void pickup(){
-        vSliderSystem.closeClaw();
-        sleep(400);
+        if(gamepad2.x) {
+            vSliderSystem.goToPos(0);
+            vSliderSystem.tiltToPos(0.73);
+            vSliderSystem.pickupClaw();
+        }
     }
 
     public void hSlidePushFloor(){

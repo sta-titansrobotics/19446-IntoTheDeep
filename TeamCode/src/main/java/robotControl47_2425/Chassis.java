@@ -198,9 +198,6 @@ public class Chassis {
                 local_vel_y = (local_vel_y / local_vel_max) * max_speed;
             }
 
-
-
-
             error_ang = target_ang - current_ang;
             double correction_ang;
             if (Math.abs(error_ang) < ang_tolerance) {
@@ -215,7 +212,6 @@ public class Chassis {
             if (Math.abs(correction_ang) > turn_max_speed) {
                 correction_ang = turn_max_speed * Math.signum(correction_ang);
             }
-
 
 
             double lfPower = local_vel_x - local_vel_y - correction_ang;
