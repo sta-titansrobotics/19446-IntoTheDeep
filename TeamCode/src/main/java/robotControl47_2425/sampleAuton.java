@@ -254,7 +254,7 @@ public class sampleAuton extends LinearOpMode {
 
     public void pickup() {
         vSliderSystem.closeClaw();
-        sleep(100);
+        sleep(400);
     }
 
     public void hSlidePushFloor() {

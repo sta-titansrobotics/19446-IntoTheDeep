@@ -56,7 +56,8 @@ public class VSlideController {
     // Method to move motors to a position
     public void stepCtrl(int step) {
         int targetPos = Math.min(MAX_POSITION, Math.max(0, getCurrentPos() + step));
-
+        //tuning/fixing a little problem with robot
+        //int targetPos = Math.min(3000, Math.max(0, getCurrentPos() + step));
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
         slideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);

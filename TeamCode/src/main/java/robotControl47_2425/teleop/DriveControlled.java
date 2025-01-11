@@ -71,6 +71,10 @@ public class DriveControlled extends LinearOpMode {
             //chassis.telemetryStrafe();
             vSliderCtrl();
             hSliderCtrl();
+            prepDropHighRung();
+            dropHighRung();
+            prepPickup();
+            hSlideMovement();
 
 
             if (gamepad1.a) {
@@ -83,10 +87,41 @@ public class DriveControlled extends LinearOpMode {
 
     private void vSliderCtrl() {
         if (gamepad2.left_trigger > 0.3) {
-            vSliderSystem.stepCtrl(100);
-        } else if (gamepad2.right_trigger>0.3) {
             vSliderSystem.stepCtrl(-100);
+        } else if (gamepad2.right_trigger>0.3) {
+            vSliderSystem.stepCtrl(100);
         }
+
+        if(gamepad2.dpad_down){
+            //grabs from transfer pos
+            vSliderSystem.openClaw();
+            vSliderSystem.goToPos(350);
+            sleep(400);
+            vSliderSystem.tiltToPos(0.6969696);
+            sleep(800);
+            //vSliderSystem.goToPos(0);
+            sleep(500);
+            vSliderSystem.closeClaw();
+
+
+        }
+        telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
+
+        //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
+        if(gamepad2.dpad_up){
+            vSliderSystem.goToPos(2900);
+            sleep(100);
+            vSliderSystem.tiltToPos(0.65); //maybe 0.65
+        }
+
+        if(gamepad2.dpad_left){
+            vSliderSystem.openClaw();
+        }
+
+        if(gamepad2.dpad_right){
+            vSliderSystem.closeClaw();
+        }
+
 
 //        if (gamepad1.dpad_down) {
 //            vSliderSystem.tiltStepCtrl(-0.05);
@@ -103,9 +138,9 @@ public class DriveControlled extends LinearOpMode {
             hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 20);
         }
 
-        if (gamepad1.left_trigger > 0.2) {
+        if (gamepad1.right_trigger > 0.2) {
             hSliderSystem.outtaking();
-        } else if (gamepad1.right_trigger > 0.2) {
+        } else if (gamepad1.right_bumper) {
             hSliderSystem.intaking();
         } else {
             hSliderSystem.intakeOff();
@@ -142,7 +177,8 @@ public class DriveControlled extends LinearOpMode {
 
                 vSliderSystem.goToPos(0);
                 vSliderSystem.tiltToPos(0.73);
-                vSliderSystem.pickupClaw();
+                vSliderSystem.openClaw();
+                sleep(50);
             }
         }
 
@@ -157,6 +193,7 @@ public class DriveControlled extends LinearOpMode {
             if (gamepad1.y) {
                 hSliderSystem.rampUp();
                 hSliderSystem.goToPos(0);
+
             }
         }
 
