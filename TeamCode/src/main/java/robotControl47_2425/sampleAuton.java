@@ -123,10 +123,10 @@ public class sampleAuton extends LinearOpMode {
         for (int i = 0; i < 2; i++) {
 
             prepPickup();
-            chassis.p2pDrive(0.26, -1.05, 0, 2000, 0.8, 1.1, 0.2, 0.4, 0.03, 3, 1.2, 2, 1.5, 2, 0.01, 0.04);
+            chassis.p2pDrive(0.26, -1.05, 0, 2000, 0.4, 1.1, 0.2, 0.4, 0.03, 3, 1, 2, 1.5, 2, 0.01, 0.04);
             timeout(chassis);
 
-            chassis.p2pDrive(0.155, -1.05, 0, 800, 0.4, 0.6, 0.2, 0.4, 0.01, 2, 1.1, 2, 1.1, 2, 0.01, 0.04);
+            chassis.p2pDrive(0.155, -1.05, 0, 800, 0.28, 0.6, 0.2, 0.4, 0.01, 2, 1, 2, 1.1, 2, 0.01, 0.04);
             timeout(chassis);
             pickup();
 
