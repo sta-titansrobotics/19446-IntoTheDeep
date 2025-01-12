@@ -248,13 +248,13 @@ public class DriveControlled extends LinearOpMode {
 //    private void handleServoControl() {
 //        // Toggle claw open/close with gamepad1.x
 //        if (gamepad1.x && !previousXState) {
-////            toggleClaw();
+//            toggleClaw();
 //        }
 //        previousXState = gamepad1.x;
 //
 //        // Toggle arm tilt up/down with gamepad1.y or dpad_up/down
 //        if ((gamepad1.y && !previousYState) || (gamepad1.dpad_up && !previousDpadUpState) || (gamepad1.dpad_down && !previousDpadDownState)) {
-////            toggleArmTilt();
+//            toggleArmTilt();
 //        }
 //        previousYState = gamepad1.y;
 //        previousDpadUpState = gamepad1.dpad_up;
@@ -262,7 +262,7 @@ public class DriveControlled extends LinearOpMode {
 //
 //        // Toggle claw roll up/down with gamepad1.dpad_left/right
 //        if ((gamepad1.dpad_left && !previousDpadLeftState) || (gamepad1.dpad_right && !previousDpadRightState)) {
-////            toggleClawRoll();
+//            toggleClawRoll();
 //        }
 //        previousDpadLeftState = gamepad1.dpad_left;
 //        previousDpadRightState = gamepad1.dpad_right;
