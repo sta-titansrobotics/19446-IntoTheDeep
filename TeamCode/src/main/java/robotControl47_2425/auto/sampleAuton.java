@@ -1,17 +1,14 @@
-package robotControl47_2425;
-
-import androidx.annotation.AnyThread;
+package robotControl47_2425.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
 
 @Autonomous
-public class specimen3_auton extends LinearOpMode {
+public class sampleAuton extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     // initialize chassis, current robot pos, odometry, sliders, etc.
     //private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
@@ -46,22 +43,22 @@ public class specimen3_auton extends LinearOpMode {
 
         prepDropHighRung();
 
-        chassis.p2pDrive(1.06, 0.1, 0, 1800, 0.18, 0.7, 0.2, 0.4, 0.02, 2, 1, 2, 1.4, 2, 0.018, 0.04);
+        chassis.p2pDrive(1.08, 0.2, 0, 2000, 0.18, 0.7, 0.2, 0.4, 0.02, 2, 1, 2, 1, 2, 0.02, 0.04);
         timeout(chassis);
 
         dropHighRung();
         prepPickup();
 
         //point 2
-        chassis.p2pDrive(0.8, -0.86, 0, 2000, 0.8, 1.1, 0.2, 0.5, 0.1, 2, 1.15, 2, 1.25, 2, 0.018, 0.04);
+        chassis.p2pDrive(0.8, -0.86, 0, 1700, 0.8, 1.1, 0.2, 0.5, 0.06, 3, 1.15, 2, 1.25, 2, 0.02, 0.04);
         timeout(chassis);
 
         //point 3
-        chassis.p2pDrive(1.5, -0.86, 0, 1200, 0.3, 1.1, 0.2, 0.5, 0.08, 2, 1.4, 2, 1, 2, 0.018, 0.04);
+        chassis.p2pDrive(1.5, -0.97, 0, 1500, 0.4, 1.1, 0.2, 0.5, 0.04, 3, 1.4, 2, 1, 2, 0.025, 0.04);
         timeout(chassis);
 
         //push floor 1
-        chassis.p2pDrive(1.48, -1.24, 0, 1000, 0.4, 0.6, 0.2, 0.5, 0.06, 2, 1.3, 2, 1.4, 2, 0.03, 0.04);
+        chassis.p2pDrive(1.48, -1.2, 0, 1000, 0.4, 0.6, 0.2, 0.5, 0.06, 2, 1.3, 2, 1.4, 2, 0.02, 0.04);
         timeout(chassis);
 //        sleep(200);
 
@@ -70,7 +67,7 @@ public class specimen3_auton extends LinearOpMode {
 //        timeout(chassis);
 
 //      hSlidePushFloor();
-        chassis.p2pDrive(0.4, -1.24, 0, 1200, 0.25, 1.1, 0.2, 0.2, 0.02, 2, 1.6, 2, 1.3, 2, 0.03, 0.04);
+        chassis.p2pDrive(0.4, -1.22, 0, 1000, 0.25, 1.1, 0.2, 0.2, 0.02, 2, 1.6, 2, 1.3, 2, 0.03, 0.04);
         timeout(chassis);
 
 //      hSlideReturn();
@@ -79,7 +76,7 @@ public class specimen3_auton extends LinearOpMode {
 
 
         //push floor 2
-        chassis.p2pDrive(1.48, -1.48, 0, 1200, 0.25, 1.1, 0.2, 0.5, 0.035, 2, 1.3, 2, 1.3, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.48, -1.44, 0, 1200, 0.25, 1.1, 0.2, 0.5, 0.035, 2, 1.3, 2, 1.5, 2, 0.02, 0.04);
         timeout(chassis);
 //        sleep(200);
 
@@ -90,7 +87,7 @@ public class specimen3_auton extends LinearOpMode {
 
 //        hSlidePushFloor();
 //        sleep(200);
-        chassis.p2pDrive(0.5, -1.48, 15, 1500, 0.25, 1.1, 0.2, 0.2, 0.1, 2, 1.5, 2, 1.15, 2, 0.02, 0.04);
+        chassis.p2pDrive(0.5, -1.45, 15, 1500, 0.25, 1.1, 0.2, 0.2, 0.1, 2, 1.5, 2, 1.15, 2, 0.02, 0.04);
         timeout(chassis);
 //        hSlideReturn();
 
@@ -98,42 +95,41 @@ public class specimen3_auton extends LinearOpMode {
         // first rung specimen
 
         prepPickup();
-        chassis.p2pDrive(0.4, -1, 15, 1300, 0.8, 1.1, 0.2, 0.5, 0.07, 1, 1.7, 2, 1.4, 2, 0.02, 0.04);
+        chassis.p2pDrive(0.4, -1, 15, 1000, 0.8, 1.1, 0.2, 0.5, 0.07, 1, 1.7, 2, 1.4, 2, 0.02, 0.04);
         timeout(chassis);
 
 
-        chassis.p2pDrive(0.155, -1, 0, 2400, 0.18, 0.4, 0.2, 0.4, 0.01, 2, 0.7, 2, 1, 2, 0.02, 0.04);
+        chassis.p2pDrive(0.16, -1, 0, 1300, 0.3, 0.6, 0.2, 0.4, 0.02, 2, 1.5, 2, 1.5, 2, 0.02, 0.04);
         timeout(chassis);
         pickup();
 
         prepDropHighRung();
-//        chassis.p2pDrive(0.75, 0.1, 0, 1000, 0.8,  1.1, 0.2, 0.4, 0.1, 2, 1.35, 2, 1.4, 2, 0.01, 0.04);
+//        chassis.p2pDrive(0.75, 0.1, 0, 1000, 0.8, 1.1, 0.2, 0.4, 0.1, 2, 1.35, 2, 1.4, 2, 0.01, 0.04);
 //        timeout(chassis);
-        chassis.p2pDrive(1.09, 0.05, 0, 2300, 0.2, 0.9, 0.2, 0.4, 0.02, 2, 1.1, 2, 1.7, 2, 0.02, 0.04);
+        chassis.p2pDrive(1.09, 0.15, 0, 2000, 0.2, 0.9, 0.2, 0.4, 0.02, 2, 1.2, 2, 1.6, 2, 0.02, 0.04);
         timeout(chassis);
 
-
         dropHighRung();
-
 
         // for human player
 //        sleep(100);
 
         // 2 & 3
-        for (int i = 0; i < 1; i++) {
+        //commented 5:21
+        for (int i = 0; i < 2; i++) {
 
             prepPickup();
-            chassis.p2pDrive(0.3, -1.01, 0, 2500, 0.4, 1.1, 0.2, 0.4, 0.03, 2, 0.8, 2, 1, 2, 0.025, 0.04);
+            chassis.p2pDrive(0.3, -1.01, 0, 1700, 0.4, 1.1, 0.2, 0.4, 0.03, 2, 0.6, 2, 1, 2, 0.025, 0.04);
             timeout(chassis);
 
-            chassis.p2pDrive(0.155, -1.01, 0, 1300, 0.28, 0.4, 0.2, 0.4, 0.01, 2, 0.5, 2, 0.8, 2, 0.025, 0.04);
+            chassis.p2pDrive(0.155, -1.01, 0, 1400, 0.3, 0.3, 0.2, 0.4, 0.01, 2, 0.6, 2, 0.8, 2, 0.025, 0.04);
             timeout(chassis);
             pickup();
 
             prepDropHighRung();
 //            chassis.p2pDrive(0.75, -0.06, 0, 800, 0.8, 1.1, 0.2, 0.4, 0.1, 2, 1.35, 2, 1.6, 2, 0.01, 0.04);
 //            timeout(chassis);
-            chassis.p2pDrive(1.09, -0.04, 0, 2400, 0.18, 0.9, 0.2, 0.4,     0.01, 2, 0.6, 2, 1.5, 2, 0.02, 0.04);
+            chassis.p2pDrive(1.1, 0.12-0.06*i, 0, 2050, 0.18, 0.9, 0.3, 0.4,     0.01, 2, 0.69, 2, 1.1, 2, 0.02, 0.04);
             timeout(chassis);
 
 
@@ -141,6 +137,8 @@ public class specimen3_auton extends LinearOpMode {
 
 
         }
+
+
         //oaihd
         prepPickup();
         hSliderSystem.goToPos(1500, 0.6);
@@ -150,7 +148,6 @@ public class specimen3_auton extends LinearOpMode {
 
 //        for(int i = 0; i < 1; i++){
 //
-
 //            chassis.p2pDrive(-0.1, -1.25, 0, 1500, 0.2, 1.1, 0.2, 0.7, 0.02, 2, 1.15, 2, 1.15, 2, 0.02, 0.04);
 //            timeout(chassis);
 //            chassis.p2pDrive(0, -1.3, 0, 500, 0.2, 0.7, 0.2, 0.6, 0.02, 2, 1.15, 2, 1.15, 2, 0.02, 0.04);
@@ -216,7 +213,7 @@ public class specimen3_auton extends LinearOpMode {
         telemetry.addData("Position (m): ", chassis.getGlobalPos());
         telemetry.update();
     }
-
+    //
     private void timeout(Chassis chassis) {
         timer.reset();
 //        while (opModeIsActive() && timer.milliseconds() < ms && chassis.isBusy){
@@ -237,7 +234,7 @@ public class specimen3_auton extends LinearOpMode {
 
     public void prepDropHighRung() {
         vSliderSystem.tiltToPos(0.15);
-        vSliderSystem.goToPos(920);
+        vSliderSystem.goToPos(930);
     }
 
     public void dropHighRung() {
@@ -249,7 +246,7 @@ public class specimen3_auton extends LinearOpMode {
     public void prepPickup() {
         vSliderSystem.goToPos(0);
         vSliderSystem.tiltToPos(0.73);
-        vSliderSystem.openClaw();
+        vSliderSystem.pickupClaw();
     }
 
     public void pickup() {
