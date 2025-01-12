@@ -81,6 +81,11 @@ public class VSlideController {
         clawR.setPosition(0.63);
     }
 
+    public void openSlightClaw() {
+        clawL.setPosition(0.43);
+        clawR.setPosition(0.6);
+    }
+
     public void closeClaw() {
         clawL.setPosition(0.53);
         clawR.setPosition(0.5);
