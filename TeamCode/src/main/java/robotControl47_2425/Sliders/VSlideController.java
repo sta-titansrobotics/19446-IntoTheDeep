@@ -56,7 +56,8 @@ public class VSlideController {
     // Method to move motors to a position
     public void stepCtrl(int step) {
         int targetPos = Math.min(MAX_POSITION, Math.max(0, getCurrentPos() + step));
-
+        //tuning/fixing a little problem with robot
+        //int targetPos = Math.min(3000, Math.max(0, getCurrentPos() + step));
         slideL.setTargetPosition(targetPos);
         slideR.setTargetPosition(targetPos);
         slideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -80,6 +81,11 @@ public class VSlideController {
         clawR.setPosition(0.63);
     }
 
+    public void openSlightClaw() {
+        clawL.setPosition(0.43);
+        clawR.setPosition(0.6);
+    }
+
     public void closeClaw() {
         clawL.setPosition(0.53);
         clawR.setPosition(0.5);
@@ -95,7 +101,6 @@ public class VSlideController {
         tiltL.setPosition(pos);
         tiltR.setPosition(pos);
     }
-
     public double getTiltPos(){
         return tiltL.getPosition();
     }
@@ -104,11 +109,8 @@ public class VSlideController {
 
         double targetPos = Math.min(1.0, Math.max(0.1, tiltL.getPosition() + step));
         tiltL.setPosition(targetPos);
-//        tiltR.setPosition(targetPos);
+        tiltR.setPosition(targetPos);
     }
-
-
-
 
     public int getCurrentPos() {
         return (slideR.getCurrentPosition() + slideL.getCurrentPosition()) / 2;

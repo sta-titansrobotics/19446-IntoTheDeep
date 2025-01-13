@@ -2,20 +2,19 @@ package robotControl47_2425.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import robotControl47_2425.Chassis;
+import robotControl47_2425.auto.Chassis;
 import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
 
 @TeleOp(name = "46TeleOp", group = "Test")
 public class DriveControlled extends LinearOpMode {
+    ElapsedTime timer = new ElapsedTime();
     private Chassis chassis;
     private HSlideController hSliderSystem = null;
     private VSlideController vSliderSystem = null;
-
-//    private boolean hSlideExtended = false;
+    //    private boolean hSlideExtended = false;
 //    private boolean vSlideExtended = false;
 //    private boolean previousAState = false;
 //    private boolean previousBState = false;
@@ -26,13 +25,13 @@ public class DriveControlled extends LinearOpMode {
 //    private boolean previousDpadLeftState = false;
 //    private boolean previousDpadRightState = false;
     private boolean clawOpen = false;
-//    private boolean armTiltedUp = false;
+    private boolean rampUp = true;
+
+    //    private boolean armTiltedUp = false;
 //    private boolean clawRolledUp = false;
     private long totalTime = 0;
-    private int position_buttonA =0;
+    private int position_buttonA = 0;
     private boolean isHighBasket = false;
-
-    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -43,8 +42,8 @@ public class DriveControlled extends LinearOpMode {
 
         chassis = new Chassis(this, 0.36 / 2, -0.36 / 2);
 
-     //   hSliderSystem.initialize();
-     //   vSliderSystem.initializeMotors();
+        //   hSliderSystem.initialize();
+        //   vSliderSystem.initializeMotors();
 
 //        vSliderSystem.goToPosition(700);
 //        long start = System.currentTimeMillis();
@@ -73,83 +72,164 @@ public class DriveControlled extends LinearOpMode {
             //chassis.telemetryStrafe();
             vSliderCtrl();
             hSliderCtrl();
+            prepDropHighRung();
+            dropHighRung();
+            prepPickup();
+            hSlideMovement();
 
 
-            if (gamepad1.a){
+            if (gamepad1.a) {
                 toggleClaw();
             }
-            sleep(5);
+            sleep(50);
         }
         chassis.stopAllThreads();
     }
 
     private void vSliderCtrl() {
-        if (gamepad1.x) {
-            vSliderSystem.stepCtrl(100);
-        } else if (gamepad1.y) {
-            vSliderSystem.stepCtrl(-100);
-        }
+//        if (gamepad2.left_trigger > 0.3) {
+//            vSliderSystem.stepCtrl(-100);
+//        } else if (gamepad2.right_trigger>0.3) {
+//            vSliderSystem.stepCtrl(100);
+//        }
 
-        if (gamepad1.dpad_down){
-            vSliderSystem.tiltStepCtrl(-0.05);
-        }
-        else if(gamepad1.dpad_up){
-            vSliderSystem.tiltStepCtrl(0.05);
-        }
 
-    }
-
-    public void hSliderCtrl(){
-        if (gamepad1.dpad_left){
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos()+10);
-        }
-        else if (gamepad1.dpad_right){
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos()-10);
-        }
-    }
-
-    private void toggleClaw(){
-        if (!clawOpen) {
-            vSliderSystem.openClaw();
-        } else {
+        if(gamepad2.dpad_down){
+            //grabs from transfer pos
+            hSliderSystem.goToPos(78);
+            sleep(600);
+            vSliderSystem.openSlightClaw();
+            vSliderSystem.goToPos(350);
+            sleep(600);
+            vSliderSystem.tiltToPos(1);
+            sleep(800);
+            vSliderSystem.goToPos(0);
+            sleep(600);
             vSliderSystem.closeClaw();
         }
-        clawOpen = !clawOpen;
+        telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
+
+        //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
+        if(gamepad2.dpad_up){
+            vSliderSystem.goToPos(2900);
+            sleep(100);
+            vSliderSystem.tiltToPos(0.65);
+        }
+
+        if(gamepad2.b){
+            toggleRamp();
+            sleep(75);
+        }
+
+        if(gamepad2.dpad_left){
+            vSliderSystem.openClaw();
+        }
+
+        if(gamepad2.dpad_right){
+            vSliderSystem.closeClaw();
+        }
+
+        //double y = gamepad2.left_stick_y; // reversed NOT same as auto
+        if (gamepad2.left_stick_y>0.4) {
+            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() + 50);
+        } else if (gamepad2.left_stick_y<-0.4) {
+            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 50);
+        }
+
+
+//        if (gamepad1.dpad_down) {
+//            vSliderSystem.tiltStepCtrl(-0.05);
+//        } else if (gamepad1.dpad_up) {
+//            vSliderSystem.tiltStepCtrl(0.05);
+//        }
 
     }
 
-    public void prepDropHighRung(){
-        vSliderSystem.tiltToPos(0.15);
-        vSliderSystem.goToPos(930);
-    }
-    public void dropHighRung(){
-        vSliderSystem.tiltToPos(0.5);
-        sleep(300);
-        vSliderSystem.openClaw();
+    public void hSliderCtrl() {
+        if (gamepad1.dpad_down) {
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 20);
+        } else if (gamepad1.dpad_up) {
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 20);
+        }
+
+        if (gamepad1.right_trigger > 0.2) {
+            hSliderSystem.outtaking();
+        } else if (gamepad1.right_bumper) {
+            hSliderSystem.intaking();
+        } else {
+            hSliderSystem.intakeOff();
+        }
     }
 
-    public void prepPickup(){
-        vSliderSystem.goToPos(0);
-        vSliderSystem.tiltToPos(0.73);
-        vSliderSystem.pickupClaw();
-    }
+        private void toggleClaw () {
+            if (!clawOpen) {
+                vSliderSystem.openClaw();
+            } else {
+                vSliderSystem.closeClaw();
+            }
+            clawOpen = !clawOpen;
 
-    public void pickup(){
-        vSliderSystem.closeClaw();
-        sleep(400);
-    }
+        }
 
-    public void hSlidePushFloor(){
-        hSliderSystem.goToPos(1500);
-        hSliderSystem.rampDown();
-        hSliderSystem.outtaking();
-    }
+        private void toggleRamp () {
+            if (!rampUp) {
+                hSliderSystem.rampHigh();
+            } else {
+                hSliderSystem.rampDown();
+            }
+            rampUp = !rampUp;
 
-    public void hSlideReturn(){
-        hSliderSystem.intakeOff();
-        hSliderSystem.goToPos(0);
-        hSliderSystem.rampUp();
-    }
+        }
+        public void prepDropHighRung () {
+        if(gamepad2.x) {
+            vSliderSystem.closeClaw();
+            sleep(400);
+            vSliderSystem.tiltToPos(0.15);
+            vSliderSystem.goToPos(930);
+        }
+        }
+        public void dropHighRung () {
+        if(gamepad2.y) {
+            vSliderSystem.tiltToPos(0.5);
+            sleep(300);
+            vSliderSystem.openClaw();
+        }
+        }
+
+        //This is the macro for auto pick up from sidways walls. Don't use for tele-Op (maybe)
+        public void prepPickup () {
+            if (gamepad2.a) {
+
+                vSliderSystem.goToPos(0);
+                vSliderSystem.tiltToPos(0.73);
+                vSliderSystem.openClaw();
+                sleep(50);
+            }
+        }
+
+        //X - HSlide OUT
+        //Y - HSlide IN
+        public void hSlideMovement() {
+            if (gamepad1.x) {
+                hSliderSystem.goToPos(1500);
+                hSliderSystem.rampUp();
+            }
+
+            if (gamepad1.y) {
+                hSliderSystem.rampUp();
+
+                hSliderSystem.goToPos(0);
+
+            }
+            if (gamepad2.right_trigger > 0.2) {
+                hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
+            } else if (gamepad2.left_trigger > 0.2) {
+                hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
+            }
+            if (gamepad2.b){
+                hSliderSystem.rampUp();
+            }
+        }
 
 //    private void hSlideManualControl() {
 //        // Control HSlide with gamepad1.a
@@ -168,13 +248,13 @@ public class DriveControlled extends LinearOpMode {
 //    private void handleServoControl() {
 //        // Toggle claw open/close with gamepad1.x
 //        if (gamepad1.x && !previousXState) {
-////            toggleClaw();
+//            toggleClaw();
 //        }
 //        previousXState = gamepad1.x;
 //
 //        // Toggle arm tilt up/down with gamepad1.y or dpad_up/down
 //        if ((gamepad1.y && !previousYState) || (gamepad1.dpad_up && !previousDpadUpState) || (gamepad1.dpad_down && !previousDpadDownState)) {
-////            toggleArmTilt();
+//            toggleArmTilt();
 //        }
 //        previousYState = gamepad1.y;
 //        previousDpadUpState = gamepad1.dpad_up;
@@ -182,7 +262,7 @@ public class DriveControlled extends LinearOpMode {
 //
 //        // Toggle claw roll up/down with gamepad1.dpad_left/right
 //        if ((gamepad1.dpad_left && !previousDpadLeftState) || (gamepad1.dpad_right && !previousDpadRightState)) {
-////            toggleClawRoll();
+//            toggleClawRoll();
 //        }
 //        previousDpadLeftState = gamepad1.dpad_left;
 //        previousDpadRightState = gamepad1.dpad_right;
@@ -228,20 +308,20 @@ public class DriveControlled extends LinearOpMode {
 //        clawRolledUp = !clawRolledUp;
 //    }
 
-    private void updateTelemetry() {
-        telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
-        telemetry.addData("VSlide Position", vSliderSystem.getCurrentPos());
-        telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
+        private void updateTelemetry () {
+            telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
+            telemetry.addData("VSlide Position", vSliderSystem.getCurrentPos());
+            telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
 //
 //        telemetry.addData("Front Left Power", fl.getPower());
 //        telemetry.addData("Front Right Power", fr.getPower());
 //        telemetry.addData("Back Left Power", bl.getPower());
 //        telemetry.addData("Back Right Power", br.getPower());
 
-        telemetry.addData("Position", chassis.getGlobalPos());
+            telemetry.addData("Position", chassis.getGlobalPos());
 
-        telemetry.update();
-    }
+            telemetry.update();
+        }
 
 
 //
@@ -397,4 +477,4 @@ public class DriveControlled extends LinearOpMode {
 //    public void updateTime(){
 //        totalTime = System.currentTimeMillis();
 //    }
-}
+    }

@@ -90,10 +90,22 @@ public class HSlideController {
     }
 
     public void rampUp(){
-        ramp.setPosition(0);
+        ramp.setPosition(0.4);
+        //ramp.setPosition(0.25);
+    }
 
+    public void rampHigh(){
+        ramp.setPosition(0.25);
     }
     public void rampDown(){
-        ramp.setPosition(0.51);
+
+        ramp.setPosition(0.55);
     }
+
+//    public void rampHold(){
+//        ramp.setDirection(Servo.Direction.FORWARD);
+//    }
+
+
 }
+
