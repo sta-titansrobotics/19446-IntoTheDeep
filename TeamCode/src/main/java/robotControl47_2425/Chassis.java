@@ -248,7 +248,7 @@ public class Chassis {
 
             Thread.sleep(10);
         }
-        // ethans comment: need to implement smt to stop thing from stopping
+        // ethans comment: need to implement smt to stop thing from stopping d
         stop();
 
         isBusy = false;
