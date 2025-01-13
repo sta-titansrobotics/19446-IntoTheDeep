@@ -41,6 +41,7 @@ public class sampleAuton extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
         hSliderSystem.rampUp();
+        hSliderSystem.intakeOff();
         waitForStart();
         resetRuntime();
 
