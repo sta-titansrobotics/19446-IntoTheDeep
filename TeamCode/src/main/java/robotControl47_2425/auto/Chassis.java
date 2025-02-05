@@ -128,7 +128,7 @@ public class Chassis {
         double error_sum_x = 0, error_sum_y = 0;
         //put initial values first during init
         double prev_error_x = 0, prev_error_y = 0, prev_error_ang = 0;//init before use
-        double ki = 0.02;
+        double ki = 0.00;
 
         double error_ang = target_ang - current_ang;
         double error_x = target_x - current_x;
@@ -397,6 +397,13 @@ public class Chassis {
 
     public String getGlobalPos(){
         return "Global X: " + (int)(global_xM * 10000)/10000.0 + " | Global Y: " + (int)(global_yM * 10000)/10000.0 + "| Angle: " + globalAngle;
+    }
+
+    public double getGlobalX(){
+        return (int)(global_xM * 10000)/10000.0;
+    }
+    public double getGlobalY(){
+        return (int)(global_yM * 10000)/10000.0;
     }
 
     public boolean getBusyState(){
