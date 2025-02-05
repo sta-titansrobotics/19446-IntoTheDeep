@@ -8,13 +8,17 @@ import robotControl47_2425.auto.Chassis;
 import robotControl47_2425.auto.Odometry;
 
 /**
- * refer to straight forward tuning for more information.
+ * Used to tune the kp and kd value for the turning movement of the robot,
+ *
+ * Press gamepad1.a to move the robot back and forth, use the dpad to adjust the kpx and kdx values.
+ *
+ * @author Best
  */
 @TeleOp
-public class PIDStrafeTesting extends LinearOpMode {
+public class PIDTurnTuning extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
-    double kp = 2; // Proportional gain
-    double kd = 2; // Derivative gain
+    double kp = 1; // Proportional gain
+    double kd = 1.5; // Derivative gain
     double desiredPosition = 0; // Desired position to move to
     int buttonAPressCount = 0;
     // Placeholder for error calculation
@@ -66,13 +70,13 @@ public class PIDStrafeTesting extends LinearOpMode {
 
                 // Determine the desired position based on the number of button presses
                 if (buttonAPressCount % 2 == 1) {
-                    desiredPosition = 1.4; // Move forward by 0.8
+                    desiredPosition = 270; // Move forward by 0.8
                 } else {
                     desiredPosition = 0; // Return to 0
                 }
 
                 // Drive the chassis to the desired position
-                chassis.p2pDrive(0, desiredPosition, 0, 5000, 0.2, 1.1, 0.2, 0.5, 0.02, 2, 0.888, 2.407, kp, kd, 0.2, 0.2);
+                chassis.p2pDrive(0, 0, desiredPosition, 5000, 0, 1.1, 0, 0.8, 0.02, 4, 0, 0, 0, 0, kp, kd);
                 timeout(chassis);
             }
 
