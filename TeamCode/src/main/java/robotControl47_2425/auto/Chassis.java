@@ -192,7 +192,6 @@ public class Chassis {
                 correction_ang = (turn_kp * error_ang) + (turn_kd * (error_ang - prev_error_ang));//PD control
                 correction_ang = Math.abs(correction_ang) < turn_min_speed? Math.signum(correction_ang) * turn_min_speed : correction_ang;
 
-
             }
             if (Math.abs(correction_ang) > turn_max_speed) {
                 correction_ang = turn_max_speed * Math.signum(correction_ang);
@@ -211,7 +210,6 @@ public class Chassis {
                 rfPower /= maxNumber;
                 rrPower /= maxNumber;
             }
-
 
             lf.setPower(lfPower);
             rf.setPower(rfPower);
@@ -305,6 +303,7 @@ public class Chassis {
 
         p2pThread.start();
     }
+
     private class moveToPoint extends Thread {
         double target_x, target_y, target_ang, timeoutSeconds, pos_tolerance,
                 ang_tolerance, min_speed, max_speed, turn_min_speed, turn_max_speed, kpx, kdx, kpy, kdy, turn_kp, turn_kd;
@@ -399,6 +398,9 @@ public class Chassis {
         return "Global X: " + (int)(global_xM * 10000)/10000.0 + " | Global Y: " + (int)(global_yM * 10000)/10000.0 + "| Angle: " + globalAngle;
     }
 
+    public String getMotorPower(){
+        return "lf: " + lf.getPower() + " | rf: " + rf.getPower() + " | lr: " + lr.getPower() + " | rr: " + rr.getPower();
+    }
     public double getGlobalX(){
         return (int)(global_xM * 10000)/10000.0;
     }

@@ -81,6 +81,8 @@ public class PIDStrafeTesting extends LinearOpMode {
 
             telemetry.addData("Error-X(cm) : ", errorX * 100);
             telemetry.addData("Error-Y(cm) : ", errorY * 100);
+            telemetry.addData("Motor Power: ", chassis.getMotorPower() );
+
 
             telemetry.addData("kp(dpad up/down) : ", kp);
             telemetry.addData("kd(dpad right/left : ", kd);
