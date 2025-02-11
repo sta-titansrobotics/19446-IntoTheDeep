@@ -10,11 +10,11 @@ import robotControl47_2425.auto.Odometry;
 /**
  * refer to straight forward tuning for more information.
  */
-@TeleOp
+@TeleOp(name = "strafe", group = "IDK")
 public class PIDStrafeTesting extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
-    double kp = 2; // Proportional gain
-    double kd = 2; // Derivative gain
+    double kp = 0.9; // Proportional gain
+    double kd = 0; // Derivative gain
     double desiredPosition = 0; // Desired position to move to
     int buttonAPressCount = 0;
     // Placeholder for error calculation
@@ -72,12 +72,12 @@ public class PIDStrafeTesting extends LinearOpMode {
                 }
 
                 // Drive the chassis to the desired position
-                chassis.p2pDrive(0, desiredPosition, 0, 5000, 0.2, 1.1, 0.2, 0.5, 0.02, 2, 0.888, 2.407, kp, kd, 0.2, 0.2);
+                chassis.p2pDrive(0, desiredPosition, 0, 8000, 0.2, 1.1, 0.2, 0.5, 0.02, 2, 0, 0, kp, kd, 0.02, 0);
                 timeout(chassis);
             }
 
-            errorX = Math.abs(desiredPosition - chassis.getGlobalX());
-            errorY = Math.abs(chassis.getGlobalY());
+            errorX = Math.abs(chassis.getGlobalX());
+            errorY = Math.abs(desiredPosition - chassis.getGlobalY());
 
             telemetry.addData("Error-X(cm) : ", errorX * 100);
             telemetry.addData("Error-Y(cm) : ", errorY * 100);

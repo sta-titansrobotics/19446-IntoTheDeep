@@ -23,12 +23,11 @@ public class HSlideController {
 
 
         slideH = hardwareMap.get(DcMotor.class, "hSlide");
-        slideH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideH.setDirection(DcMotor.Direction.REVERSE);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setDirection(DcMotor.Direction.FORWARD);
 
         ramp = hardwareMap.get(Servo.class, "ramp");

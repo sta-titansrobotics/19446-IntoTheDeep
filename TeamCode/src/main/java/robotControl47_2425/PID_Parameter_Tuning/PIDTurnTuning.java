@@ -17,11 +17,12 @@ import robotControl47_2425.auto.Odometry;
 @TeleOp
 public class PIDTurnTuning extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
-    double kp = 1; // Proportional gain
-    double kd = 1.5; // Derivative gain
+    double kp = 0.02; // Proportional gain
+    double kd = 0; // Derivative gain
     double desiredPosition = 0; // Desired position to move to
     int buttonAPressCount = 0;
     // Placeholder for error calculation
+    double errorAng = 0;
     double errorX = 0;
     double errorY = 0;
     // initialize chassis, current robot pos, odometry, sliders, etc.
@@ -47,21 +48,21 @@ public class PIDTurnTuning extends LinearOpMode {
         //   prepDropHighRung();
         while (opModeIsActive() && !isStopRequested()) {
             if (gamepad1.dpad_up) {
-                kp += 0.002; // Increase kp
-                sleep(20);
+                kp += 0.001; // Increase kp
+                sleep(50);
             } else if (gamepad1.dpad_down) {
-                kp -= 0.002; // Decrease kp
-                sleep(20);
+                kp -= 0.001; // Decrease kp
+                sleep(50);
             }
             //forwards kp 0.888 kd 2.407   or 0.85 & 2.389 or 0.86&2.369
             //backwards kp 0.86 kd 2.375
 
             if (gamepad1.dpad_right) {
                 kd += 0.001; // Increase kd
-                sleep(20);
+                sleep(50);
             } else if (gamepad1.dpad_left) {
                 kd -= 0.001; // Decrease kd
-                sleep(20);
+                sleep(50);
             }
 
             // Check if button A is pressed
@@ -76,15 +77,17 @@ public class PIDTurnTuning extends LinearOpMode {
                 }
 
                 // Drive the chassis to the desired position
-                chassis.p2pDrive(0, 0, desiredPosition, 5000, 0, 1.1, 0, 0.8, 0.02, 4, 0, 0, 0, 0, kp, kd);
+                chassis.p2pDrive(0, 0, desiredPosition, 5000, 0.2, 1.1, 0.2, 0.6, 0.02, 1, 0, 0, 0, 0, kp, kd);
                 timeout(chassis);
             }
 
             errorX = Math.abs(desiredPosition - chassis.getGlobalX());
             errorY = Math.abs(chassis.getGlobalY());
+            errorAng = desiredPosition - chassis.getAngle();
 
             telemetry.addData("Error-X(cm) : ", errorX * 100);
             telemetry.addData("Error-Y(cm) : ", errorY * 100);
+            telemetry.addData("error_ang (deg): ", errorAng);
 
             telemetry.addData("kp(dpad up/down) : ", kp);
             telemetry.addData("kd(dpad right/left : ", kd);
