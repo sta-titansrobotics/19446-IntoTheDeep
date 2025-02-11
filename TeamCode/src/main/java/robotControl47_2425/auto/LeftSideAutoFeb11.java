@@ -48,63 +48,22 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
 
         //============================================== Actual Code Starts ==============================================================
 
-        //S1
-        chassis.p2pDrive(0.88, 0.3, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        timeout(chassis);
-
-        dropHighRung();
-        prepPickup();
-
-        //B1_1
-        chassis.p2pDrive(0.57, -0.48, 140, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+        //high basket prep drop position
+        chassis.p2pDrive(1.08, -0.03, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
         timeout(chassis);
 
 
-        hSliderSystem.goToPos(1500, 0.8);
-        sleep(1500);
 
-        //B1_2
-        chassis.p2pDrive(0.5, -0.5, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 4, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        timeout(chassis);
-
-        //B2_1
-        chassis.p2pDrive(0.65, -0.7, 140, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        hSliderSystem.goToPos(1000, 1);
-        timeout(chassis);
-
-        hSliderSystem.goToPos(1500, 1);
-        sleep(200);
-
-        //B2_2
-        chassis.p2pDrive(0.5, -0.7, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        timeout(chassis);
-
-        //B3_1
-        chassis.p2pDrive(0.7, -0.9, 110, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        hSliderSystem.goToPos(1000, 1);
-        timeout(chassis);
-
-        hSliderSystem.goToPos(1500, 1);
-        sleep(200);
-
-        //B3_2
-        chassis.p2pDrive(0.5, -0.85, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        timeout(chassis);
         // 2 & 3
         //commented 5:21
         for (int i = 0; i < 2; i++) {
 
-            prepPickup();
             chassis.p2pDrive(0.01, -0.855, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
             timeout(chassis);
-            pickup();
 
-            prepDropHighRung();
-
-            chassis.p2pDrive(0.88, 0.23 - 0.07 * i, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+            chassis.p2pDrive(0.01, -0.855, 48.5, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
             timeout(chassis);
 
-            dropHighRung();
         }
 
         chassis.stopAllThreads();

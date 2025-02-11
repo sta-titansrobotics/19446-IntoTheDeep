@@ -111,7 +111,7 @@ public class DriveControlled extends LinearOpMode {
         if(gamepad2.dpad_up){
             vSliderSystem.goToPos(2800);
             sleep(100);
-            vSliderSystem.tiltToPos(0.65);
+            vSliderSystem.tiltToPos(0);
         }
 
         if(gamepad2.b){
@@ -137,9 +137,9 @@ public class DriveControlled extends LinearOpMode {
 
     public void hSliderCtrl() {
         if (gamepad1.dpad_down) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 20);
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 40);
         } else if (gamepad1.dpad_up) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 20);
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 40);
         }
 
         if (gamepad1.right_trigger > 0.2) {
