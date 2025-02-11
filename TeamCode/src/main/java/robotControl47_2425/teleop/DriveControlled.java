@@ -92,7 +92,6 @@ public class DriveControlled extends LinearOpMode {
 //            vSliderSystem.stepCtrl(100);
 //        }
 
-
         if(gamepad2.dpad_down){
             //grabs from transfer pos
             hSliderSystem.goToPos(78);
@@ -110,7 +109,7 @@ public class DriveControlled extends LinearOpMode {
 
         //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
         if(gamepad2.dpad_up){
-            vSliderSystem.goToPos(2900);
+            vSliderSystem.goToPos(2800);
             sleep(100);
             vSliderSystem.tiltToPos(0.65);
         }
@@ -134,14 +133,6 @@ public class DriveControlled extends LinearOpMode {
         } else if (gamepad2.left_stick_y<-0.4) {
             vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 50);
         }
-
-
-//        if (gamepad1.dpad_down) {
-//            vSliderSystem.tiltStepCtrl(-0.05);
-//        } else if (gamepad1.dpad_up) {
-//            vSliderSystem.tiltStepCtrl(0.05);
-//        }
-
     }
 
     public void hSliderCtrl() {

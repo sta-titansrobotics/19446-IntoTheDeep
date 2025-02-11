@@ -12,7 +12,7 @@ public class VSlideController {
     private final HardwareMap hardwareMap;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
-    private static final int MAX_POSITION = 2400; // Updated maximum position
+    private static final int MAX_POSITION = 2800; // Updated maximum position - DO NOT TOUCH WITHOUT CONSENT
     private boolean isHighBasket = false; // Track the last called method
 
     // Constructor
