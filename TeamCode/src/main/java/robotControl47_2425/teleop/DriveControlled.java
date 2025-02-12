@@ -109,8 +109,8 @@ public class DriveControlled extends LinearOpMode {
 
         //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
         if(gamepad2.dpad_up){
-            vSliderSystem.goToPos(2800);
-            sleep(100);
+            vSliderSystem.goToPos(2850);
+            sleep(150);
             vSliderSystem.tiltToPos(0);
         }
 
