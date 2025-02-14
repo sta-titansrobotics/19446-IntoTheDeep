@@ -26,6 +26,7 @@ public class DriveControlled extends LinearOpMode {
 //    private boolean previousDpadRightState = false;
     private boolean clawOpen = false;
     private boolean rampUp = true;
+    private boolean bootUp = true;
 
     //    private boolean armTiltedUp = false;
 //    private boolean clawRolledUp = false;
@@ -80,6 +81,9 @@ public class DriveControlled extends LinearOpMode {
             if (gamepad1.a) {
                 toggleClaw();
             }
+            if(gamepad1.start){
+                toggleBoot();
+            }
             sleep(50);
         }
         chassis.stopAllThreads();
@@ -115,7 +119,7 @@ public class DriveControlled extends LinearOpMode {
         }
 
         if(gamepad2.b){
-            toggleRamp();
+            hSliderSystem.goToPos(0);
             sleep(75);
         }
 
@@ -170,6 +174,15 @@ public class DriveControlled extends LinearOpMode {
             rampUp = !rampUp;
 
         }
+    private void toggleBoot () {
+        if (!bootUp) {
+            hSliderSystem.bootUp();
+        } else {
+            hSliderSystem.bootDown();
+        }
+        bootUp = !bootUp;
+
+    }
         public void prepDropHighRung () {
         if(gamepad2.x) {
             vSliderSystem.closeClaw();
@@ -216,9 +229,9 @@ public class DriveControlled extends LinearOpMode {
             } else if (gamepad2.left_trigger > 0.2) {
                 hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
             }
-            if (gamepad2.b){
-                hSliderSystem.rampUp();
-            }
+//            if (gamepad2.b){
+//                hSliderSystem.rampUp();
+//            }
         }
 
 //    private void hSlideManualControl() {

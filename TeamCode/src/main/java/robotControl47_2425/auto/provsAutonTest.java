@@ -37,86 +37,107 @@ public class provsAutonTest extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
-        hSliderSystem.rampUp();
+//        hSliderSystem.rampUp();
         hSliderSystem.intakeOff();
+        hSliderSystem.bootUp();
         waitForStart();
         resetRuntime();
 
-        prepDropHighRung();
+
         // fwd: kp = 0.88, kd = 2.4
         // bwd: kp = 0.86, kd = 2.375
         //strafe: kp 1.254, kd 1.506
         // turn: kp = 0.007, kd = 0.01
 
         //S1
-
-        chassis.p2pDrive(0.88, 0.3, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+        prepDropHighRung();
+        chassis.p2pDrive(0.9, 0.28, 0, 5000, 0.2, 1.1, 0.15, 0.5, 0.03, 2, 0.88, 2.8, 2, 1.5, 0.008, 0.016);
         timeout(chassis);
 
         dropHighRung();
         prepPickup();
+        hSliderSystem.goToPos(100, 0.5);
+        hSliderSystem.bootDown();
 
         //B1_1
-        chassis.p2pDrive(0.57, -0.48, 140, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+
+        chassis.p2pDrive(0.52, -0.63, 150, 5000, 0.25, 0.7, 0.2, 0.6, 0.02, 3, 2, 2.3, 1.6, 2, 0.008, 0.016);
         timeout(chassis);
 
-
-        hSliderSystem.goToPos(1500, 0.8);
-        sleep(1500);
-
+        hSliderSystem.goToPos(1500, 1);
+        sleep(400);
+//
         //B1_2
-        chassis.p2pDrive(0.5, -0.5, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 4, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        timeout(chassis);
 
+        chassis.p2pDrive(0.4, -0.67, 80, 5000, 0.2, 0.6, 0.3, 0.8, 0.07, 4, 0.88, 2.4, 1.6, 1.7, 0.01, 0.01);
+        hSliderSystem.goToPos(700, 0.4);
+        timeout(chassis);
+//
         //B2_1
-        chassis.p2pDrive(0.65, -0.7, 140, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        hSliderSystem.goToPos(1000, 1);
+
+        chassis.p2pDrive(0.7, -0.72, 135, 5000, 0.2, 0.7, 0.2, 0.6, 0.06, 4, 2.42, 2.5, 1.254, 1.7, 0.008, 0.02);
         timeout(chassis);
-
-        hSliderSystem.goToPos(1500, 1);
-        sleep(200);
-
+//
+        hSliderSystem.goToPos(1260, 1);
+        sleep(300);
         //B2_2
-        chassis.p2pDrive(0.5, -0.7, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+        chassis.p2pDrive(0.46, -0.79, 55, 5000, 0.18, 0.6, 0.3, 0.8, 0.06, 5, 1.3, 2.4, 1.254, 1.506, 0.008, 0.02);
+        hSliderSystem.goToPos(700, 0.5);
         timeout(chassis);
-
+//
         //B3_1
-        chassis.p2pDrive(0.7, -0.9, 110, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-        hSliderSystem.goToPos(1000, 1);
-        timeout(chassis);
 
-        hSliderSystem.goToPos(1500, 1);
+        chassis.p2pDrive(0.7, -0.98, 140, 5000, 0.18, 0.7, 0.2, 0.6, 0.04, 3, 2, 2.5, 1.2, 1.8, 0.009, 0.02);
+        timeout(chassis);
+//
+        hSliderSystem.goToPos(1420, 1);
         sleep(200);
+//
+//        //B3_2
 
-        //B3_2
-        chassis.p2pDrive(0.5, -0.85, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+        chassis.p2pDrive(0.3, -1, 80, 5000, 0.18, 0.6, 0.3, 0.8, 0.07, 10, 2.6, 2.4, 1.254, 1.506, 0.008, 0.017);
+        hSliderSystem.goToPos(400, 0.5);
         timeout(chassis);
+//
+        hSliderSystem.goToPos(0, 1);
+        hSliderSystem.bootUp();
 
-
-
-
-
+//        sleep(300);
 //
 //
-        // 2 & 3
-        //commented 5:21
-        for (int i = 0; i < 2; i++) {
-
-            prepPickup();
-            chassis.p2pDrive(0.01, -0.855, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-            timeout(chassis);
-            pickup();
-
+        prepPickup();
+        chassis.p2pDrive(0.034, -0.8, 0, 1500, 0.22, 0.7, 0.2, 0.3, 0.03, 3, 0.88, 3, 1.254, 1.506, 0.007, 0.014);
+        timeout(chassis);
+        pickup();
+//
+//
+////
+////
+//        // 2 & 3
+//        //commented 5:21
+        for (int i = 0; i < 3; i++) {
             prepDropHighRung();
 //
-            chassis.p2pDrive(0.88, 0.23-0.07*i, 55, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+            chassis.p2pDrive(0.91, 0.25-0.05*i, 0, 5000, 0.22, 1.1, 0.2, 0.3, 0.03, 2, 0.9, 2.4, 1.8, 1.6, 0.008, 0.016);
             timeout(chassis);
 
 
             dropHighRung();
 
+            prepPickup();
+            chassis.p2pDrive(0.034, -0.80, 0, 3000, 0.22, 1.1, 0.2, 0.3, 0.03, 2, 0.88, 3.1, 1.8, 1.6, 0.008, 0.016);
+            timeout(chassis);
+            pickup();
+
+
+
 
         }
+//        chassis.p2pDrive(0.93, 0.1, 0, 2400, 0.2, 0.7, 0.2, 0.5, 0.01, 2, 0.92, 2.4, 1.254, 1.506, 0.007, 0.01);
+//        timeout(chassis);
+//        dropHighRung();
+
+
 
 
 //        //oaihd
@@ -213,38 +234,28 @@ public class provsAutonTest extends LinearOpMode {
     }
 
     public void prepDropHighRung() {
-        vSliderSystem.tiltToPos(0.15);
-        vSliderSystem.goToPos(940);
+        vSliderSystem.tiltToPos(0.90);
+        vSliderSystem.goToPos(1300);
     }
 
     public void dropHighRung() {
-        vSliderSystem.tiltToPos(0.5);
-        sleep(300);
+        vSliderSystem.tiltToPos(0.7);
+        sleep(200);
         vSliderSystem.openClaw();
     }
 
     public void prepPickup() {
         vSliderSystem.goToPos(0);
-        vSliderSystem.tiltToPos(0.73);
+        vSliderSystem.tiltToPos(0.3);
         vSliderSystem.pickupClaw();
     }
 
     public void pickup() {
         vSliderSystem.closeClaw();
-        sleep(400);
+        sleep(250);
     }
 
-    public void hSlidePushFloor() {
-        hSliderSystem.goToPos(1500);
-        hSliderSystem.rampDown();
-        hSliderSystem.outtaking();
-    }
-
-    public void hSlideReturn() {
-        hSliderSystem.intakeOff();
-        hSliderSystem.goToPos(0);
-        hSliderSystem.rampUp();
-    }
+    
 
 
 }

@@ -12,7 +12,7 @@ public class VSlideController {
     private final HardwareMap hardwareMap;
     private Thread slideThread;
     private volatile boolean opModeActive = true; // Flag to safely stop the thread
-    private static final int MAX_POSITION = 2800; // Updated maximum position - DO NOT TOUCH WITHOUT CONSENT
+    private static final int MAX_POSITION = 2820; // Updated maximum position - DO NOT TOUCH WITHOUT CONSENT
     private boolean isHighBasket = false; // Track the last called method
 
     // Constructor
@@ -92,12 +92,12 @@ public class VSlideController {
     }
 
     public void pickupClaw(){
-        clawL.setPosition(0.15);
+        clawL.setPosition(0.25);
         clawR.setPosition(0.55);
     }
 
     public void tiltToPos(double pos){
-        pos = pos > 0.14 ? (pos < 1 ? pos : 1) : 0.14;
+        pos = pos > 0 ? (pos < 0.91 ? pos : 0.91) : 0;
         tiltL.setPosition(pos);
         tiltR.setPosition(pos);
     }

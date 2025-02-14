@@ -234,7 +234,7 @@ public class sampleAuton extends LinearOpMode {
     }
 
     public void prepDropHighRung() {
-        vSliderSystem.tiltToPos(0.15);
+        vSliderSystem.tiltToPos(0.1);
         vSliderSystem.goToPos(930);
     }
 

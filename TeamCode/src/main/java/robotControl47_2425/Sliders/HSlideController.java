@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class HSlideController {
     private final DcMotor slideH, intake;
-    private final Servo ramp;
+    private Servo ramp, boot;
     private volatile boolean opModeActive = true;
     private static final int MAX_POSITION = 1500;
 
@@ -30,9 +30,9 @@ public class HSlideController {
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setDirection(DcMotor.Direction.FORWARD);
 
-        ramp = hardwareMap.get(Servo.class, "ramp");
+        //ramp = hardwareMap.get(Servo.class, "ramp");
 
-
+        boot = hardwareMap.get(Servo.class, "boot");
     }
 
     public void resetHSlidePos() {
@@ -104,7 +104,16 @@ public class HSlideController {
 //    public void rampHold(){
 //        ramp.setDirection(Servo.Direction.FORWARD);
 //    }
+    public void bootUp(){
+        boot.setPosition(0.3);
+    }
 
+    public void bootHalf(){
+        boot.setPosition(0.8);
+    }
+    public void bootDown(){
+        boot.setPosition(1);
+    }
 
 }
 

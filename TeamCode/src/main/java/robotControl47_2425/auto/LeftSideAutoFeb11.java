@@ -41,8 +41,9 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
-        hSliderSystem.rampUp();
+//        hSliderSystem.rampUp();
         hSliderSystem.intakeOff();
+        hSliderSystem.bootUp();
         waitForStart();
         resetRuntime();
 
@@ -50,21 +51,24 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
 
         //high basket prep drop position
         chassis.p2pDrive(1.08, -0.03, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+        prepDropHighBasket();
         timeout(chassis);
 
+        chassis.p2pDrive(1.08, -0.03, 47, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+        timeout(chassis);
+        dropHighBasket();
 
 
-        // 2 & 3
-        //commented 5:21
-        for (int i = 0; i < 2; i++) {
 
-            chassis.p2pDrive(0.01, -0.855, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-            timeout(chassis);
-
-            chassis.p2pDrive(0.01, -0.855, 48.5, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
-            timeout(chassis);
-
-        }
+//        for (int i = 0; i < 2; i++) {
+//
+//            chassis.p2pDrive(0.01, -0.855, 0, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+//            timeout(chassis);
+//
+//            chassis.p2pDrive(0.01, -0.855, 48.5, 5000, 0.18, 0.7, 0.2, 0.5, 0.02, 2, 0.88, 2.4, 1.254, 1.506, 0.007, 0.01);
+//            timeout(chassis);
+//
+//        }
 
         chassis.stopAllThreads();
         double endTime = getRuntime();
@@ -95,6 +99,18 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
         vSliderSystem.goToPos(940);
     }
 
+    public void prepDropHighBasket(){
+        vSliderSystem.goToPos(2820);
+        vSliderSystem.tiltToPos(0.73);
+        vSliderSystem.closeClaw();
+    }
+
+    public void dropHighBasket(){
+        vSliderSystem.tiltToPos(0.5);
+        sleep(300);
+        vSliderSystem.openClaw();
+    }
+
     public void dropHighRung() {
         vSliderSystem.tiltToPos(0.5);
         sleep(300);
@@ -107,10 +123,10 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
         vSliderSystem.pickupClaw();
     }
 
-    public void pickup() {
-        vSliderSystem.closeClaw();
-        sleep(400);
-    }
+//    public void pickup() {
+//        vSliderSystem.closeClaw();
+//        sleep(400);
+//    }
 
     public void hSlidePushFloor() {
         hSliderSystem.goToPos(1500);
