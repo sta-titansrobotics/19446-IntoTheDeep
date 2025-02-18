@@ -25,7 +25,7 @@ public class DriveControlled extends LinearOpMode {
 //    private boolean previousDpadLeftState = false;
 //    private boolean previousDpadRightState = false;
     private boolean clawOpen = false;
-    private boolean rampUp = true;
+    private boolean intakeUp = true;
     private boolean bootUp = true;
 
     //    private boolean armTiltedUp = false;
@@ -147,33 +147,37 @@ public class DriveControlled extends LinearOpMode {
         }
 
         if (gamepad1.right_trigger > 0.2) {
-            hSliderSystem.outtaking();
+            hSliderSystem.outtake();
         } else if (gamepad1.right_bumper) {
-            hSliderSystem.intaking();
+            hSliderSystem.intake();
         } else {
-            hSliderSystem.intakeOff();
+            hSliderSystem.idleIntake();
+        }
+
+        if (gamepad1.left_bumper){
+            toggleIntakeTilt();
         }
     }
 
-        private void toggleClaw () {
-            if (!clawOpen) {
-                vSliderSystem.openClaw();
-            } else {
-                vSliderSystem.closeClaw();
-            }
-            clawOpen = !clawOpen;
-
+    private void toggleClaw () {
+        if (!clawOpen) {
+            vSliderSystem.openClaw();
+        } else {
+            vSliderSystem.closeClaw();
         }
+        clawOpen = !clawOpen;
 
-        private void toggleRamp () {
-            if (!rampUp) {
-                hSliderSystem.rampHigh();
-            } else {
-                hSliderSystem.rampDown();
-            }
-            rampUp = !rampUp;
-
+    }
+    private void toggleIntakeTilt() {
+        if (!intakeUp) {
+            hSliderSystem.tiltIntake();
+        } else {
+            hSliderSystem.tiltTransfer();
         }
+        intakeUp = !intakeUp;
+
+    }
+
     private void toggleBoot () {
         if (!bootUp) {
             hSliderSystem.bootUp();
@@ -215,11 +219,11 @@ public class DriveControlled extends LinearOpMode {
         public void hSlideMovement() {
             if (gamepad1.x) {
                 hSliderSystem.goToPos(1500);
-                hSliderSystem.rampUp();
+//                hSliderSystem.rampUp();
             }
 
             if (gamepad1.y) {
-                hSliderSystem.rampUp();
+//                hSliderSystem.rampUp();
 
                 hSliderSystem.goToPos(0);
 

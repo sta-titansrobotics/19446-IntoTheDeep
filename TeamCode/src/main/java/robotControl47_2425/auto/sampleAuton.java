@@ -37,8 +37,8 @@ public class sampleAuton extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
-        hSliderSystem.rampUp();
-        hSliderSystem.intakeOff();
+        hSliderSystem.tiltTransfer();
+        hSliderSystem.idleIntake();
         waitForStart();
         resetRuntime();
 
@@ -255,17 +255,6 @@ public class sampleAuton extends LinearOpMode {
         sleep(400);
     }
 
-    public void hSlidePushFloor() {
-        hSliderSystem.goToPos(1500);
-        hSliderSystem.rampDown();
-        hSliderSystem.outtaking();
-    }
-
-    public void hSlideReturn() {
-        hSliderSystem.intakeOff();
-        hSliderSystem.goToPos(0);
-        hSliderSystem.rampUp();
-    }
 
 
 }

@@ -42,7 +42,7 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
 //        hSliderSystem.rampUp();
-        hSliderSystem.intakeOff();
+        hSliderSystem.idleIntake();
         hSliderSystem.bootUp();
         waitForStart();
         resetRuntime();
@@ -128,15 +128,4 @@ public class LeftSideAutoFeb11 extends LinearOpMode {
 //        sleep(400);
 //    }
 
-    public void hSlidePushFloor() {
-        hSliderSystem.goToPos(1500);
-        hSliderSystem.rampDown();
-        hSliderSystem.outtaking();
-    }
-
-    public void hSlideReturn() {
-        hSliderSystem.intakeOff();
-        hSliderSystem.goToPos(0);
-        hSliderSystem.rampUp();
-    }
 }

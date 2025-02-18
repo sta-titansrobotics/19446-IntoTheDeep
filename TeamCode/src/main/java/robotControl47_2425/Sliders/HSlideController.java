@@ -2,12 +2,19 @@ package robotControl47_2425.Sliders;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+
 
 public class HSlideController {
-    private final DcMotor slideH, intake;
-    private Servo ramp, boot;
+    private final DcMotor slideH;
+    private Servo boot;
+    private Servo tiltL, tiltR;
+    // tiltL transfer pos is 0
+    // tiltR transfer pos is 1 without reverse direction
+    private CRServo intakeL, intakeR;
     private volatile boolean opModeActive = true;
     private static final int MAX_POSITION = 1500;
 
@@ -26,13 +33,17 @@ public class HSlideController {
         slideH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         slideH.setDirection(DcMotor.Direction.REVERSE);
 
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setDirection(DcMotor.Direction.FORWARD);
 
         //ramp = hardwareMap.get(Servo.class, "ramp");
 
         boot = hardwareMap.get(Servo.class, "boot");
+        tiltL = hardwareMap.get(Servo.class, "inTiltL");
+        tiltR = hardwareMap.get(Servo.class, "inTiltR");
+
+        intakeL = hardwareMap.get(CRServo.class, "inL");
+        intakeR = hardwareMap.get(CRServo.class, "inR");
+        intakeL.setDirection(CRServo.Direction.REVERSE);
+
     }
 
     public void resetHSlidePos() {
@@ -63,47 +74,7 @@ public class HSlideController {
         return slideH.getCurrentPosition();
     }
 
-    /**
-     * Brings the Hslide motor to 0 and reset the servo position to 0.5
-     */
-//    public void transferPos(){
-//        long start = programStartTime;
-//        while (programStartTime - start < 300){
-//            ramp.setPosition(0.5);
-//        }
-//
-//
-//
-//    }
 
-    public void intaking(){
-        intake.setPower(0.8);
-    }
-
-    public void outtaking(){
-        intake.setPower(-0.8);
-    }
-
-    public void intakeOff(){
-        intake.setPower(0);
-    }
-
-    public void rampUp(){
-        ramp.setPosition(0.4);
-        //ramp.setPosition(0.25);
-    }
-
-    public void rampHigh(){
-        ramp.setPosition(0.25);
-    }
-    public void rampDown(){
-
-        ramp.setPosition(0.55);
-    }
-
-//    public void rampHold(){
-//        ramp.setDirection(Servo.Direction.FORWARD);
-//    }
     public void bootUp(){
         boot.setPosition(0.3);
     }
@@ -115,5 +86,28 @@ public class HSlideController {
         boot.setPosition(1);
     }
 
+
+    public void intake(){
+        intakeL.setPower(0.8);
+        intakeR.setPower(0.8);
+    }
+    public void idleIntake(){
+        intakeL.setPower(0);
+        intakeR.setPower(0);
+    }
+    public void outtake(){
+        intakeL.setPower(-0.8);
+        intakeR.setPower(-0.8);
+    }
+
+    public void tiltTransfer(){
+        tiltL.setPosition(0);
+        tiltR.setPosition(1);
+    }
+
+    public void tiltIntake(){
+        tiltL.setPosition(0.71);
+        tiltR.setPosition(0.28);
+    }
 }
 

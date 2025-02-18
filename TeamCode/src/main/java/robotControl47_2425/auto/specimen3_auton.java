@@ -37,7 +37,7 @@ public class specimen3_auton extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
-        hSliderSystem.rampUp();
+        hSliderSystem.tiltTransfer();
         waitForStart();
         resetRuntime();
 
@@ -252,18 +252,6 @@ public class specimen3_auton extends LinearOpMode {
     public void pickup() {
         vSliderSystem.closeClaw();
         sleep(400);
-    }
-
-    public void hSlidePushFloor() {
-        hSliderSystem.goToPos(1500);
-        hSliderSystem.rampDown();
-        hSliderSystem.outtaking();
-    }
-
-    public void hSlideReturn() {
-        hSliderSystem.intakeOff();
-        hSliderSystem.goToPos(0);
-        hSliderSystem.rampUp();
     }
 
 
