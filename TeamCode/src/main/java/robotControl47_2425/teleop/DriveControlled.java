@@ -76,6 +76,7 @@ public class DriveControlled extends LinearOpMode {
             dropHighRung();
             prepPickup();
             hSlideMovement();
+            gamepad1Ctrl();
 
 
             if (gamepad1.a) {
@@ -330,6 +331,35 @@ public class DriveControlled extends LinearOpMode {
             telemetry.update();
         }
 
+
+        void gamepad1Ctrl(){
+            // transfer(ASSUMING ALREADY INTAKED)
+            if (gamepad1.a){
+                hSliderSystem.bootUp();
+                vSliderSystem.goToPos(300);
+                sleep(1500);
+    //            vSliderSystem.goToPos(0);
+                sleep(1500);
+                vSliderSystem.tiltToPos(0);
+                sleep(1500);
+                hSliderSystem.outtake();
+                sleep(50);
+                hSliderSystem.idleIntake();
+                hSliderSystem.tiltTransfer();
+                sleep(1500);
+                vSliderSystem.openClaw();
+                hSliderSystem.goToPos(0);
+                vSliderSystem.goToPos(0);
+                vSliderSystem.closeClaw();
+            }
+
+            //
+            if (gamepad1.b){
+
+
+            }
+
+        }
 
 //
 //    void gamepad1Ctrl(){
