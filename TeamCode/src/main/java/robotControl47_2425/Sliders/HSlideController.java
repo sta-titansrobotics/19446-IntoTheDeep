@@ -109,5 +109,10 @@ public class HSlideController {
         tiltL.setPosition(0.74);
         tiltR.setPosition(0.23);
     }
+
+    public void tiltInit(){
+        tiltL.setPosition(0.3);
+        tiltR.setPosition(0.65);
+    }
 }
 

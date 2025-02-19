@@ -8,7 +8,7 @@ import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
 
 @Autonomous
-public class provsAutonTest extends LinearOpMode {
+public class provsLeftAuton extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     // initialize chassis, current robot pos, odometry, sliders, etc.
     //private RobotPos currentRobotPos = new RobotPos(0, 0, 0); //start value
@@ -37,10 +37,8 @@ public class provsAutonTest extends LinearOpMode {
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         vSliderSystem.closeClaw();
-
 //        hSliderSystem.rampUp();
         hSliderSystem.idleIntake();
-        hSliderSystem.tiltInit();
         hSliderSystem.bootUp();
         waitForStart();
         resetRuntime();
@@ -266,7 +264,7 @@ public class provsAutonTest extends LinearOpMode {
         sleep(250);
     }
 
-    
+
 
 
 }

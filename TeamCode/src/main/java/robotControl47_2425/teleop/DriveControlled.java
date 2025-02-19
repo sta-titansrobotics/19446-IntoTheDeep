@@ -14,16 +14,6 @@ public class DriveControlled extends LinearOpMode {
     private Chassis chassis;
     private HSlideController hSliderSystem = null;
     private VSlideController vSliderSystem = null;
-    //    private boolean hSlideExtended = false;
-//    private boolean vSlideExtended = false;
-//    private boolean previousAState = false;
-//    private boolean previousBState = false;
-//    private boolean previousXState = false;
-//    private boolean previousYState = false;
-//    private boolean previousDpadUpState = false;
-//    private boolean previousDpadDownState = false;
-//    private boolean previousDpadLeftState = false;
-//    private boolean previousDpadRightState = false;
     private boolean clawOpen = false;
     private boolean intakeUp = true;
     private boolean bootUp = true;
@@ -77,7 +67,7 @@ public class DriveControlled extends LinearOpMode {
             prepPickup();
             hSlideMovement();
             gamepad1Ctrl();
-
+            prepHighBasket();
 
             if (gamepad1.a) {
                 toggleClaw();
@@ -88,6 +78,17 @@ public class DriveControlled extends LinearOpMode {
             sleep(50);
         }
         chassis.stopAllThreads();
+    }
+
+    private void prepHighBasket(){
+
+        if (gamepad2.dpad_up){
+            vSliderSystem.closeClaw();
+            vSliderSystem.goToPos(2850);
+            sleep(150);
+            vSliderSystem.tiltToPos(0.8);
+        }
+
     }
 
     private void vSliderCtrl() {
@@ -114,9 +115,7 @@ public class DriveControlled extends LinearOpMode {
 
         //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
         if(gamepad2.dpad_up){
-            vSliderSystem.goToPos(2850);
-            sleep(150);
-            vSliderSystem.tiltToPos(0);
+
         }
 
         if(gamepad2.b){
@@ -189,19 +188,19 @@ public class DriveControlled extends LinearOpMode {
 
     }
         public void prepDropHighRung () {
-        if(gamepad2.x) {
+            if(gamepad2.x) {
             vSliderSystem.closeClaw();
             sleep(400);
             vSliderSystem.tiltToPos(0.15);
             vSliderSystem.goToPos(930);
-        }
+            }
         }
         public void dropHighRung () {
-        if(gamepad2.y) {
+            if(gamepad2.y) {
             vSliderSystem.tiltToPos(0.5);
             sleep(300);
             vSliderSystem.openClaw();
-        }
+            }
         }
 
         //This is the macro for auto pick up from sidways walls. Don't use for tele-Op (maybe)
@@ -234,87 +233,8 @@ public class DriveControlled extends LinearOpMode {
             } else if (gamepad2.left_trigger > 0.2) {
                 hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
             }
-//            if (gamepad2.b){
-//                hSliderSystem.rampUp();
-//            }
         }
 
-//    private void hSlideManualControl() {
-//        // Control HSlide with gamepad1.a
-//        if (gamepad1.a && !previousAState) {
-//            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() + 15);
-//        }
-//        previousAState = gamepad1.a;
-//
-//        // Control VSlide with gamepad1.b
-//        if (gamepad1.b && !previousBState) {
-//            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos() - 15);
-//        }
-//        previousBState = gamepad1.b;
-//    }
-
-//    private void handleServoControl() {
-//        // Toggle claw open/close with gamepad1.x
-//        if (gamepad1.x && !previousXState) {
-//            toggleClaw();
-//        }
-//        previousXState = gamepad1.x;
-//
-//        // Toggle arm tilt up/down with gamepad1.y or dpad_up/down
-//        if ((gamepad1.y && !previousYState) || (gamepad1.dpad_up && !previousDpadUpState) || (gamepad1.dpad_down && !previousDpadDownState)) {
-//            toggleArmTilt();
-//        }
-//        previousYState = gamepad1.y;
-//        previousDpadUpState = gamepad1.dpad_up;
-//        previousDpadDownState = gamepad1.dpad_down;
-//
-//        // Toggle claw roll up/down with gamepad1.dpad_left/right
-//        if ((gamepad1.dpad_left && !previousDpadLeftState) || (gamepad1.dpad_right && !previousDpadRightState)) {
-//            toggleClawRoll();
-//        }
-//        previousDpadLeftState = gamepad1.dpad_left;
-//        previousDpadRightState = gamepad1.dpad_right;
-//    }
-//
-//    private void toggleHSlide() {
-//        if (!hSlideExtended) {
-//            hSliderSystem.goToPosition(hSliderSystem.getCurrentPos());
-//        } else {
-//            hSliderSystem.goToPosition(0);
-//        }
-//        hSlideExtended = !hSlideExtended;
-//    }
-
-
-//
-//    private void toggleVSlide() {
-//        if (!vSlideExtended) {
-//            vSliderSystem.goToPosition(vSliderSystem.getMaxPosition());
-//        } else {
-//            vSliderSystem.goToPosition(0);
-//        }
-//        vSlideExtended = !vSlideExtended;
-//    }
-//
-//
-//
-//    private void toggleArmTilt() {
-//        if (!armTiltedUp) {
-//            vSliderSystem.tiltArmUp();
-//        } else {
-//            vSliderSystem.tilt1ArmZero();
-//        }
-//        armTiltedUp = !armTiltedUp;
-//    }
-//
-//    private void toggleClawRoll() {
-//        if (!clawRolledUp) {
-//            vSliderSystem.rollClawUp();
-//        } else {
-//            vSliderSystem.rollClawDown();
-//        }
-//        clawRolledUp = !clawRolledUp;
-//    }
 
         private void updateTelemetry () {
             telemetry.addData("HSlide Position", hSliderSystem.getCurrentPos());
@@ -334,23 +254,26 @@ public class DriveControlled extends LinearOpMode {
 
         void gamepad1Ctrl(){
             // transfer(ASSUMING ALREADY INTAKED)
-            if (gamepad1.a){
+            if (gamepad1.left_trigger > 0.2){
                 hSliderSystem.bootUp();
-                vSliderSystem.goToPos(300);
-                sleep(1500);
-    //            vSliderSystem.goToPos(0);
-                sleep(1500);
+                // vslide up and tilt ready
+                vSliderSystem.goToPos(600);
                 vSliderSystem.tiltToPos(0);
-                sleep(1500);
+
+                vSliderSystem.transferClaw();
+
+
+
                 hSliderSystem.outtake();
-                sleep(50);
+                sleep(400);
                 hSliderSystem.idleIntake();
                 hSliderSystem.tiltTransfer();
-                sleep(1500);
-                vSliderSystem.openClaw();
-                hSliderSystem.goToPos(0);
-                vSliderSystem.goToPos(0);
+
+                hSliderSystem.goToPos(82, 1);
+                sleep(800);
+                vSliderSystem.goToPos(383);
                 vSliderSystem.closeClaw();
+
             }
 
             //
