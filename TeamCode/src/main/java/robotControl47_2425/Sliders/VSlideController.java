@@ -73,8 +73,8 @@ public class VSlideController {
         slideR.setTargetPosition(targetPos);
         slideL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideL.setPower(0.4);
-        slideR.setPower(0.4);
+        slideL.setPower(1);
+        slideR.setPower(1);
     }
     public void openClaw() {
         clawL.setPosition(0.4);

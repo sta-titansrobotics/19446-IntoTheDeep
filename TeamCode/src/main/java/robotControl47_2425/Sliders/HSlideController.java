@@ -101,13 +101,13 @@ public class HSlideController {
     }
 
     public void tiltTransfer(){
-        tiltL.setPosition(0);
-        tiltR.setPosition(1);
+        tiltL.setPosition(0.03);
+        tiltR.setPosition(0.96);
     }
 
     public void tiltIntake(){
-        tiltL.setPosition(0.71);
-        tiltR.setPosition(0.28);
+        tiltL.setPosition(0.74);
+        tiltR.setPosition(0.23);
     }
 }
 
