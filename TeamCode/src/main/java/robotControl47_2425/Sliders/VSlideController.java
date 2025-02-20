@@ -100,6 +100,11 @@ public class VSlideController {
         clawR.setPosition(0.55);
     }
 
+    public void tiltToTransfer(){
+        tiltL.setPosition(0.04);
+        tiltR.setPosition(0.04);
+    }
+
     public void tiltToPos(double pos){
         pos = pos > 0 ? (pos < 0.91 ? pos : 0.91) : 0;
         tiltL.setPosition(pos);

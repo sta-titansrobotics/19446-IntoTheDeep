@@ -258,7 +258,7 @@ public class DriveControlled extends LinearOpMode {
                 hSliderSystem.bootUp();
                 // vslide up and tilt ready
                 vSliderSystem.goToPos(600);
-                vSliderSystem.tiltToPos(0);
+                vSliderSystem.tiltToTransfer();
 
                 vSliderSystem.transferClaw();
 
@@ -269,9 +269,10 @@ public class DriveControlled extends LinearOpMode {
                 hSliderSystem.idleIntake();
                 hSliderSystem.tiltTransfer();
 
-                hSliderSystem.goToPos(82, 1);
+                hSliderSystem.goToPos(0, 1);
                 sleep(800);
                 vSliderSystem.goToPos(383);
+                sleep(200);
                 vSliderSystem.closeClaw();
 
             }
