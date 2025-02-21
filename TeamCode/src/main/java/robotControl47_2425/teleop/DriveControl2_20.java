@@ -80,6 +80,9 @@ public class DriveControl2_20 extends LinearOpMode {
             if(gamepad1.start){
                 toggleBoot();
             }
+            if(gamepad2.start){
+                testHang();
+            }
             sleep(50);
         }
         chassis.stopAllThreads();
@@ -108,28 +111,30 @@ public class DriveControl2_20 extends LinearOpMode {
         if(gamepad1.y){
             prepVTransfer();
             transfer();
+        }
+        if(gamepad1.a){
             prepDropHighBasket();
         }
 
         //Manual
         if (gamepad2.left_stick_y>0.4) {
-            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() + 50);
+            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() + 80);
         } else if (gamepad2.left_stick_y<-0.4) {
-            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 50);
+            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 80);
         }
     }
-    //
+
     public void hSliderCtrl() {
         // Manual
         if (gamepad2.right_stick_y<-0.4) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 50);
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
         } else if (gamepad2.right_stick_y>0.4) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 50);
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
         }
         if (gamepad1.dpad_up) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 50);
-        } else if (gamepad2.dpad_down) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 50);
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
+        } else if (gamepad1.dpad_down) {
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
         }
 
 
@@ -162,11 +167,6 @@ public class DriveControl2_20 extends LinearOpMode {
             hSliderSystem.goToPos(0);
 
         }
-        if (gamepad2.left_stick_y > 0.4) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
-        } else if (gamepad2.left_stick_y < -0.4) {
-            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
-        }
         if (gamepad1.dpad_down) {
             hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
         } else if (gamepad1.dpad_up) {
@@ -189,14 +189,14 @@ public class DriveControl2_20 extends LinearOpMode {
         telemetry.update();
     }
 
-    private void p2pMacro(){
-        if(gamepad1.b){
-            chassis.p2pDrive(0.73, -0.72, 135, 5000, 0.2, 0.7, 0.2, 0.6, 0.06, 4, 0.86, 2.38, 1.254, 1.506, 0.008, 0.02);
-        }
-        if(gamepad1.back){
-            //break
-        }
-    }
+//    private void p2pMacro(){
+//        if(gamepad1.b){
+//            chassis.p2pDrive(0.73, -0.72, 135, 5000, 0.2, 0.7, 0.2, 0.6, 0.06, 4, 0.86, 2.38, 1.254, 1.506, 0.008, 0.02);
+//        }
+//        if(gamepad1.back){
+//            //break
+//        }
+//    }
 
     void gamepad1Ctrl(){
         // transfer(ASSUMING ALREADY INTAKED)
@@ -207,7 +207,6 @@ public class DriveControl2_20 extends LinearOpMode {
             sleep(250);
             vSliderSystem.tiltToPos(0.8);
             sleep(150);
-
         }
     }
 
@@ -226,8 +225,6 @@ public class DriveControl2_20 extends LinearOpMode {
         sleep(300);
         vSliderSystem.tiltToPos(0.7);
         sleep(100);
-
-
     }
 
     public void prepVTransfer() {
@@ -322,6 +319,13 @@ public class DriveControl2_20 extends LinearOpMode {
             hSliderSystem.bootDown();
         }
         bootUp = !bootUp;
+
+    }
+
+    private void testHang(){
+        vSliderSystem.goToPos(0);
+        sleep(2000);
+        vSliderSystem.goToPos(600);
 
     }
 }
