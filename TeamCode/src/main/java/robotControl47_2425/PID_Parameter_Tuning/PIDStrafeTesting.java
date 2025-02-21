@@ -29,7 +29,7 @@ public class PIDStrafeTesting extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        chassis = new Chassis(this, 0, 0);
+        chassis = new Chassis(this, 0, 0, "T");
         chassis.startOdomThread();
         chassis.resetAngle();
         sleep(2000);

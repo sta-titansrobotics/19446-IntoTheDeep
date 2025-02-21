@@ -30,7 +30,7 @@ public class DriveControlled extends LinearOpMode {
         hSliderSystem = new HSlideController(this);
         vSliderSystem = new VSlideController(this);
 
-        chassis = new Chassis(this, 0, 0);
+        chassis = new Chassis(this, 0, 0, "T");
 
         //   hSliderSystem.initialize();
         //   vSliderSystem.initializeMotors();
@@ -58,24 +58,34 @@ public class DriveControlled extends LinearOpMode {
 //            hSlideManualControl();
 //            handleServoControl();
             updateTelemetry();
-            chassis.telemetryDrive();
+//            chassis.telemetryDrive();
             //chassis.telemetryStrafe();
             vSliderCtrl();
             hSliderCtrl();
-            prepDropHighRung();
-            dropHighRung();
-            prepPickup();
-            hSlideMovement();
-            gamepad1Ctrl();
-            prepHighBasket();
-
-            if (gamepad1.a) {
-                toggleClaw();
-            }
+//            prepDropHighRung();
+//            dropHighRung();
+//            prepPickup();
+//            hSlideMovement();
+//            gamepad1Ctrl();
+//            prepHighBasket();
+//
+//            if (gamepad1.a) {
+//                toggleClaw();
+//            }
             if(gamepad1.start){
                 toggleBoot();
             }
             sleep(50);
+            if (gamepad1.a){
+                prepDropHighBasket();
+
+            }
+            if(gamepad1.b){
+                dropHighBasket();
+            }
+            if(gamepad1.y){
+                transfer();
+            }
         }
         chassis.stopAllThreads();
     }
@@ -97,31 +107,31 @@ public class DriveControlled extends LinearOpMode {
 //        } else if (gamepad2.right_trigger>0.3) {
 //            vSliderSystem.stepCtrl(100);
 //        }
-
-        if(gamepad2.dpad_down){
-            //grabs from transfer pos
-            hSliderSystem.goToPos(78);
-            sleep(600);
-            vSliderSystem.openSlightClaw();
-            vSliderSystem.goToPos(350);
-            sleep(600);
-            vSliderSystem.tiltToPos(1);
-            sleep(800);
-            vSliderSystem.goToPos(0);
-            sleep(600);
-            vSliderSystem.closeClaw();
-        }
-        telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
-
-        //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
-        if(gamepad2.dpad_up){
-
-        }
-
-        if(gamepad2.b){
-            hSliderSystem.goToPos(0);
-            sleep(75);
-        }
+//
+//        if(gamepad2.dpad_down){
+//            //grabs from transfer pos
+//            hSliderSystem.goToPos(78);
+//            sleep(600);
+//            vSliderSystem.openSlightClaw();
+//            vSliderSystem.goToPos(350);
+//            sleep(600);
+//            vSliderSystem.tiltToPos(1);
+//            sleep(800);
+//            vSliderSystem.goToPos(0);
+//            sleep(600);
+//            vSliderSystem.closeClaw();
+//        }
+//        telemetry.addData("tiltPos", vSliderSystem.getTiltPos());
+//
+//        //smaller the tilt value, the higher the servo, where tiltpotision of 1 is straight downwards.
+//        if(gamepad2.dpad_up){
+//
+//        }
+//
+//        if(gamepad2.b){
+//            hSliderSystem.goToPos(0);
+//            sleep(75);
+//        }
 
         if(gamepad2.dpad_left){
             vSliderSystem.openClaw();
@@ -133,9 +143,21 @@ public class DriveControlled extends LinearOpMode {
 
         //double y = gamepad2.left_stick_y; // reversed NOT same as auto
         if (gamepad2.left_stick_y>0.4) {
-            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() + 50);
+            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() + 20);
         } else if (gamepad2.left_stick_y<-0.4) {
-            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 50);
+            vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 20);
+        }
+        if(gamepad2.a){
+            prepDropHighRung();
+        }
+        if(gamepad2.b){
+            dropHighRung();
+        }
+        if(gamepad2.y){
+            prepPickup();
+        }
+        if(gamepad2.x){
+            pickup();
         }
     }
 
@@ -187,32 +209,7 @@ public class DriveControlled extends LinearOpMode {
         bootUp = !bootUp;
 
     }
-        public void prepDropHighRung () {
-            if(gamepad2.x) {
-            vSliderSystem.closeClaw();
-            sleep(400);
-            vSliderSystem.tiltToPos(0.15);
-            vSliderSystem.goToPos(930);
-            }
-        }
-        public void dropHighRung () {
-            if(gamepad2.y) {
-            vSliderSystem.tiltToPos(0.5);
-            sleep(300);
-            vSliderSystem.openClaw();
-            }
-        }
 
-        //This is the macro for auto pick up from sidways walls. Don't use for tele-Op (maybe)
-        public void prepPickup () {
-            if (gamepad2.a) {
-
-                vSliderSystem.goToPos(0);
-                vSliderSystem.tiltToPos(0.73);
-                vSliderSystem.openClaw();
-                sleep(50);
-            }
-        }
 
         //X - HSlide OUT
         //Y - HSlide IN
@@ -259,11 +256,7 @@ public class DriveControlled extends LinearOpMode {
                 // vslide up and tilt ready
                 vSliderSystem.goToPos(600);
                 vSliderSystem.tiltToTransfer();
-
                 vSliderSystem.transferClaw();
-
-//
-
                 hSliderSystem.outtake();
                 sleep(400);
                 hSliderSystem.idleIntake();
@@ -274,7 +267,6 @@ public class DriveControlled extends LinearOpMode {
                 vSliderSystem.goToPos(383);
                 sleep(200);
                 vSliderSystem.closeClaw();
-
             }
 
             //
@@ -438,4 +430,83 @@ public class DriveControlled extends LinearOpMode {
 //    public void updateTime(){
 //        totalTime = System.currentTimeMillis();
 //    }
+public void prepDropHighBasket() {
+    vSliderSystem.closeClaw();
+    sleep(100);
+    vSliderSystem.tiltToPos(0.8);
+    vSliderSystem.goToPos(2820);
+    sleep(900);
+}
+
+    public void dropHighBasket() {
+        vSliderSystem.tiltToPos(0.93);
+        sleep(200);
+        vSliderSystem.openClaw();
+        sleep(300);
+
     }
+
+    public void prepVTransfer() {
+        vSliderSystem.tiltToTransfer();
+        sleep(200);
+        vSliderSystem.goToPos(600);
+        vSliderSystem.transferClaw();
+    }
+
+
+
+    public void transfer(){
+        hSliderSystem.bootUp();
+        // vslide up and tilt ready
+        hSliderSystem.tiltTransfer();
+
+
+        sleep(700);
+        hSliderSystem.goToPos(0, 1);
+        while (hSliderSystem.getCurrentPos() > 50 && opModeIsActive()){
+            sleep(10);
+        }
+
+        hSliderSystem.outtake();
+        sleep(80);
+        hSliderSystem.idleIntake();
+        vSliderSystem.goToPos(390);
+
+        sleep(300);
+        vSliderSystem.closeClaw();
+        sleep(250);
+    }
+
+    public void intake(int midPos){
+        hSliderSystem.goToPos(midPos, 1);
+        sleep(700);
+        hSliderSystem.intake();
+        hSliderSystem.goToPos(1500, 0.2);
+        sleep(500);
+    }
+
+    public void prepDropHighRung() {
+        vSliderSystem.tiltToPos(0.95);
+        vSliderSystem.goToPos(1400);
+    }
+
+    public void dropHighRung() {
+        hSliderSystem.tiltTransfer();
+        vSliderSystem.goToPos(1680);
+        sleep(600);
+        vSliderSystem.openClaw();
+    }
+
+    public void prepPickup() {
+        vSliderSystem.goToPos(200);
+        vSliderSystem.tiltToPos(0.33);
+        vSliderSystem.pickupClaw();
+    }
+
+    public void pickup() {
+        vSliderSystem.closeClaw();
+        sleep(250);
+    }
+
+
+}

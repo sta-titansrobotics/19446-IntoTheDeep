@@ -85,14 +85,9 @@ public class VSlideController {
         clawR.setPosition(0.68);
     }
 
-    public void openSlightClaw() {
-        clawL.setPosition(0.43);
-        clawR.setPosition(0.6);
-    }
-
     public void closeClaw() {
-        clawL.setPosition(0.53);
-        clawR.setPosition(0.5);
+        clawL.setPosition(0.56);
+        clawR.setPosition(0.47);
     }
 
     public void pickupClaw(){
@@ -106,7 +101,7 @@ public class VSlideController {
     }
 
     public void tiltToPos(double pos){
-        pos = pos > 0 ? (pos < 0.91 ? pos : 0.91) : 0;
+        pos = pos > 0 ? (pos < 0.94 ? pos : 0.94) : 0;
         tiltL.setPosition(pos);
         tiltR.setPosition(pos);
     }

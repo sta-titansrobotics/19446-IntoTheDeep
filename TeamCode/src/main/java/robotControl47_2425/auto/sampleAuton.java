@@ -29,7 +29,7 @@ public class sampleAuton extends LinearOpMode {
         vSliderSystem.resetVSlidePos();
 
 
-        chassis = new Chassis(this, 0.36 / 2, -0.36 / 2);
+        chassis = new Chassis(this, 0.36 / 2, -0.36 / 2, "A");
         chassis.startOdomThread();
         chassis.resetAngle();
         sleep(2000);

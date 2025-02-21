@@ -29,7 +29,7 @@ public class provsAutonTest extends LinearOpMode {
         vSliderSystem.resetVSlidePos();
 
 
-        chassis = new Chassis(this, 0, 0);
+        chassis = new Chassis(this, 0, 0, "A");
         chassis.startOdomThread();
         chassis.resetAngle();
         sleep(2000);
