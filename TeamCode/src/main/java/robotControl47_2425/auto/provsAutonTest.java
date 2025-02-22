@@ -106,17 +106,14 @@ public class provsAutonTest extends LinearOpMode {
         hSliderSystem.goToPos(0, 1);
         hSliderSystem.bootUp();
 
-//        sleep(300);
+//        sleep(300);-
 //
 //
         prepPickup();
         chassis.p2pDrive(0.034, -0.8, 0, 1500, 0.22, 0.7, 0.2, 0.3, 0.03, 3, 0.88, 3, 1.254, 1.506, 0.007, 0.014);
         timeout(chassis);
         pickup();
-//
-//
-////
-////
+
 //        // 2 & 3
 //        //commented 5:21
         for (int i = 0; i < 3; i++) {
@@ -133,9 +130,6 @@ public class provsAutonTest extends LinearOpMode {
             timeout(chassis);
             pickup();
 
-
-
-
         }
         prepDropHighRung();
 //
@@ -147,10 +141,6 @@ public class provsAutonTest extends LinearOpMode {
 //        chassis.p2pDrive(0.93, 0.1, 0, 2400, 0.2, 0.7, 0.2, 0.5, 0.01, 2, 0.92, 2.4, 1.254, 1.506, 0.007, 0.01);
 //        timeout(chassis);
 //        dropHighRung();
-
-
-
-
 //        //oaihd
 //        prepPickup();
 //        hSliderSystem.goToPos(1500, 0.6);
