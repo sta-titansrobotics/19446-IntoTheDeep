@@ -52,9 +52,9 @@ public class provsRightAuton extends LinearOpMode {
 
         //S1
         prepDropHighRung();
-        chassis.p2pDrive(0.88, 0.26, 0, 5000, 0.2, 1.1, 0.15, 0.5, 0.04, 2, 0.88, 2.8, 1.254, 1.506, 0.008, 0.016);
-        timeout(chassis);
+        chassis.p2pDrive(0.93, 0.27, 0, 2500, 0.2, 0.7, 0.2, 0.4, 0.02, 2, 0.84, 3, 1.254, 1.506, 0.004, 0.01);
 
+        sleep(1800);
         dropHighRung();
         prepPickup();
 
@@ -62,33 +62,49 @@ public class provsRightAuton extends LinearOpMode {
         //B1_1
         hSliderSystem.tiltTransfer();
 
-        chassis.p2pDrive(0.668, -0.45, 133.4, 5000, 0.25, 0.7, 0.2, 0.6, 0.02, 2, 0.88, 2.3, 1.254, 1.506, 0.007, 0.012);
+        chassis.p2pDrive(0.68, -0.475, 139, 4000, 0.2, 0.8, 0.2, 0.4, 0.03, 4, 1.3, 1.4, 1.3, 1.65, 0.01, 0.02);
+        hSliderSystem.goToPos(300, 0.2);
+        hSliderSystem.bootDown();
         timeout(chassis);
 
-        hSliderSystem.goToPos(1480, 1);
-        hSliderSystem.bootDown();
-        while (hSliderSystem.getCurrentPos() < 1480 && opModeIsActive()){
-            sleep(10);
-        }
+        hSliderSystem.goToPos(1440, 1);
+
+        sleep(600);
 //
         //B1_2
 
-        chassis.p2pDrive(0.212, -0.458, 86.4, 5000, 0.2, 0.6, 0.3, 0.8, 0.07, 4, 0.88, 2.4, 1.254, 1.506, 0.02, 0.015);
+        chassis.p2pDrive(0.2, -0.55, 85, 4000, 0.2, 0.6, 0.3, 0.9, 0.15, 15, 1.5, 2.4, 1.3, 1.5, 0.015, 0.05);
+        sleep(100);
+        hSliderSystem.goToPos(300, 0.4);
         timeout(chassis);
 
         hSliderSystem.bootUp();
-////
-//        //B2_1
+
 //
-//        chassis.p2pDrive(0.73, -0.72, 135, 5000, 0.2, 0.7, 0.2, 0.6, 0.06, 4, 0.86, 2.38, 1.254, 1.506, 0.008, 0.02);
-//        timeout(chassis);
-////
-//        hSliderSystem.goToPos(1350, 1);
-//        sleep(300);
+        //B2_1
+
+        chassis.p2pDrive(0.824, -0.68, 124, 4000, 0.2, 0.8, 0.2, 0.4, 0.04, 4, 1.4, 1.5, 1.4, 1.4, 0.011, 0.02);
+
+        timeout(chassis);
+
+        hSliderSystem.goToPos(1470, 1);
+        hSliderSystem.bootDown();
+        sleep(600);
+
 //        //B2_2
-//        chassis.p2pDrive(0.46, -0.79, 40, 5000, 0.18, 0.6, 0.3, 0.8, 0.06, 5, 0.88, 2.4, 1.254, 1.506, 0.008, 0.02);
-//        hSliderSystem.goToPos(700, 0.3);
-//        timeout(chassis);
+        chassis.p2pDrive(0.34, -0.8, 76.1, 4000, 0.2, 0.6, 0.2, 1.0, 0.15, 14, 1.5, 2.4, 1.3, 1.5, 0.015, 0.05);
+
+        hSliderSystem.goToPos(600, 0.2);
+        timeout(chassis);
+
+
+        hSliderSystem.bootUp();
+        hSliderSystem.goToPos(0, 1);
+        prepPickup();
+        chassis.p2pDrive(-.02, -0.8, 0, 1500, 0.25, 0.7, 0.2, 0.3, 0.03, 3, 0.88, 3, 1.254, 1.506, 0.007, 0.014);
+
+        sleep(1400);
+        pickup();
 //
 ////
 //        //B3_1
@@ -122,32 +138,35 @@ public class provsRightAuton extends LinearOpMode {
 //////
 ////        // 2 & 3
 ////        //commented 5:21
-//        for (int i = 0; i < 3; i++) {
-//            prepDropHighRung();
-////
-//            chassis.p2pDrive(0.92  , 0.25-0.05*i, 0, 5000, 0.22, 1.1, 0.2, 0.3, 0.04, 2, 0.9, 2.4, 1.8, 1.6, 0.009, 0.02);
-//            timeout(chassis);
+        for (int i = 0; i < 2; i++) {
+            prepDropHighRung();
 //
-//
-//            dropHighRung();
-//
-//            prepPickup();
-//            chassis.p2pDrive(0.032, -0.76, 0, 3000, 0.22, 1.1, 0.2, 0.3, 0.04, 2, 0.9, 3.1, 1.8, 1.6, 0.008, 0.02);
-//            timeout(chassis);
-//            pickup();
-//
-//
-//
-//
-//        }
-//        prepDropHighRung();
-////
-//        chassis.p2pDrive(0.92  , 0.1, 0, 5000, 0.22, 1.1, 0.2, 0.3, 0.03, 2, 0.9, 2.4, 1.8, 1.6, 0.009, 0.02);
-//        timeout(chassis);
-//
-//
-//        dropHighRung();
+            chassis.p2pDrive(1  , 0.22-0.06*i, 0, 5000, 0.25, 1.1, 0.2, 0.3, 0.04, 2, 0.85, 3, 1.8, 1.7, 0.009, 0.02);
 
+
+            sleep(2700);
+
+            dropHighRung();
+
+
+            prepPickup();
+            chassis.p2pDrive(-.04, -0.8, 0, 3000, 0.25, 0.7, 0.2, 0.3, 0.03, 3, 0.88, 2, 1.7, 2, 0.007, 0.014);
+
+            sleep(2500);
+            pickup();
+        }
+        prepDropHighRung();
+//
+        chassis.p2pDrive(1  , 0.10, 0, 5000, 0.25, 1.1, 0.2, 0.3, 0.04, 2, 0.84, 2.9, 1.8, 1.6, 0.009, 0.02);
+
+
+        sleep(2600);
+
+        dropHighRung();
+        prepPickup();
+        chassis.p2pDrive(0.3, -0.5, 64, 3000, 0.25, 0.7, 0.2, 0.5, 0.1, 3, 0.88, 2, 1.7, 2, 0.007, 0.014);
+        hSliderSystem.goToPos(1400, 0.5);
+        timeout(chassis);
 
         chassis.stopAllThreads();
         double endTime = getRuntime();
@@ -189,13 +208,13 @@ public class provsRightAuton extends LinearOpMode {
 
     public void prepDropHighRung() {
         vSliderSystem.tiltToPos(0.95);
-        vSliderSystem.goToPos(1300);
+        vSliderSystem.goToPos(1240);
     }
 
     public void dropHighRung() {
         hSliderSystem.tiltTransfer();
-        vSliderSystem.goToPos(1680);
-        sleep(600);
+        vSliderSystem.goToPos(1720);
+        sleep(400);
         vSliderSystem.openClaw();
     }
 

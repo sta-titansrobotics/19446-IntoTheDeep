@@ -30,7 +30,7 @@ public class VSlideController {
         slideR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slideL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slideR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         initializeServos();
         //resetVSlidePos();

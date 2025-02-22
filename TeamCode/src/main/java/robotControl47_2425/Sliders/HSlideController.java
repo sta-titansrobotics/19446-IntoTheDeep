@@ -31,6 +31,7 @@ public class HSlideController {
 
         slideH = hardwareMap.get(DcMotor.class, "hSlide");
         slideH.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        slideH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideH.setDirection(DcMotor.Direction.REVERSE);
 
 
@@ -50,7 +51,6 @@ public class HSlideController {
         slideH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-
     // Generic method to move a motor to a specific position
     public void goToPos(int position) {
         position = Math.max(0, position);
@@ -66,6 +66,7 @@ public class HSlideController {
 
         slideH.setTargetPosition(position);
         slideH.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         slideH.setPower(power);
     }
 

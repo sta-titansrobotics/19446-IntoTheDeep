@@ -59,30 +59,14 @@ public class DriveControl2_20 extends LinearOpMode {
 //            handleServoControl();
             updateTelemetry();
             chassis.telemetryDrive();
-            //chassis.telemetryStrafe();
-//            vSliderCtrl();
-//            hSliderCtrl();
-//            prepDropHighRung();
-//            dropHighRung();
-//            prepPickup();
-//            hSlideMovement();
-//            gamepad1Ctrl();
-            //prepHighBasket();
-
-//            if (gamepad2.right_trigger>0.2) {
-//                toggleClaw();
-//            }
             vSliderCtrl();
             hSliderCtrl();
             hSlideMovement();
 
-            //gamepad1Ctrl();
             if(gamepad1.start){
                 toggleBoot();
             }
-            if(gamepad2.start){
-                testHang();
-            }
+
             sleep(50);
         }
         chassis.stopAllThreads();
@@ -109,8 +93,10 @@ public class DriveControl2_20 extends LinearOpMode {
             dropHighBasket();
         }
         if(gamepad1.y){
-            prepVTransfer();
             transfer();
+        }
+        if(gamepad1.x){
+            prepVTransfer();
         }
         if(gamepad1.a){
             prepDropHighBasket();
@@ -157,8 +143,9 @@ public class DriveControl2_20 extends LinearOpMode {
     //Y - HSlide IN
     public void hSlideMovement() {
         if (gamepad1.dpad_right) {
-            hSliderSystem.goToPos(1500);
-//                hSliderSystem.rampUp();
+            hSliderSystem.goToPos(550);
+            //hSliderSystem.goToPos(1500);
+
         }
 
         if (gamepad1.dpad_left) {
@@ -322,10 +309,4 @@ public class DriveControl2_20 extends LinearOpMode {
 
     }
 
-    private void testHang(){
-        vSliderSystem.goToPos(0);
-        sleep(2000);
-        vSliderSystem.goToPos(600);
-
-    }
 }

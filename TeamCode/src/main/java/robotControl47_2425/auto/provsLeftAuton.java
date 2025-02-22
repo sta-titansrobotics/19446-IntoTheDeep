@@ -194,7 +194,7 @@ public class provsLeftAuton extends LinearOpMode {
         hSliderSystem.outtake();
         sleep(80);
         hSliderSystem.idleIntake();
-        vSliderSystem.goToPos(390);
+        vSliderSystem.goToPos(380);
 
         sleep(300);
         vSliderSystem.closeClaw();
