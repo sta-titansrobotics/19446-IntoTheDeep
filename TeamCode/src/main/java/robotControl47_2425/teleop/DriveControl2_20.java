@@ -89,16 +89,16 @@ public class DriveControl2_20 extends LinearOpMode {
         if(gamepad1.left_trigger>0.2){
             toggleClaw();
         }
-        if(gamepad2.right_trigger>0.2){
+        if(gamepad2.dpad_right){
             dropHighBasket();
         }
-        if(gamepad1.y){
+        if(gamepad2.dpad_left){
             transfer();
         }
-        if(gamepad1.x){
+        if(gamepad2.dpad_up){
             prepVTransfer();
         }
-        if(gamepad1.a){
+        if(gamepad2.dpad_down){
             prepDropHighBasket();
         }
 
@@ -124,14 +124,20 @@ public class DriveControl2_20 extends LinearOpMode {
         }
 
 
-        if (gamepad1.right_trigger > 0.3) {
-            hSliderSystem.outtake();
-        } else if (gamepad1.right_bumper) {
+        if (gamepad2.right_trigger > 0.3) {
             hSliderSystem.intake();
+        } else if (gamepad1.right_bumper) {
+            hSliderSystem.outtake();
         } else {
             hSliderSystem.idleIntake();
         }
 
+        if(gamepad1.right_trigger>0.3){
+            goToOuttake();
+        }
+        if(gamepad1.right_bumper){
+            goToIntake();
+        }
         if (gamepad1.left_bumper){
             toggleIntakeTilt();
         }
@@ -297,6 +303,18 @@ public class DriveControl2_20 extends LinearOpMode {
         intakeUp = !intakeUp;
         sleep(50);
 
+    }
+    private void goToOuttake(){
+        hSliderSystem.goToPos(600, 1);
+        sleep(400);
+        hSliderSystem.tiltIntake();
+    }
+
+    private void goToIntake(){
+        //not intaking just going back
+        hSliderSystem.tiltTransfer();
+        sleep(400);
+        hSliderSystem.goToPos(0, 1);
     }
 
     private void toggleBoot () {
