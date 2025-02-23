@@ -147,7 +147,7 @@ public class Chassis {
         double startTime = opMode.getRuntime() * 1000.0;
         while (opMode.opModeIsActive() && isBusy  && (Math.hypot(error_x, error_y) > pos_tolerance || Math.abs(error_ang) > ang_tolerance) && opMode.getRuntime() * 1000.0  - startTime < timeoutSeconds){
             opMode.telemetry.addData("running", opMode.getRuntime() + "||||" + startTime);
-            if (Thread.currentThread().isInterrupted()) {
+            if (Thread.currentThread().isInterrupted()||gamepad1.left_stick_button) {
                 System.out.println("Thread interrupted, exiting...");
                 break;
             }

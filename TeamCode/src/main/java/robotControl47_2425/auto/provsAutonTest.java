@@ -60,7 +60,6 @@ public class provsAutonTest extends LinearOpMode {
         prepPickup();
         hSliderSystem.goToPos(100, 0.5);
         hSliderSystem.bootDown();
-
         //B1_1
 
         chassis.p2pDrive(0.54, -0.63, 150, 5000, 0.25, 0.7, 0.2, 0.6, 0.02, 3, 2, 2.3, 1.254, 1.506, 0.008, 0.016);
@@ -97,7 +96,7 @@ public class provsAutonTest extends LinearOpMode {
         hSliderSystem.bootDown();
         sleep(300);
 //
-//        //B3_2
+//      //B3_2
 
         chassis.p2pDrive(0.3, -1, 80, 5000, 0.18, 0.6, 0.3, 0.8, 0.07, 10, 0.88, 2.4, 1.254, 1.506, 0.008, 0.017);
         hSliderSystem.goToPos(400, 0.1);
