@@ -80,8 +80,9 @@ public class DriveControl2_20 extends LinearOpMode {
         // SPECIMENS
         if (gamepad2.dpad_up){
 
-            vSliderSystem.goToPos(600);
+            vSliderSystem.goToPos(800);
 
+            sleep(700);
             vSliderSystem.tiltToPos(0.33);
             sleep(100);
 
@@ -100,7 +101,7 @@ public class DriveControl2_20 extends LinearOpMode {
             prepPickup();
         }
 
-        if(gamepad2.left_trigger>0.3){
+        if(gamepad2.left_trigger>0.2){
             toggleClaw();
         }
 
@@ -134,11 +135,11 @@ public class DriveControl2_20 extends LinearOpMode {
 
     public void hSliderCtrl() {
         // Manual
-//        if (gamepad2.right_stick_y<-0.4) {
-//            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
-//        } else if (gamepad2.right_stick_y>0.4) {
-//            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
-//        }
+        if (gamepad2.right_stick_y<-0.4) {
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 120);
+        } else if (gamepad2.right_stick_y>0.4) {
+            hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 120);
+        }
         if (gamepad1.dpad_up) {
             hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
         } else if (gamepad1.dpad_down) {
@@ -150,22 +151,24 @@ public class DriveControl2_20 extends LinearOpMode {
         }
 
 
-        if (gamepad2.right_trigger > 0.3) {
+        if (gamepad2.right_trigger > 0.2) {
             hSliderSystem.intake();
-        } else if (gamepad1.right_bumper) {
+        } else if (gamepad2.right_bumper) {
             hSliderSystem.outtake();
         } else {
             hSliderSystem.idleIntake();
         }
 
-        if(gamepad1.right_trigger>0.3){
-            goToOuttake();
-        }
-        if(gamepad1.right_bumper){
-            goToIntake();
-        }
-        if (gamepad1.left_bumper){
+//        if(gamepad1.right_trigger>0.3){
+//            goToOuttake();
+//        }
+//        if(gamepad1.right_bumper){
+//            goToIntake();
+//        }
+
+        if (gamepad1.b){
             toggleIntakeTilt();
+            sleep(50);
         }
     }
 
@@ -185,7 +188,7 @@ public class DriveControl2_20 extends LinearOpMode {
 //            hSliderSystem.goToPos(0);
 //
 //        }
-        if (gamepad1.left_trigger>0.3) {
+        if (gamepad1.left_trigger>0.2) {
             hSliderSystem.goToPos(hSliderSystem.getCurrentPos() - 80);
         } else if (gamepad1.left_bumper) {
             hSliderSystem.goToPos(hSliderSystem.getCurrentPos() + 80);
@@ -254,6 +257,7 @@ public class DriveControl2_20 extends LinearOpMode {
 
     public void transfer(){
         hSliderSystem.bootUp();
+        sleep(50);
         hSliderSystem.intake();
         // vslide up and tilt ready
         hSliderSystem.tiltTransfer();
@@ -264,9 +268,9 @@ public class DriveControl2_20 extends LinearOpMode {
         while (hSliderSystem.getCurrentPos() > 50 && opModeIsActive()){
             sleep(10);
         }
-
-        hSliderSystem.outtake();
-        sleep(80);
+//
+//        hSliderSystem.outtake();
+//        sleep(80);
         hSliderSystem.idleIntake();
         vSliderSystem.goToPos(390);
 
@@ -307,8 +311,11 @@ public class DriveControl2_20 extends LinearOpMode {
     private void toggleClaw () {
         if (!clawOpen) {
             vSliderSystem.openClaw();
+            sleep(100);
         } else {
             vSliderSystem.closeClaw();
+            sleep(100);
+
         }
         clawOpen = !clawOpen;
 
@@ -339,8 +346,11 @@ public class DriveControl2_20 extends LinearOpMode {
     private void toggleBoot () {
         if (!bootUp) {
             hSliderSystem.bootUp();
+            sleep(100);
         } else {
             hSliderSystem.bootDown();
+            sleep(100);
+
         }
         bootUp = !bootUp;
 

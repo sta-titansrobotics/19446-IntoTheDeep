@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
-
-@Autonomous
+//
+//@Autonomous
 public class sampleAuton extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     // initialize chassis, current robot pos, odometry, sliders, etc.

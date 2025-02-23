@@ -95,12 +95,11 @@ public class Chassis {
     public void telemetryDrive() {
 
         if (opModeType.equals("T")) {
+
+            double speedMultiplier = 0.6;
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            //double y = gamepad1.left_stick_y; // reversed NOT same as auto
-//            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-//            double rx = gamepad1.right_stick_x;
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-            double rx = -gamepad1.right_stick_x;
+            double rx = gamepad1.right_stick_x;
 
 
             double frontLeftPower = (y + x + rx);
@@ -108,12 +107,15 @@ public class Chassis {
             double frontRightPower = (y - x - rx);
             double backRightPower = (y + x - rx);
 
+            if (gamepad1.right_bumper){
+                speedMultiplier = 1;
+            }
             double denominator = Math.max(Math.abs(frontLeftPower), Math.max(Math.abs(backLeftPower), Math.max(Math.abs(frontRightPower), Math.max(Math.abs(backRightPower), 1))));
 
-            lf.setPower(frontLeftPower / denominator);
-            lr.setPower(backLeftPower / denominator);
-            rf.setPower(frontRightPower / denominator);
-            rr.setPower(backRightPower / denominator);
+            lf.setPower(frontLeftPower / denominator * speedMultiplier);
+            lr.setPower(backLeftPower / denominator * speedMultiplier);
+            rf.setPower(frontRightPower / denominator * speedMultiplier);
+            rr.setPower(backRightPower / denominator * speedMultiplier);
         }
     }
 
