@@ -76,38 +76,53 @@ public class DriveControl2_20 extends LinearOpMode {
 
 
     private void vSliderCtrl() {
+
+        // SPECIMENS
         if (gamepad2.dpad_up){
-            prepPickup();
+
+            vSliderSystem.goToPos(600);
+
+            vSliderSystem.tiltToPos(0.33);
+            sleep(100);
+
+            vSliderSystem.goToPos(200);
+
+            vSliderSystem.transferClaw();
         }
         if (gamepad2.dpad_left){
             pickup();
+            //dont move chassis too much
+            // TEST TMR HUMAN PLAYER
             prepDropHighRung();
         }
         if (gamepad2.dpad_right){
             dropHighRung();
             prepPickup();
         }
+
         if(gamepad2.left_trigger>0.3){
             toggleClaw();
         }
-        final int TRANSFER_POS = 600;
-        final int TOLERANCE = 5;
-        if(gamepad2.a){
-            if (Math.abs(vSliderSystem.getCurrentPos() - TRANSFER_POS) > TOLERANCE) {
-                vSliderSystem.goToPos(600);
-                sleep(100);
-            }
-            else{
-                transfer();
-            }
+
+
+        // SAMPLES
+        if(gamepad2.y){
+            //Specimen to samples
+            vSliderSystem.goToPos(850);
+            prepVTransfer();
         }
         if(gamepad2.x){
+
+            transfer();
+        }
+        if(gamepad2.a){
+            prepDropHighBasket();
+        }
+        if(gamepad2.b){
             dropHighBasket();
             prepVTransfer();
         }
-        if(gamepad2.b){
-            prepDropHighBasket();
-        }
+
 
         //Manual
         if (gamepad2.left_stick_y>0.4) {
@@ -218,7 +233,7 @@ public class DriveControl2_20 extends LinearOpMode {
         sleep(100);
         vSliderSystem.tiltToPos(0.8);
         vSliderSystem.goToPos(2820);
-        sleep(900);
+        // could add sleep?
     }
 
     public void dropHighBasket() {
@@ -226,8 +241,8 @@ public class DriveControl2_20 extends LinearOpMode {
         sleep(200);
         vSliderSystem.openClaw();
         sleep(300);
-        vSliderSystem.tiltToPos(0.7);
-        sleep(100);
+        vSliderSystem.tiltToTransfer();
+        sleep(150);
     }
 
     public void prepVTransfer() {
@@ -261,11 +276,9 @@ public class DriveControl2_20 extends LinearOpMode {
     }
 
     public void intake(int midPos){
-        hSliderSystem.goToPos(midPos, 1);
-        sleep(700);
-        hSliderSystem.intake();
-        hSliderSystem.goToPos(1500, 0.2);
-        sleep(500);
+        hSliderSystem.goToPos(600, 1);
+        sleep(100);
+        hSliderSystem.tiltIntake();
     }
 
     public void prepDropHighRung() {
@@ -289,8 +302,6 @@ public class DriveControl2_20 extends LinearOpMode {
     public void pickup() {
         vSliderSystem.closeClaw();
         sleep(250);
-        vSliderSystem.tiltToPos(0.95);
-        vSliderSystem.goToPos(1400);
     }
 
     private void toggleClaw () {
@@ -334,5 +345,6 @@ public class DriveControl2_20 extends LinearOpMode {
         bootUp = !bootUp;
 
     }
+
 
 }
