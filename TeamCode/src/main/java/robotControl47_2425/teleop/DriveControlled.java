@@ -8,7 +8,7 @@ import robotControl47_2425.auto.Chassis;
 import robotControl47_2425.Sliders.HSlideController;
 import robotControl47_2425.Sliders.VSlideController;
 
-@TeleOp(name = "46TeleOp", group = "Test")
+//@TeleOp(name = "46TeleOp", group = "Test")
 public class DriveControlled extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     private Chassis chassis;
@@ -142,9 +142,9 @@ public class DriveControlled extends LinearOpMode {
         }
 
         //double y = gamepad2.left_stick_y; // reversed NOT same as auto
-        if (gamepad2.left_stick_y>0.4) {
+        if (gamepad2.left_stick_y>0.3) {
             vSliderSystem.goToPos(vSliderSystem.getCurrentPos() + 20);
-        } else if (gamepad2.left_stick_y<-0.4) {
+        } else if (gamepad2.left_stick_y<-0.3) {
             vSliderSystem.goToPos(vSliderSystem.getCurrentPos() - 20);
         }
         if(gamepad2.a){

@@ -96,12 +96,12 @@ public class VSlideController {
     }
 
     public void tiltToTransfer(){
-        tiltL.setPosition(0.04);
-        tiltR.setPosition(0.04);
+        tiltL.setPosition(0.03);
+        tiltR.setPosition(0.03);
     }
 
     public void tiltToPos(double pos){
-        pos = pos > 0 ? (pos < 0.94 ? pos : 0.94) : 0;
+        pos = pos > 0 ? (pos < 1 ? pos : 1) : 0;
         tiltL.setPosition(pos);
         tiltR.setPosition(pos);
     }

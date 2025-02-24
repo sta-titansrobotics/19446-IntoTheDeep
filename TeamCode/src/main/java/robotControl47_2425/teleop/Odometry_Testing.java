@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp
+//@TeleOp
 public class Odometry_Testing extends LinearOpMode {
     // test commit
     // Declare OpMode members for each of the 3 motors and IMU.

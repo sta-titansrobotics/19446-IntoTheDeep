@@ -69,35 +69,35 @@ public class provsLeftAuton extends LinearOpMode {
         intake();
 
         //S2
-        chassis.p2pDrive(0.02, 1.14, 135, 4000, 0.2, 0.8, 0.15, 0.35, 0.04, 2, 0.92, 2.4, 1.3, 1.5, 0.007, 0.014);
+        chassis.p2pDrive(0.02, 1.135, 135, 4000, 0.2, 0.8, 0.15, 0.35, 0.04, 2, 0.92, 2.4, 1.3, 1.5, 0.007, 0.014);
         transfer();
         prepDropHighBasket();
         timeout(chassis);
         dropHighBasket();
 
         //P2
-        chassis.p2pDrive(0.4, 1.15, 173, 4000, 0.2, 0.7, 0.15, 0.35, 0.016, 1, 0.88, 2.4, 1.3, 1.5, 0.007, 0.014);
+        chassis.p2pDrive(0.4, 1.12, 173, 4000, 0.2, 0.7, 0.15, 0.35, 0.016, 1, 0.88, 2.4, 1.3, 1.5, 0.007, 0.014);
         prepVTransfer();
         timeout(chassis);
 
         intake();
 
         //S3
-        chassis.p2pDrive(0.02, 1.14, 135, 4000, 0.2, 0.8, 0.15, 0.35, 0.04, 2, 0.92, 2.4, 1.3, 1.5, 0.007, 0.014);
+        chassis.p2pDrive(0.02, 1.135, 135, 4000, 0.2, 0.8, 0.15, 0.35, 0.04, 2, 0.92, 2.4, 1.3, 1.5, 0.007, 0.014);
         transfer();
         prepDropHighBasket();
         timeout(chassis);
         dropHighBasket();
 
         //P3
-        chassis.p2pDrive(0.52, 0.925, 224, 4000, 0.2, 0.7, 0.15, 0.35, 0.016, 1, 0.88, 2.4, 1.3, 1.5, 0.007, 0.014);
+        chassis.p2pDrive(0.52, 0.90, 224, 4000, 0.2, 0.7, 0.15, 0.35, 0.016, 1, 0.88, 2.4, 1.3, 1.5, 0.007, 0.014);
         prepVTransfer();
         timeout(chassis);
 
         intake();
 
         //S4
-        chassis.p2pDrive(0.03, 1.15, 135, 4000, 0.2, 0.8, 0.15, 0.35, 0.04, 2, 0.92, 2.4, 1.3, 1.5, 0.007, 0.014);
+        chassis.p2pDrive(0.03, 1.135, 135, 4000, 0.2, 0.8, 0.15, 0.35, 0.04, 2, 0.92, 2.4, 1.3, 1.5, 0.007, 0.014);
         transfer();
         prepDropHighBasket();
         timeout(chassis);
@@ -203,7 +203,7 @@ public class provsLeftAuton extends LinearOpMode {
 
     public void intake(){
         hSliderSystem.tiltIntake();
-        hSliderSystem.goToPos(700, 1);
+        hSliderSystem.goToPos(550, 1);
 
         sleep(450);
         hSliderSystem.intake();

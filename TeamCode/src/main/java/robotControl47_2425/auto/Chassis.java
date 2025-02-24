@@ -37,6 +37,8 @@ public class Chassis {
     private BNO055IMU imu;
 
     private Gamepad gamepad1;
+//    private Gamepad gamepad2;
+
 
     private String opModeType;
     // A for Autonomous; T for TeleOp
@@ -46,6 +48,8 @@ public class Chassis {
         this.telemetry = opMode.telemetry;
         this.hardwareMap = opMode.hardwareMap;
         this.gamepad1 = opMode.gamepad1;
+//        this.gamepad2 = opMode.gamepad2;
+
         this.opModeType = opModeType;
 
         initializeMotors();
@@ -98,10 +102,12 @@ public class Chassis {
 
             double speedMultiplier = 0.6;
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+//            double x = gamepad1.left_stick_x * 1.1 + gamepad2.right_stick_x; // Counteract imperfect strafing
+            double x = gamepad1.left_stick_x * 1.1 ; // Counteract imperfect strafing
+
             double rx = gamepad1.right_stick_x;
 
-        //
+        //z
             double frontLeftPower = (y + x + rx);
             double backLeftPower = (y - x + rx);
             double frontRightPower = (y - x - rx);

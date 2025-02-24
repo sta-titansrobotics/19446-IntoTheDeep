@@ -14,7 +14,7 @@ import robotControl47_2425.auto.Odometry;
  *
  * @author Best
  */
-@TeleOp
+//@TeleOp
 public class PIDTurnTuning extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     double kp = 0.02; // Proportional gain

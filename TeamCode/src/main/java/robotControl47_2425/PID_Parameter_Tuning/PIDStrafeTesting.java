@@ -10,7 +10,7 @@ import robotControl47_2425.auto.Odometry;
 /**
  * refer to straight forward tuning for more information.
  */
-@TeleOp(name = "strafe", group = "IDK")
+//@TeleOp(name = "strafe", group = "IDK")
 public class PIDStrafeTesting extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
     double kp = 0.9; // Proportional gain

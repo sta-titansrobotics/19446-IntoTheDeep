@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "SliderLengthTest", group = "Test")
+//@TeleOp(name = "SliderLengthTest", group = "Test")
 public class SliderLengthTest extends LinearOpMode {
 
     private DcMotor slideVL, slideVR;
